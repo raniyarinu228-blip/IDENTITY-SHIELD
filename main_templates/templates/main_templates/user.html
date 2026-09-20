@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Shield - Social & Support Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-300 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand -->
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-shield-halved text-emerald-500 text-2xl"></i>
+                <span class="text-white text-lg font-bold tracking-wider">Identity Shield <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded ml-1">User Hub</span></span>
+            </div>
+
+            <!-- Quick Navigation -->
+            <div class="flex items-center space-x-3">
+                <button onclick="switchTab('feed')" class="text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+                    <i class="fa-solid fa-house mr-1"></i> Feed
+                </button>
+                <button onclick="switchTab('profile')" class="text-xs sm:text-sm px-3 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 font-medium">
+                    <i class="fa-solid fa-user mr-1"></i> Profile
+                </button>
+                <button onclick="switchTab('auth')" class="text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium">
+                    <i class="fa-solid fa-right-to-bracket mr-1"></i> Auth
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6">
+        
+        <!-- Sidebar Menu -->
+        <aside class="w-full md:w-64 flex-shrink-0">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 sticky top-20">
+                <div class="flex items-center space-x-3 pb-4 mb-4 border-b border-slate-800">
+                    <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">
+                        JD
+                    </div>
+                    <div>
+                        <h4 class="text-white text-sm font-semibold">John Doe</h4>
+                        <p class="text-slate-500 text-xs">@johndoe</p>
+                    </div>
+                </div>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">Social</p>
+                <nav class="space-y-1 mb-6">
+                    <button onclick="switchTab('feed')" id="tab-feed" class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg bg-emerald-500/10 text-emerald-400 font-medium border border-emerald-500/20 transition-all">
+                        <span><i class="fa-solid fa-square-rss w-6"></i> Feed & Posts</span>
+                    </button>
+                    <button onclick="switchTab('friends')" id="tab-friends" class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                        <span><i class="fa-solid fa-users w-6"></i> Manage Friends</span>
+                        <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full">3</span>
+                    </button>
+                    <button onclick="switchTab('chat')" id="tab-chat" class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                        <span><i class="fa-solid fa-comments w-6"></i> Chat</span>
+                        <span class="bg-slate-800 text-slate-400 text-xs px-2 py-0.5 rounded-full">1</span>
+                    </button>
+                </nav>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">Security & Help</p>
+                <nav class="space-y-1">
+                    <button onclick="switchTab('profile')" id="tab-profile" class="w-full flex items-center px-3 py-2 text-sm rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                        <i class="fa-solid fa-user-gear w-6"></i> Update Profile
+                    </button>
+                    <button onclick="switchTab('auth-requests')" id="tab-auth-requests" class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                        <span><i class="fa-solid fa-key w-6"></i> Auth Requests</span>
+                        <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full">1</span>
+                    </button>
+                    <button onclick="switchTab('support')" id="tab-support" class="w-full flex items-center px-3 py-2 text-sm rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                        <i class="fa-solid fa-headset w-6"></i> Support & Complaints
+                    </button>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Viewport -->
+        <main class="flex-1 min-w-0">
+
+            <!-- TAB 1: FEED, PHOTO UPLOAD, LIKES & COMMENTS -->
+            <section id="sec-feed" class="space-y-6">
+                <!-- Create Post & Upload Photo -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                    <h3 class="text-sm font-semibold text-white mb-3"><i class="fa-solid fa-pen-to-square text-emerald-400 mr-2"></i>Create Post & Upload Photo</h3>
+                    <textarea rows="2" placeholder="What's on your mind?" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500"></textarea>
+                    <div class="flex items-center justify-between mt-3">
+                        <label class="cursor-pointer inline-flex items-center space-x-2 text-xs text-slate-400 hover:text-emerald-400 transition-colors bg-slate-950 px-3 py-2 rounded-lg border border-slate-800">
+                            <i class="fa-solid fa-image text-emerald-500"></i>
+                            <span>Attach Photo</span>
+                            <input type="file" accept="image/*" class="hidden">
+                        </label>
+                        <button onclick="alert('Post published!')" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-semibold rounded-lg transition-colors">
+                            Publish Post
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feed Post Item -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300">
+                            SK
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-white">Sarah Connor</h4>
+                            <p class="text-xs text-slate-500">2 hours ago</p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-slate-300">Just updated my identity protection settings. Feeling much safer online now! 🛡️</p>
+
+                    <!-- Uploaded Image Preview -->
+                    <div class="rounded-lg overflow-hidden border border-slate-800 bg-slate-950 h-48 flex items-center justify-center text-slate-600">
+                        <i class="fa-solid fa-image text-4xl"></i>
+                    </div>
+
+                    <!-- Post Actions (Like & Comment) -->
+                    <div class="flex items-center space-x-6 border-y border-slate-800/80 py-2 text-xs">
+                        <button onclick="this.classList.toggle('text-emerald-400')" class="flex items-center space-x-1.5 text-slate-400 hover:text-emerald-400 transition-colors">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                            <span>Like (12)</span>
+                        </button>
+                        <button class="flex items-center space-x-1.5 text-slate-400 hover:text-emerald-400 transition-colors">
+                            <i class="fa-solid fa-comment"></i>
+                            <span>Comment (2)</span>
+                        </button>
+                    </div>
+
+                    <!-- Comments List -->
+                    <div class="space-y-3 pt-1">
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/60 text-xs">
+                            <span class="font-semibold text-emerald-400">Alex Mercer:</span>
+                            <span class="text-slate-300 ml-1">Awesome, double check your 2FA settings as well!</span>
+                        </div>
+
+                        <!-- Add Comment Input -->
+                        <div class="flex space-x-2">
+                            <input type="text" placeholder="Write a comment..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500">
+                            <button class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg">Post</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: MANAGE FRIENDS & VIEW ACCEPTED FRIENDS -->
+            <section id="sec-friends" class="space-y-6 hidden">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Friends & Connections</h2>
+                    <p class="text-xs text-slate-400">View accepted friends and manage pending connection requests.</p>
+                </div>
+
+                <!-- Accepted Friends Grid -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <h3 class="text-sm font-semibold text-white border-b border-slate-800 pb-2">Accepted Friends (3)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 text-xs">SK</div>
+                                <div>
+                                    <p class="text-xs font-semibold text-white">Sarah Connor</p>
+                                    <p class="text-[10px] text-emerald-400">Connected</p>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('chat')" class="text-xs text-emerald-400 hover:underline"><i class="fa-solid fa-message"></i></button>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 text-xs">AM</div>
+                                <div>
+                                    <p class="text-xs font-semibold text-white">Alex Mercer</p>
+                                    <p class="text-[10px] text-emerald-400">Connected</p>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('chat')" class="text-xs text-emerald-400 hover:underline"><i class="fa-solid fa-message"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manage Pending Requests -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <h3 class="text-sm font-semibold text-white border-b border-slate-800 pb-2">Pending Friend Requests</h3>
+                    <div class="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 text-xs">DP</div>
+                            <div>
+                                <p class="text-xs font-semibold text-white">David Parker</p>
+                                <p class="text-[10px] text-slate-500">Sent 1 day ago</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="alert('Accepted!')" class="px-2.5 py-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-semibold rounded">Accept</button>
+                            <button onclick="alert('Declined!')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded">Decline</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: LIVE CHAT -->
+            <section id="sec-chat" class="space-y-4 hidden">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl flex flex-col h-[500px]">
+                    <!-- Chat Header -->
+                    <div class="p-4 border-b border-slate-800 flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-xs">
+                            SK
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-white">Sarah Connor</h4>
+                            <p class="text-[10px] text-emerald-400">● Online</p>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages Window -->
+                    <div class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/50 text-xs">
+                        <div class="flex justify-start">
+                            <div class="bg-slate-800 text-slate-200 px-3 py-2 rounded-lg max-w-xs">
+                                Hey John! Did you look into the dark web monitor setup?
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <div class="bg-emerald-500 text-slate-950 font-medium px-3 py-2 rounded-lg max-w-xs">
+                                Yes, got it enabled earlier today! Works great.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="p-3 border-t border-slate-800 flex space-x-2">
+                        <input type="text" placeholder="Type a message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500">
+                        <button class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold text-xs rounded-lg">Send</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: UPDATE PROFILE -->
+            <section id="sec-profile" class="space-y-6 hidden">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-1">Update Profile</h2>
+                    <p class="text-xs text-slate-400 mb-6">Manage your personal details and account preferences.</p>
+
+                    <form onsubmit="event.preventDefault(); alert('Profile updated!');" class="space-y-4 text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Full Name</label>
+                                <input type="text" value="John Doe" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">Username</label>
+                                <input type="text" value="johndoe" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Email</label>
+                                <input type="email" value="john@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">Mobile No</label>
+                                <input type="tel" value="+1 234 567 8900" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                            </div>
+                        </div>
+                        <button type="submit" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg">Save Profile Changes</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAB 5: AUTHENTICATION REQUESTS -->
+            <section id="sec-auth-requests" class="space-y-6 hidden">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Authentication Requests</h2>
+                        <p class="text-xs text-slate-400">View and approve pending login or authorization requests.</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between">
+                        <div class="space-y-1">
+                            <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] px-2 py-0.5 rounded font-medium">Pending 2FA</span>
+                            <p class="text-xs font-semibold text-white">New Device Login Attempt</p>
+                            <p class="text-[10px] text-slate-500">Chrome on MacOS • IP: 192.168.1.45 • 5 mins ago</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="alert('Approved!')" class="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-semibold rounded">Approve</button>
+                            <button onclick="alert('Denied!')" class="px-3 py-1.5 bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-semibold rounded">Deny</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: POST COMPLAINT, VIEW REPLY & FEEDBACK -->
+            <section id="sec-support" class="space-y-6 hidden">
+                <!-- Submit Complaint Form -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-1">Post a Complaint</h2>
+                    <p class="text-xs text-slate-400 mb-4">Report technical issues or account problems directly to admins.</p>
+                    <form onsubmit="event.preventDefault(); alert('Complaint submitted!');" class="space-y-3 text-xs">
+                        <input type="text" placeholder="Subject / Issue Title" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                        <textarea rows="3" placeholder="Describe your issue in detail..." required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white"></textarea>
+                        <button type="submit" class="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 font-semibold rounded-lg">Submit Complaint</button>
+                    </form>
+                </div>
+
+                <!-- View Admin Replies -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-3">
+                    <h3 class="text-sm font-semibold text-white">Complaint History & Replies</h3>
+                    <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 space-y-2 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="text-white font-medium">Issue #CMP-1042: Dark Web Syncing</span>
+                            <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded text-[10px]">Resolved</span>
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded border border-slate-800/80">
+                            <p class="text-emerald-400 font-semibold text-[11px] mb-1"><i class="fa-solid fa-reply mr-1"></i> Admin Response:</p>
+                            <p class="text-slate-300">We have resent the verification email to your secondary address. Please click the link to sync.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Feedback -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-1">Post Platform Feedback</h2>
+                    <p class="text-xs text-slate-400 mb-4">Let us know how we can improve your user experience.</p>
+                    <form onsubmit="event.preventDefault(); alert('Feedback submitted!');" class="space-y-3 text-xs">
+                        <div class="flex items-center space-x-2 text-amber-400 text-lg">
+                            <i class="fa-solid fa-star cursor-pointer"></i>
+                            <i class="fa-solid fa-star cursor-pointer"></i>
+                            <i class="fa-solid fa-star cursor-pointer"></i>
+                            <i class="fa-solid fa-star cursor-pointer"></i>
+                            <i class="fa-regular fa-star cursor-pointer"></i>
+                        </div>
+                        <textarea rows="2" placeholder="Share your suggestions or review..." required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white"></textarea>
+                        <button type="submit" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg">Submit Feedback</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAB 7: REGISTER & LOGIN (AUTH PREVIEW) -->
+            <section id="sec-auth" class="space-y-6 hidden">
+                <div class="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
+                    <div class="flex justify-center border-b border-slate-800 mb-6 pb-3 space-x-6 text-sm font-semibold">
+                        <button onclick="toggleAuthMode('login')" id="btn-login-tab" class="text-emerald-400 border-b-2 border-emerald-500 pb-1">Login</button>
+                        <button onclick="toggleAuthMode('register')" id="btn-register-tab" class="text-slate-400 hover:text-white pb-1">Register</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="form-login" onsubmit="event.preventDefault(); switchTab('feed');" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Email or Username</label>
+                            <input type="text" required placeholder="john@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Password</label>
+                            <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                        </div>
+                        <button type="submit" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg mt-2">Log In</button>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="form-register" onsubmit="event.preventDefault(); switchTab('feed');" class="space-y-3 text-xs hidden">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Register ID</label>
+                            <input type="text" required placeholder="REG-10982" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Username</label>
+                            <input type="text" required placeholder="johndoe" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Email</label>
+                                <input type="email" required placeholder="john@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">Mobile No</label>
+                                <input type="tel" required placeholder="+123456789" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Password</label>
+                                <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">Confirm Password</label>
+                                <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                            </div>
+                        </div>
+                        <div class="flex items-center pt-1">
+                            <input type="checkbox" required id="reg-terms" class="rounded bg-slate-950 border-slate-800 text-emerald-500">
+                            <label for="reg-terms" class="ml-2 text-[11px] text-slate-400">I agree to Terms & Privacy Policy</label>
+                        </div>
+                        <button type="submit" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg mt-2">Register</button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Script to Switch Tabs & Modes -->
+    <script>
+        const tabs = ['feed', 'friends', 'chat', 'profile', 'auth-requests', 'support', 'auth'];
+
+        function switchTab(tabName) {
+            tabs.forEach(t => {
+                const sec = document.getElementById(`sec-${t}`);
+                const btn = document.getElementById(`tab-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (btn) {
+                    btn.classList.remove('bg-emerald-500/10', 'text-emerald-400', 'border', 'border-emerald-500/20');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+
+            const activeSec = document.getElementById(`sec-${tabName}`);
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border', 'border-emerald-500/20');
+            }
+        }
+
+        function toggleAuthMode(mode) {
+            const loginForm = document.getElementById('form-login');
+            const registerForm = document.getElementById('form-register');
+            const loginBtn = document.getElementById('btn-login-tab');
+            const registerBtn = document.getElementById('btn-register-tab');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginBtn.className = "text-emerald-400 border-b-2 border-emerald-500 pb-1";
+                registerBtn.className = "text-slate-400 hover:text-white pb-1";
+            } else {
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                registerBtn.className = "text-emerald-400 border-b-2 border-emerald-500 pb-1";
+                loginBtn.className = "text-slate-400 hover:text-white pb-1";
+            }
+        }
+    </script>
+</body>
+</html>

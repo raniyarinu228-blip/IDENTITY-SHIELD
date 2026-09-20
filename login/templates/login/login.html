@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+
+            /* Colorful background */
+            background:
+                radial-gradient(circle at 10% 15%, #b9d9ff 0%, transparent 25%),
+                radial-gradient(circle at 90% 15%, #ffc4e5 0%, transparent 25%),
+                radial-gradient(circle at 15% 90%, #e8b4ff 0%, transparent 25%),
+                radial-gradient(circle at 90% 85%, #b7dcff 0%, transparent 25%),
+                linear-gradient(135deg, #dce8ff, #f9e3ff);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 40px 20px;
+
+            color: #26356f;
+        }
+
+        /* Decorative background shapes */
+
+        body::before {
+            content: "";
+            position: fixed;
+            width: 250px;
+            height: 250px;
+
+            background: #a8c7ff;
+            border-radius: 50%;
+
+            top: -100px;
+            left: -100px;
+
+            opacity: 0.5;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 250px;
+            height: 250px;
+
+            background: #ffb6dd;
+            border-radius: 50%;
+
+            bottom: -120px;
+            right: -80px;
+
+            opacity: 0.5;
+        }
+
+        /* Main registration card */
+
+        .register-card {
+            position: relative;
+            z-index: 2;
+
+            width: 100%;
+            max-width: 770px;
+
+            background: rgba(255, 255, 255, 0.92);
+
+            padding: 45px 55px;
+
+            border-radius: 28px;
+
+            box-shadow:
+                0 20px 60px rgba(70, 60, 150, 0.18),
+                0 5px 20px rgba(0, 0, 0, 0.08);
+
+            backdrop-filter: blur(10px);
+        }
+
+        /* Heading */
+
+        .heading {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .heading-icon {
+            width: 58px;
+            height: 58px;
+
+            margin: 0 auto 8px;
+
+            border-radius: 50%;
+
+            background: #e7e8ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 28px;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #5145d8;
+
+            margin-bottom: 8px;
+
+            font-weight: 800;
+        }
+
+        .subtitle {
+            color: #7180b8;
+            font-size: 17px;
+        }
+
+        /* Form */
+
+        .form-group {
+            margin-bottom: 19px;
+        }
+
+        label {
+            display: block;
+
+            font-size: 17px;
+            font-weight: 700;
+
+            color: #26356f;
+
+            margin-bottom: 8px;
+        }
+
+        /* Input box */
+
+        .input-box {
+            height: 56px;
+
+            display: flex;
+            align-items: center;
+
+            border: 2px solid #cbd5ff;
+
+            border-radius: 12px;
+
+            background: #f9faff;
+
+            transition: 0.3s;
+        }
+
+        .input-box:hover {
+            border-color: #9daaff;
+        }
+
+        .input-box:focus-within {
+            border-color: #6758e8;
+
+            box-shadow:
+                0 0 0 4px rgba(103, 88, 232, 0.12);
+        }
+
+        .input-icon {
+            width: 58px;
+
+            height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 22px;
+
+            color: #5145d8;
+
+            border-right: 1px solid #e0e4ff;
+        }
+
+        input {
+            flex: 1;
+
+            height: 100%;
+
+            border: none;
+            outline: none;
+
+            background: transparent;
+
+            padding: 0 16px;
+
+            font-size: 16px;
+
+            color: #26356f;
+        }
+
+        input::placeholder {
+            color: #91a4cf;
+        }
+
+        /* Password eye */
+
+        .eye {
+            padding: 0 18px;
+
+            font-size: 21px;
+
+            color: #3949ab;
+
+            cursor: pointer;
+        }
+
+        /* Checkbox */
+
+        .terms {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            margin-top: 25px;
+            margin-bottom: 25px;
+
+            color: #34447e;
+
+            font-size: 16px;
+        }
+
+        .terms input {
+            width: 20px;
+            height: 20px;
+
+            flex: none;
+
+            accent-color: #6656e8;
+
+            cursor: pointer;
+        }
+
+        .terms label {
+            margin: 0;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        /* Register button */
+
+        .register-btn {
+            width: 100%;
+
+            height: 58px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #5145df,
+                    #7551e9,
+                    #d34be2
+                );
+
+            color: white;
+
+            font-size: 19px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 20px rgba(103, 76, 224, 0.3);
+
+            transition: 0.3s;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 25px rgba(103, 76, 224, 0.4);
+        }
+
+        .register-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Login section */
+
+        .login-section {
+            margin-top: 28px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #7885b4;
+
+            font-size: 16px;
+        }
+
+        .login-link {
+            color: #5145d8;
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 600px) {
+
+            .register-card {
+                padding: 30px 22px;
+
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            .input-box {
+                height: 52px;
+            }
+
+            .input-icon {
+                width: 50px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <div class="register-card">
+
+        <!-- Heading -->
+
+        <div class="heading">
+
+            <div class="heading-icon">
+                👤
+            </div>
+
+            <h1>Register </h1>
+
+            <p class="subtitle">
+                Create your account and get started
+            </p>
+
+        </div>
+
+
+        <form>
+
+            <!-- Register ID -->
+
+            <div class="form-group">
+
+                <label for="registerId">
+                    Register ID
+                </label>
+
+                <div class="input-box">
+
+                    <div class="input-icon">
+                        👤
+                    </div>
+
+                    <input
+                        type="text"
+                        id="registerId"
+                        name="registerId"
+                        placeholder="Enter register ID"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Username -->
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <div class="input-box">
+
+                    <div class="input-icon">
+                        👤
+                    </div>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter username"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Email -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <div class="input-box">
+
+                    <div class="input-icon">
+                        ✉
+                    </div>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Mobile -->
+
+            <div class="form-group">
+
+                <label for="mobile">
+                    Mobile No
+                </label>
+
+                <div class="input-box">
+
+                    <div class="input-icon">
+                        📱
+                    </div>
+
+                    <input
+                        type="tel"
+                        id="mobile"
+                        name="mobile"
+                        placeholder="Enter mobile number"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Password -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="input-box">
+
+                    <div class="input-icon">
+                        🔒
+                    </div>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required
+                    >
+
+                    <span class="eye"
+                          onclick="showPassword('password', this)">
+                        👁
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Confirm Password -->
+
+            <div class="form-group">
+
+                <label for="confirmPassword">
+                    Confirm Password
+                </label>
+
+                <div class="input-box">
+
+                    <div class="input-icon">
+                        🔒
+                    </div>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Confirm password"
+                        required
+                    >
+
+                    <span class="eye"
+                          onclick="showPassword('confirmPassword', this)">
+                        👁
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Terms -->
+
+            <div class="terms">
+
+                <input
+                    type="checkbox"
+                    id="terms"
+                    name="terms"
+                    required
+                >
+
+                <label for="terms">
+                    I agree to the terms & privacy policy
+                </label>
+
+            </div>
+
+
+            <!-- Register Button -->
+
+            <button
+                type="submit"
+                class="register-btn">
+
+                Register &nbsp; →
+
+            </button>
+
+
+            <!-- Login -->
+
+            <div class="login-section">
+
+                <span>
+                    Already have an account?
+                </span>
+
+                <a href="#" class="login-link">
+                    Login
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <script>
+
+        function showPassword(id, icon) {
+
+            const password =
+                document.getElementById(id);
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+                icon.textContent = "🙈";
+
+            } else {
+
+                password.type = "password";
+
+                icon.textContent = "👁";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

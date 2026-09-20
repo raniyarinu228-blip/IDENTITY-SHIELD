@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Shield - Technical ML & Vision Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-300 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-microchip text-emerald-500 text-2xl"></i>
+                <span class="text-white text-lg font-bold tracking-wider">Identity Shield <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded ml-1">ML & Vision Studio</span></span>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <span class="text-xs text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1 rounded-full flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span> Pipeline Ready
+                </span>
+                <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-xs">
+                    ENG
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 flex-shrink-0">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 sticky top-20 space-y-4">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-2">Pipeline Workflows</p>
+                <nav class="space-y-1">
+                    <button onclick="switchTab('ml-pipeline')" id="tab-ml-pipeline" class="w-full flex items-center px-3 py-2.5 text-xs font-medium rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 transition-all">
+                        <i class="fa-solid fa-brain w-5 text-emerald-400"></i> Model Training & ML
+                    </button>
+                    <button onclick="switchTab('vision-periocular')" id="tab-vision-periocular" class="w-full flex items-center px-3 py-2.5 text-xs font-medium rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                        <i class="fa-solid fa-eye w-5"></i> Periocular & Distance
+                    </button>
+                    <button onclick="switchTab('facial-privacy')" id="tab-facial-privacy" class="w-full flex items-center px-3 py-2.5 text-xs font-medium rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                        <i class="fa-solid fa-user-shield w-5"></i> Face Processing & Privacy
+                    </button>
+                    <button onclick="switchTab('security-auth')" id="tab-security-auth" class="w-full flex items-center px-3 py-2.5 text-xs font-medium rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                        <i class="fa-solid fa-lock w-5"></i> Security Authentication
+                    </button>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Viewport -->
+        <main class="flex-1 min-w-0">
+
+            <!-- WORKFLOW 1: DATA PREPARATION & ML PIPELINE -->
+            <section id="sec-ml-pipeline" class="space-y-6">
+                <div class="border-b border-slate-800 pb-3">
+                    <h2 class="text-xl font-bold text-white">Machine Learning & Model Pipeline</h2>
+                    <p class="text-xs text-slate-400">Preprocess raw datasets, train neural network models, apply pattern matching, and export predictions.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Step 1: Data Preparation -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                        <h3 class="text-sm font-semibold text-white flex items-center">
+                            <i class="fa-solid fa-database text-emerald-400 mr-2"></i> 1. Preprocess & Prepare Dataset
+                        </h3>
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Select Raw Data Source</label>
+                                <input type="file" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-300">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="alert('Dataset Cleaned & Normalized!')" class="py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-lg">Preprocess Data</button>
+                                <button onclick="alert('Dataset split into Train/Test subsets!')" class="py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-medium rounded-lg">Prepare Dataset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Train & Save Model -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                        <h3 class="text-sm font-semibold text-white flex items-center">
+                            <i class="fa-solid fa-gears text-emerald-400 mr-2"></i> 2. Model Training & Export
+                        </h3>
+                        <div class="space-y-3 text-xs">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Epochs</label>
+                                    <input type="number" value="50" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Learning Rate</label>
+                                    <input type="text" value="0.001" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pt-1">
+                                <button onclick="alert('Model training initialized!')" class="py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg">Train Model</button>
+                                <button onclick="alert('Model weights saved (.onnx/.h5)!')" class="py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-lg">Save Trained Model</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Input Data & ML Inference -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <h3 class="text-sm font-semibold text-white flex items-center">
+                        <i class="fa-solid fa-wand-magic-sparkles text-emerald-400 mr-2"></i> 3. Inference, Pattern Matching & Output
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="space-y-2">
+                            <label class="block text-slate-400">Input Inference Data</label>
+                            <textarea rows="3" placeholder="Paste JSON or CSV data strings here..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white focus:outline-none focus:border-emerald-500"></textarea>
+                            <button onclick="alert('Data Read Successfully!')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-lg">Read Input Data</button>
+                        </div>
+
+                        <div class="space-y-2 flex flex-col justify-between">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Pattern Matching Method</label>
+                                <select class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white">
+                                    <option>Euclidean Distance Metric</option>
+                                    <option>Cosine Similarity Vector</option>
+                                    <option>Random Forest Feature Classifier</option>
+                                </select>
+                            </div>
+                            <button onclick="alert('Machine Learning Applied & Patterns Matched!')" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg">Apply ML & Match Pattern</button>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-slate-400">Generated Model Output</label>
+                            <div class="bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-300 font-mono text-[11px] h-20 overflow-y-auto">
+                                { "status": "Matched", "confidence": 0.984, "pattern_id": "PTN-88412" }
+                            </div>
+                            <button onclick="alert('Output Exported!')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-lg">Generate Output File</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WORKFLOW 2: PERIOCULAR & DISTANCE CALCULATION -->
+            <section id="sec-vision-periocular" class="space-y-6 hidden">
+                <div class="border-b border-slate-800 pb-3">
+                    <h2 class="text-xl font-bold text-white">Periocular Feature Extraction & Distance Logging</h2>
+                    <p class="text-xs text-slate-400">Analyze ocular regions, calculate spatial distances between landmarks, and log sensor telemetry.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Upload & Extract Ocular Region -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                        <h3 class="text-sm font-semibold text-white flex items-center">
+                            <i class="fa-solid fa-camera text-emerald-400 mr-2"></i> Security Picture & Ocular Processing
+                        </h3>
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Upload Security Picture</label>
+                                <input type="file" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-300">
+                            </div>
+                            <div class="border border-dashed border-slate-800 bg-slate-950 rounded-lg h-32 flex items-center justify-center text-slate-600">
+                                <span class="text-xs"><i class="fa-solid fa-eye text-2xl mb-1 block text-center"></i> Periocular Region Preview</span>
+                            </div>
+                            <button onclick="alert('Periocular region extracted successfully!')" class="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg">Extract Periocular Features</button>
+                        </div>
+                    </div>
+
+                    <!-- Distance Metric & Telemetry -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                        <h3 class="text-sm font-semibold text-white flex items-center">
+                            <i class="fa-solid fa-ruler-combined text-emerald-400 mr-2"></i> Spatial Distance Telemetry
+                        </h3>
+                        <div class="space-y-3 text-xs">
+                            <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 space-y-2">
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Interpupillary Distance (IPD):</span>
+                                    <strong class="text-white">64.2 mm</strong>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Avg Periocular Margin:</span>
+                                    <strong class="text-white">12.8 mm</strong>
+                                </div>
+                            </div>
+                            <button onclick="alert('Average Distance Calculated!')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-lg">Calculate Average Distance</button>
+                            <button onclick="alert('Spatial distances recorded in telemetry logs!')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-lg">Log Distance Data</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WORKFLOW 3: FACIAL PROCESSING & PRIVACY CLEARANCE -->
+            <section id="sec-facial-privacy" class="space-y-6 hidden">
+                <div class="border-b border-slate-800 pb-3">
+                    <h2 class="text-xl font-bold text-white">Facial Detection & Privacy Control</h2>
+                    <p class="text-xs text-slate-400">Detect faces, extract landmark vectors, apply dynamic blurring, and request clearance for unblurring.</p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        
+                        <!-- Step A: Detection -->
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 space-y-3">
+                            <h4 class="font-semibold text-white border-b border-slate-800 pb-2"><i class="fa-solid fa-user-check text-emerald-400 mr-1"></i> Detection & Feature Extraction</h4>
+                            <p class="text-slate-400">Locate faces and map 68 facial landmark coordinates.</p>
+                            <button onclick="alert('Face Detected!')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-lg">Detect Face</button>
+                            <button onclick="alert('Facial Features Extracted!')" class="w-full py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-medium rounded-lg">Extract Facial Features</button>
+                        </div>
+
+                        <!-- Step B: Anonymization -->
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 space-y-3">
+                            <h4 class="font-semibold text-white border-b border-slate-800 pb-2"><i class="fa-solid fa-eye-slash text-amber-400 mr-1"></i> Anonymization & Blurring</h4>
+                            <p class="text-slate-400">Apply Gaussian spatial filter to protect subject privacy.</p>
+                            <div class="h-16 bg-slate-900 border border-slate-800 rounded flex items-center justify-center text-slate-600 font-mono">
+                                [ BLURRED PREVIEW ]
+                            </div>
+                            <button onclick="alert('Face Privacy Blur Applied!')" class="w-full py-2 bg-amber-500/20 text-amber-400 border border-amber-500/30 font-medium rounded-lg">Blur Face</button>
+                        </div>
+
+                        <!-- Step C: Unblur Authorization -->
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 space-y-3">
+                            <h4 class="font-semibold text-white border-b border-slate-800 pb-2"><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Permission & Output</h4>
+                            <p class="text-slate-400">Request elevated admin permission to restore original face detail.</p>
+                            <button onclick="alert('Permission Granted! Face Cleared.')" class="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg">Clear Face with Permission</button>
+                            <button onclick="alert('Processed Face Output Generated!')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-lg">Generate Output</button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- WORKFLOW 4: SECURITY AUTHENTICATION -->
+            <section id="sec-security-auth" class="space-y-6 hidden">
+                <div class="border-b border-slate-800 pb-3">
+                    <h2 class="text-xl font-bold text-white">System Security Authentication</h2>
+                    <p class="text-xs text-slate-400">Verify identity matching tokens before executing privileged pipeline operations.</p>
+                </div>
+
+                <div class="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl my-4">
+                    <div class="text-center mb-6">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-emerald-500/10 rounded-xl mb-2 border border-emerald-500/20">
+                            <i class="fa-solid fa-fingerprint text-emerald-500 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Biometric & Identity Auth</h3>
+                        <p class="text-slate-400 text-xs">Verify credentials for system execution</p>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); alert('Authentication Successful!');" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Developer / Tech Token ID</label>
+                            <input type="text" value="DEV-9982-X" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Authentication Key</label>
+                            <input type="password" value="••••••••••••" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-white">
+                        </div>
+                        <button type="submit" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg shadow-lg shadow-emerald-500/20">
+                            Run Authentication
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Navigation Tab Switcher Script -->
+    <script>
+        const tabs = ['ml-pipeline', 'vision-periocular', 'facial-privacy', 'security-auth'];
+
+        function switchTab(tabName) {
+            tabs.forEach(t => {
+                const sec = document.getElementById(`sec-${t}`);
+                const btn = document.getElementById(`tab-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (btn) {
+                    btn.classList.remove('bg-emerald-500/10', 'text-emerald-400', 'border', 'border-emerald-500/20');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+
+            const activeSec = document.getElementById(`sec-${tabName}`);
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border', 'border-emerald-500/20');
+            }
+        }
+    </script>
+</body>
+</html>

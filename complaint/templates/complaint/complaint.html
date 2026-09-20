@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Complaint</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            margin-top: 5px;
+        }
+
+        .buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reset {
+            background-color: #ccc;
+        }
+
+        .submit {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Post Complaint</h2>
+
+        <form>
+
+            <!-- Complaint ID -->
+            <div class="form-group">
+                <label for="complaintId">Complaint ID:</label>
+                <input type="text"
+                       id="complaintId"
+                       name="complaintId"
+                       value="Auto Generated"
+                       readonly>
+            </div>
+
+            <!-- Incident Date -->
+            <div class="form-group">
+                <label for="incidentDate">Incident Date:</label>
+                <input type="date"
+                       id="incidentDate"
+                       name="incidentDate"
+                       required>
+            </div>
+
+            <!-- Incident Time -->
+            <div class="form-group">
+                <label for="incidentTime">Incident Time:</label>
+                <input type="time"
+                       id="incidentTime"
+                       name="incidentTime"
+                       required>
+            </div>
+
+            <!-- Platform -->
+            <div class="form-group">
+                <label for="platform">Platform:</label>
+
+                <select id="platform" name="platform" required>
+                    <option value="">Select Platform</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="x">X</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Offender Username -->
+            <div class="form-group">
+                <label for="offenderUsername">
+                    Offender Username:
+                </label>
+
+                <input type="text"
+                       id="offenderUsername"
+                       name="offenderUsername"
+                       placeholder="Enter offender username"
+                       required>
+            </div>
+
+            <!-- Complaint Type -->
+            <div class="form-group">
+                <label for="complaintType">
+                    Complaint Type:
+                </label>
+
+                <select id="complaintType"
+                        name="complaintType"
+                        required>
+
+                    <option value="">Select Type</option>
+                    <option value="impersonation">Impersonation</option>
+                    <option value="cyberbullying">Cyberbullying</option>
+                    <option value="harassment">Harassment</option>
+                    <option value="fraud">Fraud</option>
+                    <option value="fake-account">Fake Account</option>
+                    <option value="identity-theft">Identity Theft</option>
+                    <option value="other">Other</option>
+
+                </select>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">
+                    Description:
+                </label>
+
+                <textarea id="description"
+                          name="description"
+                          placeholder="Describe the incident..."
+                          required></textarea>
+            </div>
+
+            <!-- Upload Evidence -->
+            <div class="form-group">
+                <label for="evidence">
+                    Upload Evidence:
+                </label>
+
+                <input type="file"
+                       id="evidence"
+                       name="evidence"
+                       accept="image/*,.pdf,.doc,.docx">
+            </div>
+
+            <!-- Buttons -->
+            <div class="buttons">
+
+                <button type="reset" class="reset">
+                    Reset
+                </button>
+
+                <button type="submit" class="submit">
+                    Submit
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+</html>
