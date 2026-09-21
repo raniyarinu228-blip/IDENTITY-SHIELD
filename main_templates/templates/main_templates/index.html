@@ -1,98 +1,464 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Identity Shield Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identity Shield - Zero-Trust Identity Protection Platform</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-dark: #070a13;
+      --bg-card: #111827;
+      --accent-blue: #38bdf8;
+      --accent-indigo: #6366f1;
+      --accent-green: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-glow: rgba(56, 189, 248, 0.2);
+      --border-subtle: #1e293b;
+      --radius-lg: 20px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(56, 189, 248, 0.12) 0%, transparent 45%);
+    }
+
+    /* Navbar Header */
+    header {
+      width: 100%;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.2));
+      border: 1px solid var(--accent-blue);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-blue);
+      font-size: 1.4rem;
+      box-shadow: 0 0 15px var(--border-glow);
+    }
+
+    .brand-text h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    .brand-text span {
+      font-size: 0.72rem;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-nav-login {
+      padding: 10px 20px;
+      color: var(--text-main);
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav-login:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .btn-nav-signup {
+      padding: 10px 22px;
+      color: #070a13;
+      background: linear-gradient(135deg, var(--accent-blue), #0284c7);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav-signup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Main Landing Section */
+    .hero-section {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 30px;
+      color: var(--accent-green);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+
+    .hero-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-description {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 36px;
+      max-width: 520px;
+    }
+
+    /* Hero CTA Box */
+    .hero-cta-box {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .btn-hero-primary {
+      flex: 1;
+      padding: 16px 28px;
+      background: linear-gradient(135deg, var(--accent-blue), #0284c7);
+      color: #070a13;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 25px rgba(56, 189, 248, 0.3);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-hero-secondary {
+      flex: 1;
+      padding: 16px 28px;
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-hero-secondary:hover {
+      border-color: var(--accent-blue);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Live Security Telemetry Visual Card */
+    .visual-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      position: relative;
+    }
+
+    .card-header-badge {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .security-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .metric-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+
+    .metric-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .metric-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .feature-item i {
+      color: var(--accent-green);
+      font-size: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 24px 40px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 900px) {
+      .hero-section {
+        grid-template-columns: 1fr;
+        padding: 40px 20px;
+        gap: 40px;
+      }
+
+      .hero-title {
+        font-size: 2.4rem;
+      }
+
+      header {
+        padding: 16px 20px;
+      }
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-300 font-sans flex h-screen overflow-hidden">
+<body>
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col">
-        <div class="h-16 flex items-center px-6 border-b border-slate-800">
-            <i class="fa-solid fa-shield-halved text-emerald-500 text-2xl mr-3"></i>
-            <span class="text-white text-lg font-bold tracking-wider">Identity Shield</span>
+  <!-- Top Navigation Header -->
+  <header>
+    <a href="#" class="brand">
+      <div class="brand-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <div class="brand-text">
+        <h2>Identity Shield</h2>
+        <span>Zero-Trust Portal</span>
+      </div>
+    </a>
+
+    <!-- Primary Interaction Buttons -->
+    <div class="nav-actions">
+      <a href="/login/login/" class="btn-nav-login">
+        <i class="fa-solid fa-right-to-bracket"></i> Login
+      </a>
+      <a href="/user/register/" class="btn-nav-signup">
+        <i class="fa-solid fa-user-plus"></i> Sign Up
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Main Landing Area -->
+  <main class="hero-section">
+    
+    <!-- Hero Left Column -->
+    <div class="hero-content">
+      <div class="status-pill">
+        <span class="status-dot"></span> 24/7 Identity Shield System Active
+      </div>
+
+      <h1 class="hero-title">
+        Protect Your <span class="gradient-text">Digital Identity</span> From Threats
+      </h1>
+
+      <p class="hero-description">
+        Identity Shield provides AI-powered breach monitoring, automated cyber incident reporting, and real-time identity protection.
+      </p>
+
+      <!-- Action Box for User Interaction -->
+      <div class="hero-cta-box">
+        <a href="/user/register/" class="btn-hero-primary">
+          <i class="fa-solid fa-user-shield"></i> Get Started
+        </a>
+        <a href="/login/login/" class="btn-hero-secondary">
+          <i class="fa-solid fa-lock"></i> Access Portal
+        </a>
+      </div>
+    </div>
+
+    <!-- Hero Right Column: Interactive Dashboard Preview Card -->
+    <div class="visual-card">
+      <div class="card-header-badge">
+        <div class="card-title">
+          <i class="fa-solid fa-chart-line" style="color: var(--accent-blue);"></i> Live Telemetry
         </div>
-        <nav class="flex-1 px-4 py-6 space-y-2">
-            <a href="#" class="flex items-center px-4 py-3 bg-emerald-500/10 text-emerald-400 rounded-lg">
-                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
-            </a>
-            <a href="#" class="flex items-center px-4 py-3 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                <i class="fa-solid fa-triangle-exclamation w-6"></i> Threat Alerts
-            </a>
-            <a href="#" class="flex items-center px-4 py-3 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                <i class="fa-solid fa-globe w-6"></i> Dark Web Monitor
-            </a>
-            <a href="#" class="flex items-center px-4 py-3 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                <i class="fa-solid fa-gear w-6"></i> Settings
-            </a>
-        </nav>
-    </aside>
+        <span style="font-size: 0.75rem; color: var(--accent-green); background: rgba(16,185,129,0.1); padding: 4px 10px; border-radius: 12px;">
+          Shield Protected
+        </span>
+      </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col overflow-y-auto">
-        
-        <!-- Top Header -->
-        <header class="h-16 flex items-center justify-between px-8 bg-slate-900/50 border-b border-slate-800">
-            <h1 class="text-xl font-semibold text-white">Overview</h1>
-            <div class="flex items-center space-x-4">
-                <button class="relative p-2 text-slate-400 hover:text-white transition-colors">
-                    <i class="fa-solid fa-bell"></i>
-                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
-                <div class="w-8 h-8 bg-slate-700 rounded-full border border-slate-600"></div>
-            </div>
-        </header>
-
-        <!-- Dashboard Widgets -->
-        <div class="p-8 space-y-6">
-            
-            <!-- Main Status Card -->
-            <div class="bg-gradient-to-r from-emerald-900/50 to-slate-900 border border-emerald-500/30 rounded-2xl p-6 flex items-center justify-between shadow-lg">
-                <div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Protection is Active</h2>
-                    <p class="text-emerald-400/80">Your identity and linked accounts are currently secure.</p>
-                </div>
-                <div class="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
-                    <i class="fa-solid fa-check text-2xl text-emerald-400"></i>
-                </div>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-slate-400 font-medium">Scanned Records</h3>
-                        <i class="fa-solid fa-database text-blue-400"></i>
-                    </div>
-                    <p class="text-3xl font-bold text-white">14.2M</p>
-                    <p class="text-sm text-slate-500 mt-2">Past 30 days</p>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-slate-400 font-medium">Data Leaks Found</h3>
-                        <i class="fa-solid fa-user-secret text-red-400"></i>
-                    </div>
-                    <p class="text-3xl font-bold text-white">0</p>
-                    <p class="text-sm text-emerald-400 mt-2">No action required</p>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-slate-400 font-medium">Active Monitors</h3>
-                        <i class="fa-solid fa-eye text-purple-400"></i>
-                    </div>
-                    <p class="text-3xl font-bold text-white">5</p>
-                    <p class="text-sm text-slate-500 mt-2">Emails, SSN, Phone</p>
-                </div>
-
-            </div>
+      <div class="security-metric-grid">
+        <div class="metric-item">
+          <div class="metric-label">Identity Health</div>
+          <div class="metric-value">98.4%</div>
         </div>
-    </main>
+        <div class="metric-item">
+          <div class="metric-label">Active Monitoring</div>
+          <div class="metric-value" style="color: var(--accent-green);">Protected</div>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <i class="fa-solid fa-circle-check"></i> Multi-Factor & Passkey Authentication
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-circle-check"></i> Instant Cyber Incident Complaint Filing
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-circle-check"></i> Real-time Identity Leak Alerts
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Identity Shield System. Academic College Project Implementation.</p>
+  </footer>
+
+  <script>
+    // Handle Navigation Button Clicks
+    function handleNavigation(target) {
+      if (target === 'login') {
+        alert("Redirecting to Identity Shield Login Gateway...");
+      } else if (target === 'signup') {
+        alert("Redirecting to Identity Shield Account Registration...");
+      }
+    }
+  </script>
 
 </body>
 </html>

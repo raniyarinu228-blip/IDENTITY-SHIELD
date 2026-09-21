@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Identity Shield - Secure Portal Login</title>
+  <title>Identity Shield - Register Account</title>
   <!-- Google Fonts & Font Awesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,6 +17,7 @@
       --accent-shield: #38bdf8;
       --accent-hover: #0284c7;
       --accent-green: #10b981;
+      --accent-red: #ef4444;
       --border-color: #334155;
       --input-bg: #0f172a;
       --radius-lg: 16px;
@@ -38,12 +39,12 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 30px 20px;
     }
 
     .container {
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
     }
 
     /* Header Section */
@@ -89,7 +90,7 @@
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .form-group label {
@@ -99,7 +100,7 @@
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .input-wrapper {
@@ -114,8 +115,7 @@
       color: var(--text-muted);
     }
 
-    .input-wrapper input,
-    .input-wrapper select {
+    .input-wrapper input {
       width: 100%;
       padding: 12px 42px 12px 42px;
       background-color: var(--input-bg);
@@ -125,24 +125,16 @@
       font-size: 0.95rem;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
-      appearance: none;
     }
 
-    .input-wrapper select {
-      cursor: pointer;
+    .input-wrapper input:read-only {
+      color: var(--accent-shield);
+      font-weight: 600;
+      cursor: not-allowed;
+      border-style: dashed;
     }
 
-    .input-wrapper i.arrow-icon {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      pointer-events: none;
-    }
-
-    .input-wrapper input:focus,
-    .input-wrapper select:focus {
+    .input-wrapper input:focus {
       border-color: var(--accent-shield);
       box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
     }
@@ -156,42 +148,36 @@
       cursor: pointer;
     }
 
-    /* Form Options Row */
-    .form-options {
+    /* Terms and Conditions Row */
+    .terms-group {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 22px;
       font-size: 0.85rem;
-      margin-bottom: 24px;
-    }
-
-    .remember-me {
-      display: flex;
-      align-items: center;
-      gap: 8px;
       color: var(--text-muted);
-      cursor: pointer;
     }
 
-    .remember-me input {
+    .terms-group input {
       accent-color: var(--accent-shield);
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
       cursor: pointer;
     }
 
-    .forgot-link {
+    .terms-group a {
       color: var(--accent-shield);
       text-decoration: none;
-      font-weight: 500;
     }
 
-    .forgot-link:hover {
+    .terms-group a:hover {
       text-decoration: underline;
     }
 
-    /* Login Button */
-    .btn-login {
+    /* Register Button */
+    .btn-register {
       width: 100%;
       padding: 12px;
       background-color: var(--accent-shield);
@@ -208,34 +194,15 @@
       transition: background-color 0.2s, transform 0.1s;
     }
 
-    .btn-login:hover {
+    .btn-register:hover {
       background-color: var(--accent-hover);
     }
 
-    .btn-login:active {
+    .btn-register:active {
       transform: scale(0.99);
     }
 
-    /* Footer Register Link */
-    .card-footer {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-    }
-
-    .btn-register {
-      display: inline-block;
-      margin-left: 6px;
-      color: var(--accent-shield);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .btn-register:hover {
-      text-decoration: underline;
-    }
-
+    /* Security Status Badge */
     .security-badge {
       display: flex;
       align-items: center;
@@ -250,6 +217,33 @@
       font-size: 0.8rem;
       font-weight: 500;
     }
+
+    /* Footer Login Link */
+    .card-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .btn-login {
+      display: inline-block;
+      margin-left: 6px;
+      color: var(--accent-shield);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .btn-login:hover {
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      color: var(--accent-red);
+      font-size: 0.78rem;
+      margin-top: 4px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -258,22 +252,49 @@
     <!-- Header -->
     <div class="brand-header">
       <div class="brand-icon">
-        <i class="fa-solid fa-shield-halved"></i>
+        <i class="fa-solid fa-user-shield"></i>
       </div>
       <h1>Identity Shield</h1>
-      <p>Secure Access Authentication Portal</p>
+      <p>Create Your Secure Identity Profile</p>
     </div>
 
-    <!-- Login Card -->
+    <!-- Registration Card -->
     <div class="card">
-      <form id="loginForm" onsubmit="handleLogin(event)">
+      <form id="registerForm" onsubmit="handleRegistration(event)">
         
-        <!-- Email / Username Field -->
+        <!-- Register ID Field (Auto-Generated Unique Identifier) -->
         <div class="form-group">
-          <label for="identity">Email or Username</label>
+          <label for="registerId">Register ID</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-id-card left-icon"></i>
+            <input type="text" id="registerId" value="IS-2026-8942" readonly title="Auto-generated unique Shield ID">
+          </div>
+        </div>
+
+        <!-- Username Field -->
+        <div class="form-group">
+          <label for="username">Username</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-user left-icon"></i>
-            <input type="text" id="identity" placeholder="Enter email or username" required>
+            <input type="text" id="username" placeholder="Enter username" required>
+          </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-envelope left-icon"></i>
+            <input type="email" id="email" placeholder="name@example.com" required>
+          </div>
+        </div>
+
+        <!-- Mobile Number Field -->
+        <div class="form-group">
+          <label for="mobile">Mobile No.</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-phone left-icon"></i>
+            <input type="tel" id="mobile" placeholder="+1 234 567 8900" pattern="[0-9+\s\-]{8,15}" required>
           </div>
         </div>
 
@@ -282,60 +303,55 @@
           <label for="password">Password</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-lock left-icon"></i>
-            <input type="password" id="password" placeholder="Enter password" required>
-            <i class="fa-solid fa-eye toggle-pwd" id="pwdToggle" onclick="togglePasswordVisibility()"></i>
+            <input type="password" id="password" placeholder="Create password" required>
+            <i class="fa-solid fa-eye toggle-pwd" id="pwdToggle" onclick="togglePassword('password', 'pwdToggle')"></i>
           </div>
         </div>
 
-        <!-- User Type Field -->
+        <!-- Confirm Password Field -->
         <div class="form-group">
-          <label for="userType">User Type</label>
+          <label for="confirmPassword">Confirm Password</label>
           <div class="input-wrapper">
-            <i class="fa-solid fa-users-gear left-icon"></i>
-            <select id="userType" required>
-              <option value="" disabled selected>Select user role</option>
-              <option value="student">Student / Regular User</option>
-              <option value="admin">Administrator</option>
-              <option value="security_officer">Security Officer</option>
-            </select>
-            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+            <i class="fa-solid fa-shield-halved left-icon"></i>
+            <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+            <i class="fa-solid fa-eye toggle-pwd" id="confirmPwdToggle" onclick="togglePassword('confirmPassword', 'confirmPwdToggle')"></i>
           </div>
+          <span class="error-msg" id="passwordMismatch">Passwords do not match!</span>
         </div>
 
-        <!-- Remember Me & Forgot Password Row -->
-        <div class="form-options">
-          <label class="remember-me">
-            <input type="checkbox" id="rememberMe">
-            <span>Remember me</span>
+        <!-- Terms and Conditions Checkbox -->
+        <div class="terms-group">
+          <input type="checkbox" id="terms" required>
+          <label for="terms">
+            I agree to the <a href="/login/login/" onclick="showTerms(event)">Terms and Conditions</a> and Privacy Policy.
           </label>
-          <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Forgot Password?</a>
         </div>
 
-        <!-- Login Button -->
-        <button type="submit" class="btn-login">
-          <i class="fa-solid fa-right-to-bracket"></i> Login
+        <!-- Register Button -->
+        <button type="submit" class="btn-register">
+          <i class="fa-solid fa-user-plus"></i> Register
         </button>
 
       </form>
 
       <!-- Security Status Badge -->
       <div class="security-badge">
-        <i class="fa-solid fa-circle-check"></i> Identity Shield Protection Active
+        <i class="fa-solid fa-shield-cat"></i> Zero-Trust Encrypted Identity Creation
       </div>
     </div>
 
-    <!-- Don't have an account & Register Button Section -->
+    <!-- Already Have An Account & Login Button Section -->
     <div class="card-footer">
-      <span>Don't have an account?</span>
-      <a href="/user/register/" class="btn-register" >Register</a>
+      <span>Already have an account?</span>
+      <a href="/login/login/" class="btn-login">Login</a>
     </div>
   </div>
 
   <script>
-    // Password visibility toggle
-    function togglePasswordVisibility() {
-      const pwdInput = document.getElementById('password');
-      const pwdToggle = document.getElementById('pwdToggle');
+    // Toggle Password Visibility
+    function togglePassword(inputId, toggleIconId) {
+      const pwdInput = document.getElementById(inputId);
+      const pwdToggle = document.getElementById(toggleIconId);
 
       if (pwdInput.type === 'password') {
         pwdInput.type = 'text';
@@ -346,26 +362,38 @@
       }
     }
 
-    // Form submit handler
-    function handleLogin(event) {
+    // Handle Form Submit and Validation
+    function handleRegistration(event) {
       event.preventDefault();
-      const identity = document.getElementById('identity').value;
-      const userType = document.getElementById('userType').value;
-      const rememberMe = document.getElementById('rememberMe').checked;
 
-      alert(`Login Successful!\nIdentity: ${identity}\nRole: ${userType}\nRemember Me: ${rememberMe}`);
+      const pwd = document.getElementById('password').value;
+      const confirmPwd = document.getElementById('confirmPassword').value;
+      const errorMsg = document.getElementById('passwordMismatch');
+
+      if (pwd !== confirmPwd) {
+        errorMsg.style.display = 'block';
+        return;
+      } else {
+        errorMsg.style.display = 'none';
+      }
+
+      const registerId = document.getElementById('registerId').value;
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+
+      alert(`Registration Successful!\n\nRegister ID: ${registerId}\nUsername: ${username}\nEmail: ${email}`);
     }
 
-    // Forgot password handler
-    function handleForgotPassword(event) {
+    // Modal / Alert for Terms
+    function showTerms(event) {
       event.preventDefault();
-      alert("Redirecting to password reset flow...");
+      alert("Identity Shield Terms:\n1. Your data is protected by AES-256 encryption.\n2. Do not share your Register ID or Master Password with anyone.");
     }
 
-    // Register button handler
-    function handleRegisterRedirect(event) {
+    // Login button handler
+    function handleLoginRedirect(event) {
       event.preventDefault();
-      alert("Redirecting to the registration page...");
+      alert("Redirecting to Login Page...");
     }
   </script>
 

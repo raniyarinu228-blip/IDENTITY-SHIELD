@@ -1,212 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Complaint</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identity Shield - Post Cyber Complaint</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-primary: #0b1120;
+      --bg-card: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-shield: #38bdf8;
+      --accent-hover: #0284c7;
+      --accent-red: #ef4444;
+      --accent-green: #10b981;
+      --border-color: #334155;
+      --input-bg: #0f172a;
+      --radius-lg: 16px;
+      --radius-sm: 8px;
+    }
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
 
-        .container {
-            width: 600px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+    .container {
+      width: 100%;
+      max-width: 640px;
+    }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
+    /* Header Section */
+    .brand-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
+    .brand-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--accent-red);
+      margin-bottom: 12px;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+    }
 
-        input[type="text"],
-        input[type="date"],
-        input[type="time"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #aaa;
-            border-radius: 5px;
-        }
+    .brand-header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
 
-        textarea {
-            height: 120px;
-            resize: vertical;
-        }
+    .brand-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
 
-        input[type="file"] {
-            margin-top: 5px;
-        }
+    /* Main Card */
+    .card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 32px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
 
-        .buttons {
-            margin-top: 25px;
-            display: flex;
-            gap: 15px;
-        }
+    /* Form Grid Layout */
+    .form-row {
+      display: flex;
+      gap: 16px;
+    }
 
-        button {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .form-row .form-group {
+      flex: 1;
+    }
 
-        .reset {
-            background-color: #ccc;
-        }
+    .form-group {
+      margin-bottom: 20px;
+    }
 
-        .submit {
-            background-color: #333;
-            color: white;
-        }
-    </style>
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper i.left-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .input-wrapper input,
+    .input-wrapper select,
+    .input-wrapper textarea {
+      width: 100%;
+      padding: 12px 14px 12px 42px;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-wrapper textarea {
+      padding-top: 12px;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .input-wrapper select {
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .input-wrapper i.arrow-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .input-wrapper input:read-only {
+      color: var(--accent-shield);
+      font-weight: 600;
+      cursor: not-allowed;
+      border-style: dashed;
+    }
+
+    .input-wrapper input:focus,
+    .input-wrapper select:focus,
+    .input-wrapper textarea:focus {
+      border-color: var(--accent-shield);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+
+    /* Custom File Upload Box */
+    .file-wrapper {
+      background-color: var(--input-bg);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      position: relative;
+    }
+
+    .file-wrapper:hover {
+      border-color: var(--accent-shield);
+    }
+
+    .file-wrapper input[type="file"] {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-wrapper i {
+      font-size: 1.5rem;
+      color: var(--accent-shield);
+      margin-bottom: 6px;
+    }
+
+    .file-wrapper p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .file-name-display {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--accent-green);
+      font-weight: 500;
+    }
+
+    /* Action Buttons Row */
+    .btn-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn-reset {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .btn-reset:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .btn-submit {
+      background-color: var(--accent-red);
+      color: var(--text-main);
+    }
+
+    .btn-submit:hover {
+      background-color: #dc2626;
+    }
+
+    .btn:active {
+      transform: scale(0.99);
+    }
+
+    /* Security Status Badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 10px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: var(--radius-sm);
+      color: var(--accent-green);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* Responsive Design for small screens */
+    @media (max-width: 520px) {
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-    <div class="container">
-
-        <h2>Post Complaint</h2>
-
-        <form>
-
-            <!-- Complaint ID -->
-            <div class="form-group">
-                <label for="complaintId">Complaint ID:</label>
-                <input type="text"
-                       id="complaintId"
-                       name="complaintId"
-                       value="Auto Generated"
-                       readonly>
-            </div>
-
-            <!-- Incident Date -->
-            <div class="form-group">
-                <label for="incidentDate">Incident Date:</label>
-                <input type="date"
-                       id="incidentDate"
-                       name="incidentDate"
-                       required>
-            </div>
-
-            <!-- Incident Time -->
-            <div class="form-group">
-                <label for="incidentTime">Incident Time:</label>
-                <input type="time"
-                       id="incidentTime"
-                       name="incidentTime"
-                       required>
-            </div>
-
-            <!-- Platform -->
-            <div class="form-group">
-                <label for="platform">Platform:</label>
-
-                <select id="platform" name="platform" required>
-                    <option value="">Select Platform</option>
-                    <option value="instagram">Instagram</option>
-                    <option value="facebook">Facebook</option>
-                    <option value="whatsapp">WhatsApp</option>
-                    <option value="telegram">Telegram</option>
-                    <option value="x">X</option>
-                    <option value="youtube">YouTube</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-
-            <!-- Offender Username -->
-            <div class="form-group">
-                <label for="offenderUsername">
-                    Offender Username:
-                </label>
-
-                <input type="text"
-                       id="offenderUsername"
-                       name="offenderUsername"
-                       placeholder="Enter offender username"
-                       required>
-            </div>
-
-            <!-- Complaint Type -->
-            <div class="form-group">
-                <label for="complaintType">
-                    Complaint Type:
-                </label>
-
-                <select id="complaintType"
-                        name="complaintType"
-                        required>
-
-                    <option value="">Select Type</option>
-                    <option value="impersonation">Impersonation</option>
-                    <option value="cyberbullying">Cyberbullying</option>
-                    <option value="harassment">Harassment</option>
-                    <option value="fraud">Fraud</option>
-                    <option value="fake-account">Fake Account</option>
-                    <option value="identity-theft">Identity Theft</option>
-                    <option value="other">Other</option>
-
-                </select>
-            </div>
-
-            <!-- Description -->
-            <div class="form-group">
-                <label for="description">
-                    Description:
-                </label>
-
-                <textarea id="description"
-                          name="description"
-                          placeholder="Describe the incident..."
-                          required></textarea>
-            </div>
-
-            <!-- Upload Evidence -->
-            <div class="form-group">
-                <label for="evidence">
-                    Upload Evidence:
-                </label>
-
-                <input type="file"
-                       id="evidence"
-                       name="evidence"
-                       accept="image/*,.pdf,.doc,.docx">
-            </div>
-
-            <!-- Buttons -->
-            <div class="buttons">
-
-                <button type="reset" class="reset">
-                    Reset
-                </button>
-
-                <button type="submit" class="submit">
-                    Submit
-                </button>
-
-            </div>
-
-        </form>
-
+  <div class="container">
+    <!-- Header -->
+    <div class="brand-header">
+      <div class="brand-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h1>Identity Shield</h1>
+      <p>Cyber Incident & Identity Theft Reporting Portal</p>
     </div>
+
+    <!-- Complaint Form Card -->
+    <div class="card">
+      <form id="complaintForm" onsubmit="handleComplaintSubmit(event)">
+        
+        <!-- Complaint ID (Auto-Generated) -->
+        <div class="form-group">
+          <label for="complaintId">Complaint ID</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-hashtag left-icon"></i>
+            <input type="text" id="complaintId" value="CMP-2026-90412" readonly title="Auto-generated Incident Tracking ID">
+          </div>
+        </div>
+
+        <!-- Incident Date & Time Row -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="incidentDate">Incident Date</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-calendar-day left-icon"></i>
+              <input type="date" id="incidentDate" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="incidentTime">Incident Time</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-clock left-icon"></i>
+              <input type="time" id="incidentTime" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Platform & Offender Username Row -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="platform">Platform / App</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-globe left-icon"></i>
+              <select id="platform" required>
+                <option value="" disabled selected>Select Platform</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Facebook">Facebook</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="X (Twitter)">X (Twitter)</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Telegram">Telegram</option>
+                <option value="Email">Email / Web</option>
+                <option value="Other">Other Application</option>
+              </select>
+              <i class="fa-solid fa-chevron-down arrow-icon"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="offenderUsername">Offender Username</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-at left-icon"></i>
+              <input type="text" id="offenderUsername" placeholder="e.g. @fake_user123" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Complaint Type -->
+        <div class="form-group">
+          <label for="complaintType">Complaint Type</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-shield-virus left-icon"></i>
+            <select id="complaintType" required>
+              <option value="" disabled selected>Select Cyber Crime Category</option>
+              <option value="Identity Theft">Identity Theft / Impersonation</option>
+              <option value="Account Takeover">Unauthorized Account Takeover</option>
+              <option value="Cyber Harassment">Cyber Harassment / Bullying</option>
+              <option value="Phishing">Phishing / Scam Link</option>
+              <option value="Profile Cloning">Cloning Personal Profile</option>
+              <option value="Data Breach">Unauthorized Data Leak</option>
+            </select>
+            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Detailed Description</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-align-left left-icon" style="top: 20px;"></i>
+            <textarea id="description" placeholder="Describe the incident, messages received, or suspicious activity in detail..." required></textarea>
+          </div>
+        </div>
+
+        <!-- Upload Evidence -->
+        <div class="form-group">
+          <label>Upload Evidence (Screenshots/Logs)</label>
+          <div class="file-wrapper">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <p><strong>Click to choose file</strong> or drag & drop</p>
+            <p style="font-size: 0.75rem; margin-top: 2px;">PNG, JPG, PDF up to 10MB</p>
+            <input type="file" id="evidenceFile" onchange="updateFileName(this)" accept="image/*,.pdf">
+          </div>
+          <div class="file-name-display" id="fileNameDisplay"></div>
+        </div>
+
+        <!-- Buttons Row -->
+        <div class="btn-row">
+          <button type="reset" class="btn btn-reset" onclick="clearFileName()">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+          </button>
+          <button type="submit" class="btn btn-submit">
+            <i class="fa-solid fa-paper-plane"></i> Submit Complaint
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Security Status Badge -->
+      <div class="security-badge">
+        <i class="fa-solid fa-lock"></i> Encrypted Reporting & Protected Anonymity
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Update display when file is chosen
+    function updateFileName(input) {
+      const fileNameDisplay = document.getElementById('fileNameDisplay');
+      if (input.files && input.files.length > 0) {
+        fileNameDisplay.innerHTML = `<i class="fa-solid fa-paperclip"></i> Attached: ${input.files[0].name}`;
+      } else {
+        fileNameDisplay.innerHTML = '';
+      }
+    }
+
+    // Clear file label on reset
+    function clearFileName() {
+      document.getElementById('fileNameDisplay').innerHTML = '';
+    }
+
+    // Form Submit Handler
+    function handleComplaintSubmit(event) {
+      event.preventDefault();
+
+      const complaintId = document.getElementById('complaintId').value;
+      const date = document.getElementById('incidentDate').value;
+      const time = document.getElementById('incidentTime').value;
+      const platform = document.getElementById('platform').value;
+      const offender = document.getElementById('offenderUsername').value;
+      const type = document.getElementById('complaintType').value;
+
+      alert(`Complaint Filed Successfully!\n\nID: ${complaintId}\nDate/Time: ${date} at ${time}\nPlatform: ${platform}\nOffender: ${offender}\nType: ${type}\n\nOur Identity Shield team will review your evidence.`);
+    }
+  </script>
 
 </body>
 </html>
