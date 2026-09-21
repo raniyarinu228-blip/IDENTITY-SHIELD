@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Shield - View Thread & Replies</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --dark-bg: #0f172a;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --like-color: #ef4444;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            background: var(--dark-bg);
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .brand i {
+            color: #06b6d4;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        /* --- CONTAINER LAYOUT --- */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            transition: color 0.2s;
+        }
+
+        .back-nav:hover {
+            color: var(--primary);
+        }
+
+        /* --- ORIGINAL POST CARD --- */
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+            margin-bottom: 25px;
+        }
+
+        .post-author-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .author-details h4 {
+            font-size: 1rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .author-details span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .post-tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .post-content {
+            font-size: 1rem;
+            color: #334155;
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 12px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .action-btn.liked {
+            color: var(--like-color);
+        }
+
+        /* --- REPLIES SECTION --- */
+        .replies-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+        }
+
+        .replies-header {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Reply List Items */
+        .reply-item {
+            display: flex;
+            gap: 14px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f5f9;
+            position: relative;
+        }
+
+        .reply-item:last-child {
+            border-bottom: none;
+        }
+
+        .reply-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #0284c7;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .reply-body {
+            flex: 1;
+        }
+
+        .reply-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .reply-author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reply-author-info h5 {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .badge-verified {
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .badge-official {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .reply-time {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .reply-text {
+            font-size: 0.92rem;
+            color: #334155;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .reply-actions {
+            display: flex;
+            gap: 12px;
+            font-size: 0.8rem;
+        }
+
+        .reply-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .reply-btn:hover {
+            color: var(--primary);
+            background: #f1f5f9;
+        }
+
+        /* Nested Reply View */
+        .nested-replies {
+            margin-left: 52px;
+            padding-left: 15px;
+            border-left: 2px solid var(--border);
+            margin-top: 10px;
+        }
+
+        /* Reply Input Box */
+        .add-reply-box {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed var(--border);
+        }
+
+        .reply-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+            font-size: 0.92rem;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .reply-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .reply-submit-bar {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-reply {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-reply:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav class="navbar">
+        <a href="#" class="brand">
+            <i class="fa-solid fa-shield-halved"></i>
+            Identity Shield
+        </a>
+        <ul class="nav-links">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#" class="active">Community Feed</a></li>
+            <li><a href="#">Verification</a></li>
+            <li><a href="#">Support Chat</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        
+        <!-- Back Navigation Link -->
+        <a href="#" class="back-nav">
+            <i class="fa-solid fa-arrow-left"></i> Back to All Security Alerts
+        </a>
+
+        <!-- Original Post / Incident Card -->
+        <div class="post-card">
+            <div class="post-author-row">
+                <div class="author-info">
+                    <div class="avatar" style="background: #e11d48;">JD</div>
+                    <div class="author-details">
+                        <h4>John Doe</h4>
+                        <span>Incident Reporter • 3 hours ago</span>
+                    </div>
+                </div>
+                <span class="post-tag">Identity Leak Alert</span>
+            </div>
+            <div class="post-content">
+                I received an unverified SMS requesting identity re-verification for my student portal with a suspicious link. Has anyone else encountered this domain (<code>id-shield-verify.net</code>)? Is this an official link?
+            </div>
+            <div class="post-stats">
+                <span id="main-likes-count"><i class="fa-solid fa-heart" style="color: var(--like-color);"></i> 18 Likes</span>
+                <span id="main-reply-count"><i class="fa-solid fa-comments" style="color: var(--primary);"></i> 3 Replies</span>
+            </div>
+            <div class="post-actions">
+                <button class="action-btn" onclick="toggleMainLike(this)">
+                    <i class="fa-regular fa-heart"></i> Like
+                </button>
+                <button class="action-btn" onclick="scrollToReplyBox()">
+                    <i class="fa-regular fa-comment"></i> Add Reply
+                </button>
+            </div>
+        </div>
+
+        <!-- Replies Section -->
+        <div class="replies-container">
+            <div class="replies-header">
+                <span>Replies & Security Analyses</span>
+                <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">Sorted by Verified First</span>
+            </div>
+
+            <!-- List of Replies -->
+            <div id="replyList">
+
+                <!-- Reply 1 (Official Response) -->
+                <div class="reply-item">
+                    <div class="reply-avatar" style="background: #2563eb;">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div class="reply-body">
+                        <div class="reply-header">
+                            <div class="reply-author-info">
+                                <h5>Identity Shield CERT <i class="fa-solid fa-circle-check badge-verified"></i></h5>
+                                <span class="badge-official">Official Staff</span>
+                            </div>
+                            <span class="reply-time">2 hours ago</span>
+                        </div>
+                        <div class="reply-text">
+                            🚫 <strong>DO NOT CLICK:</strong> That domain (<code>id-shield-verify.net</code>) is a confirmed phishing link and is <strong>NOT</strong> affiliated with Identity Shield. Official communications always come from our verified domain. We have flagged the server for takedown.
+                        </div>
+                        <div class="reply-actions">
+                            <button class="reply-btn" onclick="likeReply(this)"><i class="fa-regular fa-heart"></i> <span class="like-num">12</span></button>
+                            <button class="reply-btn" onclick="replyToUser('Identity Shield CERT')"><i class="fa-solid fa-reply"></i> Reply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nested Reply to Reply 1 -->
+                <div class="nested-replies">
+                    <div class="reply-item">
+                        <div class="reply-avatar" style="background: #e11d48;">JD</div>
+                        <div class="reply-body">
+                            <div class="reply-header">
+                                <div class="reply-author-info">
+                                    <h5>John Doe</h5>
+                                </div>
+                                <span class="reply-time">1 hour ago</span>
+                            </div>
+                            <div class="reply-text">
+                                Thank you for the quick response and verification! I have blocked the sender number.
+                            </div>
+                            <div class="reply-actions">
+                                <button class="reply-btn" onclick="likeReply(this)"><i class="fa-regular fa-heart"></i> <span class="like-num">4</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reply 2 -->
+                <div class="reply-item">
+                    <div class="reply-avatar" style="background: #059669;">SK</div>
+                    <div class="reply-body">
+                        <div class="reply-header">
+                            <div class="reply-author-info">
+                                <h5>Sarah Khan</h5>
+                            </div>
+                            <span class="reply-time">45 minutes ago</span>
+                        </div>
+                        <div class="reply-text">
+                            I received the exact same SMS this morning. Good thing I checked here first before entering my credentials.
+                        </div>
+                        <div class="reply-actions">
+                            <button class="reply-btn" onclick="likeReply(this)"><i class="fa-regular fa-heart"></i> <span class="like-num">2</span></button>
+                            <button class="reply-btn" onclick="replyToUser('Sarah Khan')"><i class="fa-solid fa-reply"></i> Reply</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Post a New Reply Box -->
+            <div class="add-reply-box" id="replyFormArea">
+                <h4 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text-dark);">Post a Reply</h4>
+                <textarea id="newReplyText" class="reply-textarea" placeholder="Type your response or advice..."></textarea>
+                <div class="reply-submit-bar">
+                    <button class="btn-reply" onclick="submitReply()">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Reply
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Interactive JavaScript -->
+    <script>
+        let replyCount = 3;
+        let mainLiked = false;
+        let mainLikes = 18;
+
+        // Toggle Like on Main Post
+        function toggleMainLike(btn) {
+            const icon = btn.querySelector('i');
+            const likesSpan = document.getElementById('main-likes-count');
+
+            if (!mainLiked) {
+                mainLikes++;
+                mainLiked = true;
+                btn.classList.add('liked');
+                icon.className = 'fa-solid fa-heart';
+            } else {
+                mainLikes--;
+                mainLiked = false;
+                btn.classList.remove('liked');
+                icon.className = 'fa-regular fa-heart';
+            }
+
+            likesSpan.innerHTML = `<i class="fa-solid fa-heart" style="color: var(--like-color);"></i> ${mainLikes} Likes`;
+        }
+
+        // Toggle Like on Individual Replies
+        function likeReply(btn) {
+            const icon = btn.querySelector('i');
+            const numSpan = btn.querySelector('.like-num');
+            let currentLikes = parseInt(numSpan.textContent);
+
+            if (btn.classList.contains('liked')) {
+                btn.classList.remove('liked');
+                icon.className = 'fa-regular fa-heart';
+                numSpan.textContent = currentLikes - 1;
+            } else {
+                btn.classList.add('liked');
+                icon.className = 'fa-solid fa-heart';
+                numSpan.textContent = currentLikes + 1;
+            }
+        }
+
+        // Focus reply text box with tag
+        function replyToUser(username) {
+            const textarea = document.getElementById('newReplyText');
+            textarea.value = `@${username} `;
+            scrollToReplyBox();
+            textarea.focus();
+        }
+
+        // Scroll to reply input
+        function scrollToReplyBox() {
+            document.getElementById('replyFormArea').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Submit New Reply
+        function submitReply() {
+            const textarea = document.getElementById('newReplyText');
+            const text = textarea.value.trim();
+
+            if (text === '') {
+                alert('Please enter a reply before submitting.');
+                return;
+            }
+
+            const replyList = document.getElementById('replyList');
+            const newReplyDiv = document.createElement('div');
+            newReplyDiv.className = 'reply-item';
+            newReplyDiv.innerHTML = `
+                <div class="reply-avatar" style="background: #2563eb;">YOU</div>
+                <div class="reply-body">
+                    <div class="reply-header">
+                        <div class="reply-author-info">
+                            <h5>You</h5>
+                        </div>
+                        <span class="reply-time">Just now</span>
+                    </div>
+                    <div class="reply-text">
+                        ${escapeHTML(text)}
+                    </div>
+                    <div class="reply-actions">
+                        <button class="reply-btn" onclick="likeReply(this)"><i class="fa-regular fa-heart"></i> <span class="like-num">0</span></button>
+                    </div>
+                </div>
+            `;
+
+            replyList.appendChild(newReplyDiv);
+            textarea.value = '';
+
+            // Update reply count badge
+            replyCount++;
+            document.getElementById('main-reply-count').innerHTML = `<i class="fa-solid fa-comments" style="color: var(--primary);"></i> ${replyCount} Replies`;
+        }
+
+        // Helper to sanitize input
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>

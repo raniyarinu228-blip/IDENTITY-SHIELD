@@ -30,4 +30,6 @@ urlpatterns = [
     path('admin/',include('main_templates.urls')),
     path('user/',include('main_templates.urls')),
     path('technical/',include('main_templates.urls')),
+    path('feed/',include('feedback.urls')),
+    path('home/',include('main_templates.urls')),
 ]

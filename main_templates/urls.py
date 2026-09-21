@@ -5,4 +5,5 @@ urlpatterns = [
      path('admin/', mviews.admin),
      path('user/', mviews.user),
      path('technical/', mviews.technical),
+     path('home/', mviews.home),
 ]

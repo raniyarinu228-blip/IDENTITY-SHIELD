@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Shield - Security Feed & Posts</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --dark-bg: #0f172a;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --like-color: #ef4444;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            background: var(--dark-bg);
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .brand i {
+            color: #06b6d4;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        /* --- CONTAINER LAYOUT --- */
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 25px;
+        }
+
+        /* --- CREATE POST BOX --- */
+        .create-post-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 25px;
+        }
+
+        .create-post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .post-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        .post-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .post-actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .tag-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.85rem;
+            background: white;
+            color: var(--text-dark);
+        }
+
+        .btn-post {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-post:hover {
+            background: var(--primary-dark);
+        }
+
+        /* --- FEED & POST CARD --- */
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .post-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .post-author-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-details h4 {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-verified {
+            color: var(--primary);
+            font-size: 0.85rem;
+        }
+
+        .author-details span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .post-tag {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tag-advisory { background: #fef3c7; color: #d97706; }
+        .tag-security { background: #e0f2fe; color: #0284c7; }
+        .tag-update { background: #f0fdf4; color: #16a34a; }
+
+        .post-content {
+            font-size: 0.95rem;
+            color: #334155;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        /* --- POST INTERACTION BUTTONS (LIKE, COMMENT, SHARE) --- */
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        /* Liked State */
+        .action-btn.liked {
+            color: var(--like-color);
+        }
+
+        .action-btn.liked i {
+            animation: heartBeat 0.3s ease-in-out;
+        }
+
+        /* Bookmarked State */
+        .action-btn.bookmarked {
+            color: var(--primary);
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- COMMENTS SECTION --- */
+        .comments-section {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #64748b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .comment-bubble {
+            background: #f1f5f9;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            flex: 1;
+        }
+
+        .comment-bubble h5 {
+            font-size: 0.8rem;
+            color: var(--text-dark);
+        }
+
+        .comment-input-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.85rem;
+        }
+
+        /* --- SIDEBAR WIDGETS --- */
+        .sidebar-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-card h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trending-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-item a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: block;
+        }
+
+        .trending-item a:hover {
+            color: var(--primary);
+        }
+
+        .trending-item span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 850px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav class="navbar">
+        <a href="#" class="brand">
+            <i class="fa-solid fa-shield-halved"></i>
+            Identity Shield
+        </a>
+        <ul class="nav-links">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#" class="active">Community Feed</a></li>
+            <li><a href="#">Verification</a></li>
+            <li><a href="#">Support Chat</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Layout -->
+    <div class="container">
+
+        <!-- Main Feed Column -->
+        <div class="feed-column">
+
+            <!-- Create Post Card -->
+            <div class="create-post-card">
+                <div class="create-post-header">
+                    <div class="avatar">IS</div>
+                    <textarea id="newPostText" class="post-textarea" rows="2" placeholder="Share a security advisory or update with the community..."></textarea>
+                </div>
+                <div class="post-actions-bar">
+                    <select id="newPostTag" class="tag-select">
+                        <option value="Security Alert">Security Alert</option>
+                        <option value="Threat Advisory">Threat Advisory</option>
+                        <option value="System Update">System Update</option>
+                    </select>
+                    <button class="btn-post" onclick="publishPost()">
+                        <i class="fa-solid fa-paper-plane"></i> Publish Post
+                    </button>
+                </div>
+            </div>
+
+            <!-- Posts Stream Container -->
+            <div id="postsContainer">
+
+                <!-- Post Item 1 -->
+                <div class="post-card" id="post-1">
+                    <div class="post-author-row">
+                        <div class="author-info">
+                            <div class="avatar" style="background: #2563eb;">CS</div>
+                            <div class="author-details">
+                                <h4>CyberSec Team <i class="fa-solid fa-circle-check badge-verified"></i></h4>
+                                <span>Official Admin • 2 hours ago</span>
+                            </div>
+                        </div>
+                        <span class="post-tag tag-advisory">Threat Advisory</span>
+                    </div>
+                    <div class="post-content">
+                        ⚠️ <strong>Phishing Campaign Alert:</strong> A new spoofed login email targeting enterprise credentials has been flagged. Always verify that domain access matches Identity Shield's official SSL certificates before authenticating.
+                    </div>
+                    <div class="post-stats">
+                        <span id="likes-count-1">24 Likes</span>
+                        <span id="comments-count-1">3 Comments</span>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn" onclick="toggleLike(1, this)">
+                            <i class="fa-regular fa-heart"></i> Like
+                        </button>
+                        <button class="action-btn" onclick="toggleComments(1)">
+                            <i class="fa-regular fa-comment"></i> Comment
+                        </button>
+                        <button class="action-btn" onclick="toggleBookmark(this)">
+                            <i class="fa-regular fa-bookmark"></i> Bookmark
+                        </button>
+                    </div>
+
+                    <!-- Hidden Comments Section -->
+                    <div class="comments-section" id="comments-1">
+                        <div id="comments-list-1">
+                            <div class="comment-item">
+                                <div class="comment-avatar">AR</div>
+                                <div class="comment-bubble">
+                                    <h5>Alex Rivera</h5>
+                                    Thank you for the quick heads up! Resetting my team's MFA keys right now.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-input-box">
+                            <input type="text" class="comment-input" id="comment-input-1" placeholder="Write a comment..." onkeypress="handleCommentKeyPress(event, 1)">
+                            <button class="btn-post" style="padding: 6px 12px; font-size: 0.8rem;" onclick="addComment(1)"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Item 2 -->
+                <div class="post-card" id="post-2">
+                    <div class="post-author-row">
+                        <div class="author-info">
+                            <div class="avatar" style="background: #10b981;">MK</div>
+                            <div class="author-details">
+                                <h4>Marcus Khan</h4>
+                                <span>Security Analyst • 5 hours ago</span>
+                            </div>
+                        </div>
+                        <span class="post-tag tag-security">Security Alert</span>
+                    </div>
+                    <div class="post-content">
+                        Successfully integrated biometric face-matching with our Identity Shield authentication pipeline. Verification latency dropped by 40% with zero false-acceptance rates during stress testing! 🚀
+                    </div>
+                    <div class="post-stats">
+                        <span id="likes-count-2">41 Likes</span>
+                        <span id="comments-count-2">1 Comment</span>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn" onclick="toggleLike(2, this)">
+                            <i class="fa-regular fa-heart"></i> Like
+                        </button>
+                        <button class="action-btn" onclick="toggleComments(2)">
+                            <i class="fa-regular fa-comment"></i> Comment
+                        </button>
+                        <button class="action-btn" onclick="toggleBookmark(this)">
+                            <i class="fa-regular fa-bookmark"></i> Bookmark
+                        </button>
+                    </div>
+
+                    <!-- Hidden Comments Section -->
+                    <div class="comments-section" id="comments-2">
+                        <div id="comments-list-2">
+                            <div class="comment-item">
+                                <div class="comment-avatar">JL</div>
+                                <div class="comment-bubble">
+                                    <h5>Jessica Lee</h5>
+                                    Great performance numbers!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-input-box">
+                            <input type="text" class="comment-input" id="comment-input-2" placeholder="Write a comment..." onkeypress="handleCommentKeyPress(event, 2)">
+                            <button class="btn-post" style="padding: 6px 12px; font-size: 0.8rem;" onclick="addComment(2)"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Right Sidebar Widgets -->
+        <div class="sidebar-column">
+            <!-- Trending Topics Card -->
+            <div class="sidebar-card">
+                <h3><i class="fa-solid fa-arrow-trend-up" style="color: var(--primary);"></i> Security Topics</h3>
+                <div class="trending-item">
+                    <a href="#">#BiometricAuth</a>
+                    <span>1.2k Security Posts</span>
+                </div>
+                <div class="trending-item">
+                    <a href="#">#ZeroTrustAccess</a>
+                    <span>850 Discovered Alerts</span>
+                </div>
+                <div class="trending-item">
+                    <a href="#">#MultiFactorMFA</a>
+                    <span>640 Community Notes</span>
+                </div>
+            </div>
+
+            <!-- Community Guidelines Card -->
+            <div class="sidebar-card">
+                <h3><i class="fa-solid fa-shield-cat" style="color: #10b981;"></i> Feed Policy</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">
+                    Ensure all posts follow vulnerability disclosure guidelines. Avoid sharing active access credentials or sensitive personal identification numbers.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Actions & Post Interaction Logic -->
+    <script>
+        // Track Post Like States and Counts
+        const postData = {
+            1: { likes: 24, liked: false, comments: 1 },
+            2: { likes: 41, liked: false, comments: 1 }
+        };
+
+        // Like Button Toggle Function
+        function toggleLike(postId, btn) {
+            const data = postData[postId];
+            const icon = btn.querySelector('i');
+            const likesCountSpan = document.getElementById(`likes-count-${postId}`);
+
+            if (!data.liked) {
+                data.likes++;
+                data.liked = true;
+                btn.classList.add('liked');
+                icon.className = 'fa-solid fa-heart';
+            } else {
+                data.likes--;
+                data.liked = false;
+                btn.classList.remove('liked');
+                icon.className = 'fa-regular fa-heart';
+            }
+
+            likesCountSpan.textContent = `${data.likes} Likes`;
+        }
+
+        // Bookmark Button Toggle Function
+        function toggleBookmark(btn) {
+            const icon = btn.querySelector('i');
+            if (btn.classList.contains('bookmarked')) {
+                btn.classList.remove('bookmarked');
+                icon.className = 'fa-regular fa-bookmark';
+            } else {
+                btn.classList.add('bookmarked');
+                icon.className = 'fa-solid fa-bookmark';
+            }
+        }
+
+        // Toggle Comments Visibility
+        function toggleComments(postId) {
+            const commentsSec = document.getElementById(`comments-${postId}`);
+            if (commentsSec.style.display === 'block') {
+                commentsSec.style.display = 'none';
+            } else {
+                commentsSec.style.display = 'block';
+            }
+        }
+
+        // Add Comment Logic
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+            if (text === '') return;
+
+            const commentsList = document.getElementById(`comments-list-${postId}`);
+            const commentItem = document.createElement('div');
+            commentItem.className = 'comment-item';
+            commentItem.innerHTML = `
+                <div class="comment-avatar">YOU</div>
+                <div class="comment-bubble">
+                    <h5>You</h5>
+                    ${escapeHTML(text)}
+                </div>
+            `;
+
+            commentsList.appendChild(commentItem);
+            input.value = '';
+
+            // Update comment count stats
+            postData[postId].comments++;
+            document.getElementById(`comments-count-${postId}`).textContent = `${postData[postId].comments} Comments`;
+        }
+
+        function handleCommentKeyPress(e, postId) {
+            if (e.key === 'Enter') {
+                addComment(postId);
+            }
+        }
+
+        // Publish New Security Post
+        let nextPostId = 3;
+        function publishPost() {
+            const textInput = document.getElementById('newPostText');
+            const tagSelect = document.getElementById('newPostTag');
+            const text = textInput.value.trim();
+
+            if (text === '') {
+                alert('Please enter post content before publishing.');
+                return;
+            }
+
+            const tag = tagSelect.value;
+            let tagClass = 'tag-security';
+            if (tag === 'Threat Advisory') tagClass = 'tag-advisory';
+            if (tag === 'System Update') tagClass = 'tag-update';
+
+            const newId = nextPostId++;
+            postData[newId] = { likes: 0, liked: false, comments: 0 };
+
+            const postCard = document.createElement('div');
+            postCard.className = 'post-card';
+            postCard.id = `post-${newId}`;
+            postCard.innerHTML = `
+                <div class="post-author-row">
+                    <div class="author-info">
+                        <div class="avatar" style="background: #0284c7;">YOU</div>
+                        <div class="author-details">
+                            <h4>You <i class="fa-solid fa-circle-check badge-verified"></i></h4>
+                            <span>Just now</span>
+                        </div>
+                    </div>
+                    <span class="post-tag ${tagClass}">${tag}</span>
+                </div>
+                <div class="post-content">
+                    ${escapeHTML(text)}
+                </div>
+                <div class="post-stats">
+                    <span id="likes-count-${newId}">0 Likes</span>
+                    <span id="comments-count-${newId}">0 Comments</span>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn" onclick="toggleLike(${newId}, this)">
+                        <i class="fa-regular fa-heart"></i> Like
+                    </button>
+                    <button class="action-btn" onclick="toggleComments(${newId})">
+                        <i class="fa-regular fa-comment"></i> Comment
+                    </button>
+                    <button class="action-btn" onclick="toggleBookmark(this)">
+                        <i class="fa-regular fa-bookmark"></i> Bookmark
+                    </button>
+                </div>
+                <div class="comments-section" id="comments-${newId}">
+                    <div id="comments-list-${newId}"></div>
+                    <div class="comment-input-box">
+                        <input type="text" class="comment-input" id="comment-input-${newId}" placeholder="Write a comment..." onkeypress="handleCommentKeyPress(event, ${newId})">
+                        <button class="btn-post" style="padding: 6px 12px; font-size: 0.8rem;" onclick="addComment(${newId})"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            `;
+
+            const container = document.getElementById('postsContainer');
+            container.insertBefore(postCard, container.firstChild);
+
+            textInput.value = '';
+        }
+
+        // Helper to sanitize input
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>

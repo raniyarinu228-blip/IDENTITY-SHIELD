@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Shield - Biometric & Photo Verification</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --dark-bg: #0f172a;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            background: var(--dark-bg);
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .brand i {
+            color: #06b6d4;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        /* --- CONTAINER & LAYOUT --- */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-title h1 {
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 30px;
+        }
+
+        /* --- UPLOAD CARD & DROPZONE --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dropzone {
+            border: 2px dashed #94a3b8;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .dropzone:hover, .dropzone.dragover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .dropzone i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .dropzone h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .dropzone p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* --- PREVIEW AREA --- */
+        .preview-area {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .preview-img-container {
+            position: relative;
+            max-width: 280px;
+            margin: 0 auto 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .preview-img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .file-info {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* --- BUTTONS & ACTIONS --- */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        /* --- SIDEBAR GUIDELINES --- */
+        .guidelines-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .guidelines-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guideline-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .guideline-list li {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .guideline-list li i {
+            color: var(--success);
+            font-size: 1rem;
+            margin-top: 3px;
+        }
+
+        .security-badge {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .security-badge i {
+            color: var(--success);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        .security-badge p {
+            font-size: 0.8rem;
+            color: #166534;
+            line-height: 1.4;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 850px) {
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav class="navbar">
+        <a href="#" class="brand">
+            <i class="fa-solid fa-shield-halved"></i>
+            Identity Shield
+        </a>
+        <ul class="nav-links">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#" class="active">Verification</a></li>
+            <li><a href="#">Feedback</a></li>
+            <li><a href="#">Security Settings</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header-title">
+            <h1>Biometric & Photo Identity Verification</h1>
+            <p>Upload a clear government ID or facial portrait for identity matching & verification.</p>
+        </div>
+
+        <div class="upload-grid">
+            <!-- Upload Box -->
+            <div class="card">
+                <form id="uploadForm">
+                    <!-- Dropzone Container -->
+                    <div class="dropzone" id="dropzone" onclick="document.getElementById('photoInput').click()">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <h3>Drag & Drop your photo here</h3>
+                        <p>Supported formats: JPG, PNG, WEBP (Max 10MB)</p>
+                        <p style="margin-top: 8px; font-weight: 600; color: var(--primary);">or click to browse from device</p>
+                    </div>
+
+                    <!-- Hidden Input -->
+                    <input type="file" id="photoInput" class="file-input" accept="image/png, image/jpeg, image/webp" onchange="handleFileSelect(event)">
+
+                    <!-- Image Preview Area -->
+                    <div class="preview-area" id="previewArea">
+                        <div class="preview-img-container">
+                            <img id="imagePreview" src="" alt="Selected Photo Preview">
+                        </div>
+                        <div class="file-info" id="fileInfo">photo_name.jpg</div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="resetUpload()">
+                            <i class="fa-solid fa-arrow-rotate-left"></i> Reset
+                        </button>
+                        <button type="button" class="btn btn-primary" id="verifyBtn" onclick="submitVerification()">
+                            <i class="fa-solid fa-user-check"></i> Verify Identity
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Guidelines & Requirements Sidebar -->
+            <div class="guidelines-card">
+                <h3><i class="fa-solid fa-circle-info" style="color: var(--primary);"></i> Verification Rules</h3>
+                <ul class="guideline-list">
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        Ensure full face or ID details are clearly visible and well-lit.
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        Avoid strong reflections, glare, or heavy shadows on the image.
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        Do not use filters, screenshots, or edited photo files.
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        Original photos will speed up automated identity matching.
+                    </li>
+                </ul>
+
+                <div class="security-badge">
+                    <i class="fa-solid fa-lock"></i>
+                    <div>
+                        <strong>Encrypted Processing</strong>
+                        <p>Your uploaded document is processed using AES-256 zero-knowledge encryption and deleted after verification.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Actions -->
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const photoInput = document.getElementById('photoInput');
+        const previewArea = document.getElementById('previewArea');
+        const imagePreview = document.getElementById('imagePreview');
+        const fileInfo = document.getElementById('fileInfo');
+
+        // Drag & Drop visual highlights
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+            }, false);
+        });
+
+        // Handle File Drop
+        dropzone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                photoInput.files = files;
+                displayPreview(files[0]);
+            }
+        });
+
+        // Handle File Selection
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                displayPreview(files[0]);
+            }
+        }
+
+        // Render Image Preview
+        function displayPreview(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload a valid image file (JPG, PNG, or WEBP).');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                fileInfo.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                dropzone.style.display = 'none';
+                previewArea.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Reset Upload State
+        function resetUpload() {
+            photoInput.value = '';
+            imagePreview.src = '';
+            fileInfo.textContent = '';
+            previewArea.style.display = 'none';
+            dropzone.style.display = 'block';
+        }
+
+        // Simulate Verification Process
+        function submitVerification() {
+            if (!photoInput.files.length) {
+                alert('Please select or drop an image file first.');
+                return;
+            }
+
+            const verifyBtn = document.getElementById('verifyBtn');
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Identity...';
+
+            setTimeout(() => {
+                alert('Identity Match Successful!\nYour photo verification has been logged and secured in Identity Shield.');
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Verify Identity';
+                resetUpload();
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
