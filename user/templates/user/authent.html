@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Shield - Authentication Request Management Portal</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        shield: {
+                            dark: '#070a12',
+                            panel: '#0f172a',
+                            border: '#1e293b',
+                            cyan: '#06b6d4',
+                            emerald: '#10b981',
+                            rose: '#f43f5e',
+                            amber: '#f59e0b',
+                            indigo: '#6366f1'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(6, 182, 212, 0.3);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(6, 182, 212, 0.6);
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .light .glass-panel {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        .radar-sweep {
+            position: relative;
+            overflow: hidden;
+        }
+        .radar-sweep::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, rgba(6, 182, 212, 0.3) 0deg, transparent 60deg, transparent 360deg);
+            transform-origin: 0 0;
+            animation: radarRotate 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes radarRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .pulse-ring {
+            box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.5);
+            animation: pulseRing 2s infinite;
+        }
+        @keyframes pulseRing {
+            0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(6, 182, 212, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black dark:bg-slate-950 dark:text-slate-100 light:bg-slate-50 light:text-slate-900">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 w-full border-b border-slate-800 dark:border-slate-800 light:border-slate-200 bg-slate-950/85 dark:bg-slate-950/85 light:bg-white/90 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+                    <div class="p-2.5 bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-700 rounded-xl shadow-lg shadow-cyan-500/20 text-white flex items-center justify-center">
+                        <i class="fa-solid fa-user-shield text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg sm:text-xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-400 bg-clip-text text-transparent">Identity Shield</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">v2.4 Pro</span>
+                        </div>
+                        <span class="block text-[10px] text-slate-400 uppercase font-mono tracking-wider">Authentication Request Portal</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-1">
+                    <button id="nav-dashboard" onclick="switchTab('dashboard')" class="nav-btn px-4 py-2 rounded-lg text-xs font-semibold transition-all text-cyan-400 bg-cyan-500/10 border border-cyan-500/20">
+                        <i class="fa-solid fa-chart-pie mr-2"></i>Dashboard
+                    </button>
+                    <button id="nav-requests" onclick="switchTab('requests')" class="nav-btn px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+                        <i class="fa-solid fa-key mr-2"></i>Auth Requests <span id="pendingBadgeCount" class="ml-1.5 px-1.5 py-0.2 bg-amber-500 text-black font-bold text-[10px] rounded-full">3</span>
+                    </button>
+                    <button id="nav-devices" onclick="switchTab('devices')" class="nav-btn px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+                        <i class="fa-solid fa-laptop-code mr-2"></i>Devices & Sessions
+                    </button>
+                    <button id="nav-policies" onclick="switchTab('policies')" class="nav-btn px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+                        <i class="fa-solid fa-sliders mr-2"></i>Risk Rules
+                    </button>
+                </nav>
+
+                <!-- Actions Header -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="triggerSimulatedPushModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 transition shadow-lg shadow-purple-500/20 flex items-center gap-1.5">
+                        <i class="fa-solid fa-mobile-screen-button text-xs"></i> Simulate Push MFA
+                    </button>
+
+                    <button id="themeToggle" onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 transition">
+                        <i id="themeIcon" class="fa-solid fa-moon"></i>
+                    </button>
+
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-b border-slate-800 bg-slate-900 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('dashboard'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-xs font-semibold text-cyan-400 bg-cyan-500/10">Dashboard</button>
+            <button onclick="switchTab('requests'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-xs font-semibold text-slate-300 hover:bg-slate-800">Auth Requests</button>
+            <button onclick="switchTab('devices'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-xs font-semibold text-slate-300 hover:bg-slate-800">Devices & Sessions</button>
+            <button onclick="switchTab('policies'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-xs font-semibold text-slate-300 hover:bg-slate-800">Risk Rules</button>
+        </div>
+    </header>
+
+    <!-- Main App Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: DASHBOARD OVERVIEW -->
+        <!-- ========================================== -->
+        <section id="tab-dashboard" class="space-y-6">
+            
+            <!-- Hero Info Banner -->
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900/90 to-cyan-950/40 relative overflow-hidden">
+                <div class="max-w-3xl space-y-2 relative z-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        Zero-Trust Identity Sentinel Active
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Authentication Request & Threat Monitor</h1>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                        Real-time adaptive authentication verification system for College Cyber Defense Project. Monitors MFA verification requests, location anomalies, device trust scores, and biometric tokens.
+                    </p>
+                </div>
+            </div>
+
+            <!-- KPI Summary Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-panel p-4 rounded-xl border border-slate-800">
+                    <div class="flex justify-between items-start">
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Pending MFA Requests</p>
+                        <i class="fa-solid fa-clock text-amber-400 text-sm"></i>
+                    </div>
+                    <h3 id="statPending" class="text-2xl font-bold text-amber-400 mt-2 font-mono">3</h3>
+                    <p class="text-[10px] text-slate-400 mt-1">Requires user or admin approval</p>
+                </div>
+
+                <div class="glass-panel p-4 rounded-xl border border-slate-800">
+                    <div class="flex justify-between items-start">
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Approved Logins Today</p>
+                        <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+                    </div>
+                    <h3 id="statApproved" class="text-2xl font-bold text-emerald-400 mt-2 font-mono">148</h3>
+                    <p class="text-[10px] text-emerald-400 mt-1"><i class="fa-solid fa-arrow-up mr-1"></i>98.2% pass rate</p>
+                </div>
+
+                <div class="glass-panel p-4 rounded-xl border border-slate-800">
+                    <div class="flex justify-between items-start">
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Blocked / Denied</p>
+                        <i class="fa-solid fa-ban text-rose-400 text-sm"></i>
+                    </div>
+                    <h3 id="statDenied" class="text-2xl font-bold text-rose-400 mt-2 font-mono">12</h3>
+                    <p class="text-[10px] text-rose-400 mt-1"><i class="fa-solid fa-shield-virus mr-1"></i>4 Botnet attempts prevented</p>
+                </div>
+
+                <div class="glass-panel p-4 rounded-xl border border-slate-800">
+                    <div class="flex justify-between items-start">
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Overall Identity Risk Score</p>
+                        <i class="fa-solid fa-triangle-exclamation text-cyan-400 text-sm"></i>
+                    </div>
+                    <h3 id="statRiskScore" class="text-2xl font-bold text-cyan-400 mt-2 font-mono">Low (18/100)</h3>
+                    <p class="text-[10px] text-slate-400 mt-1">Adaptive Policy Shield Active</p>
+                </div>
+            </div>
+
+            <!-- Analytics Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart 1: Traffic by Geo Location -->
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                    <h3 class="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-earth-americas text-cyan-400"></i> Authentication Traffic by Geographic Region
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Volume of MFA verification challenges by origin country.</p>
+                    <div class="relative h-64">
+                        <canvas id="chartGeoLocation"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Auth Methods Distribution -->
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                    <h3 class="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-cyan-400"></i> Authentication Factor Breakdown
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Distribution of factors requested (FIDO2 Key, Push Notification, TOTP, SMS).</p>
+                    <div class="relative h-64">
+                        <canvas id="chartAuthMethods"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Live Mini-Stream -->
+            <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-cyan-400"></i> Live Authentication Request Stream
+                    </h3>
+                    <button onclick="switchTab('requests')" class="text-xs text-cyan-400 hover:underline font-semibold">View All Requests →</button>
+                </div>
+
+                <div id="dashboardLiveStream" class="space-y-2.5">
+                    <!-- Dynamic rendering via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: LIVE AUTHENTICATION REQUEST FEED -->
+        <!-- ========================================== -->
+        <section id="tab-requests" class="space-y-6 hidden">
+            
+            <!-- Controls Header -->
+            <div class="glass-panel p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+                
+                <!-- Search input -->
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="searchInput" onkeyup="filterRequests()" placeholder="Search by user, IP address, device, or app name..." class="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 outline-none">
+                </div>
+
+                <!-- Filters -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <select id="filterStatus" onchange="filterRequests()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none">
+                        <option value="ALL">All Statuses</option>
+                        <option value="Pending">Pending Only</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Denied">Denied / Flagged</option>
+                    </select>
+
+                    <select id="filterRisk" onchange="filterRequests()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none">
+                        <option value="ALL">All Risk Levels</option>
+                        <option value="High">High / Critical Risk</option>
+                        <option value="Medium">Medium Risk</option>
+                        <option value="Low">Low Risk</option>
+                    </select>
+
+                    <button onclick="resetRequestsData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold border border-slate-700 transition">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Reset Feed
+                    </button>
+                </div>
+            </div>
+
+            <!-- Requests Table Container -->
+            <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="py-3.5 px-4">User & App</th>
+                                <th class="py-3.5 px-4">Factor / Type</th>
+                                <th class="py-3.5 px-4">Device & IP</th>
+                                <th class="py-3.5 px-4">Location</th>
+                                <th class="py-3.5 px-4">Risk Score</th>
+                                <th class="py-3.5 px-4">Status</th>
+                                <th class="py-3.5 px-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requestsTableBody" class="divide-y divide-slate-800/60 font-sans">
+                            <!-- Dynamic Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: USER SECURITY & DEVICE MANAGEMENT -->
+        <!-- ========================================== -->
+        <section id="tab-devices" class="space-y-6 hidden">
+            
+            <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-laptop-code text-cyan-400"></i> Enrolled Devices & Active Session Tokens
+                    </h2>
+                    <p class="text-xs text-slate-400">Manage hardware security keys (FIDO2/WebAuthn), trusted workstations, and revoke compromised authentication tokens.</p>
+                </div>
+
+                <button onclick="enrollNewDeviceMock()" class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold text-xs rounded-xl shadow transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Enroll Hardware Key
+                </button>
+            </div>
+
+            <!-- Devices Grid -->
+            <div id="devicesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: IDENTITY RISK POLICY ENGINE -->
+        <!-- ========================================== -->
+        <section id="tab-policies" class="space-y-6 hidden">
+            
+            <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2 mb-1">
+                    <i class="fa-solid fa-sliders text-cyan-400"></i> Adaptive Risk Policy & Automation Engine
+                </h2>
+                <p class="text-xs text-slate-400">Configure continuous identity verification triggers, geo-fencing policies, and automatic step-up authentication rules.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Policy Toggles -->
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
+                    <h3 class="text-sm font-bold text-cyan-400 uppercase tracking-wider border-b border-slate-800 pb-2">Active Enforcement Rules</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Geo-Fencing Strict Mode</h4>
+                                <p class="text-[10px] text-slate-400">Auto-deny verification attempts from blacklisted high-risk countries.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer" onchange="showToast('Geo-Fencing rule updated')">
+                                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Impossible Travel Anomaly Detection</h4>
+                                <p class="text-[10px] text-slate-400">Flag requests when logins occur in two distant locations within 1 hour.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer" onchange="showToast('Travel anomaly rule updated')">
+                                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Step-Up Auth for VPN / Tor IPs</h4>
+                                <p class="text-[10px] text-slate-400">Require FIDO2 Hardware Key biometric challenge if proxy detected.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer" onchange="showToast('VPN step-up rule updated')">
+                                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">After-Hours Admin Portal Lock</h4>
+                                <p class="text-[10px] text-slate-400">Auto-flag privilege access attempts made between 00:00 - 05:00 AM.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" onchange="showToast('After-hours rule updated')">
+                                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sensitivity Threshold Slider -->
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-5">
+                    <h3 class="text-sm font-bold text-cyan-400 uppercase tracking-wider border-b border-slate-800 pb-2">Global Risk Sensitivity</h3>
+
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-300 font-semibold">Risk Score Blocking Threshold</span>
+                            <span id="riskThresholdVal" class="font-mono font-bold text-cyan-400">75 / 100</span>
+                        </div>
+                        <input type="range" min="30" max="90" value="75" id="riskSlider" oninput="document.getElementById('riskThresholdVal').innerText = this.value + ' / 100'" class="w-full accent-cyan-400 cursor-pointer">
+                        <p class="text-[10px] text-slate-400 mt-1">Requests with a risk score above this value will automatically be denied or challenged with step-up verification.</p>
+                    </div>
+
+                    <div class="p-4 bg-cyan-950/20 border border-cyan-500/30 rounded-xl text-xs space-y-2">
+                        <span class="font-bold text-cyan-300"><i class="fa-solid fa-lightbulb mr-1"></i> Identity Shield Logic:</span>
+                        <p class="text-slate-300 leading-relaxed text-[11px]">
+                            Risk scoring evaluates 14 variables including IP threat reputation, browser canvas fingerprinting, time elapsed since last login, network velocity, and MFA device trust level.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- REQUEST DEEP-DIVE DETAIL MODAL -->
+    <div id="requestModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-2xl rounded-2xl border border-slate-700 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-cyan-500/20 text-cyan-400 rounded-lg"><i class="fa-solid fa-fingerprint"></i></div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Authentication Request Intelligence</h3>
+                        <p id="modalReqId" class="text-[10px] font-mono text-cyan-400">REQ-88902</p>
+                    </div>
+                </div>
+                <button onclick="closeRequestModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-5 overflow-y-auto custom-scrollbar space-y-4" id="modalContent">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <div class="p-4 bg-slate-900 border-t border-slate-800 flex justify-end space-x-2" id="modalFooterActions">
+                <!-- Action buttons -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PUSH MFA SIMULATION MODAL -->
+    <div id="pushSimModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 w-full max-w-md rounded-2xl border border-cyan-500/40 shadow-2xl overflow-hidden radar-sweep">
+            <div class="p-4 bg-slate-950 border-b border-slate-800 flex justify-between items-center relative z-10">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-cyan-300">Push MFA Challenge Simulator</h3>
+                </div>
+                <button onclick="closeSimulatedPushModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 text-center space-y-4 relative z-10">
+                <div class="w-16 h-16 mx-auto bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg pulse-ring">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div>
+                    <h4 class="text-base font-bold text-white">Verification Prompt Received</h4>
+                    <p class="text-xs text-slate-400 mt-1">Target Account: <span class="text-slate-200 font-semibold">alex.m@college.edu</span></p>
+                </div>
+
+                <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-left text-xs space-y-1 font-mono">
+                    <div class="flex justify-between text-slate-400"><span>Application:</span><span class="text-cyan-300">Student Portal VPN</span></div>
+                    <div class="flex justify-between text-slate-400"><span>IP Address:</span><span class="text-slate-200">103.21.144.18</span></div>
+                    <div class="flex justify-between text-slate-400"><span>Location:</span><span class="text-slate-200">Mumbai, India</span></div>
+                </div>
+
+                <!-- Countdown Timer Bar -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                        <span>Challenge Expires In</span>
+                        <span id="pushCountdown">30s</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div id="pushProgressBar" class="bg-cyan-400 h-full w-full transition-all duration-1000"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button onclick="handleSimPushAction(false)" class="py-2.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-xmark mr-1"></i> Deny
+                    </button>
+                    <button onclick="handleSimPushAction(true)" class="py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-500/20">
+                        <i class="fa-solid fa-check mr-1"></i> Approve
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border border-cyan-500/40 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-cyan-400 text-base"></i>
+        <span id="toastMessage">Notification message</span>
+    </div>
+
+    <script>
+        // ==========================================
+        // MOCK DATASET: AUTHENTICATION REQUESTS
+        // ==========================================
+        let mockRequests = [
+            {
+                id: "REQ-99201",
+                user: "alex.m@college.edu",
+                app: "Academic Financial Portal",
+                factor: "Push MFA",
+                ip: "103.21.144.18",
+                location: "Mumbai, India",
+                flag: "🇮🇳",
+                device: "MacBook Pro (macOS 14)",
+                browser: "Chrome 122.0",
+                timestamp: "Just now",
+                status: "Pending",
+                riskScore: 22,
+                riskLevel: "Low",
+                riskFactors: ["Recognized Device", "Domestic Location", "Normal Login Hours"],
+                vpnDetected: false
+            },
+            {
+                id: "REQ-99202",
+                user: "prof.jenkins@college.edu",
+                app: "Faculty Admin Console",
+                factor: "FIDO2 / WebAuthn Key",
+                ip: "185.220.101.5",
+                location: "Frankfurt, Germany",
+                flag: "🇩🇪",
+                device: "Windows Workstation",
+                browser: "Firefox 123.0",
+                timestamp: "3 mins ago",
+                status: "Pending",
+                riskScore: 88,
+                riskLevel: "High",
+                riskFactors: ["Tor Exit Node IP", "Impossible Travel Anomaly", "Unrecognized Hardware Token"],
+                vpnDetected: true
+            },
+            {
+                id: "REQ-99203",
+                user: "sam.student@college.edu",
+                app: "Library Digital System",
+                factor: "TOTP Authenticator",
+                ip: "49.207.210.4",
+                location: "Bengaluru, India",
+                flag: "🇮🇳",
+                device: "iPhone 15 Pro (iOS 17)",
+                browser: "Safari Mobile",
+                timestamp: "7 mins ago",
+                status: "Pending",
+                riskScore: 45,
+                riskLevel: "Medium",
+                riskFactors: ["New OS Version", "Domestic IP"],
+                vpnDetected: false
+            },
+            {
+                id: "REQ-99198",
+                user: "admin.dean@college.edu",
+                app: "University Core DB",
+                factor: "Push MFA",
+                ip: "122.160.12.90",
+                location: "New Delhi, India",
+                flag: "🇮🇳",
+                device: "Dell XPS 15 (Win 11)",
+                browser: "Edge 122.0",
+                timestamp: "24 mins ago",
+                status: "Approved",
+                riskScore: 12,
+                riskLevel: "Low",
+                riskFactors: ["Enrolled Workstation", "Trusted Campus Network"],
+                vpnDetected: false
+            },
+            {
+                id: "REQ-99195",
+                user: "hacker_test@college.edu",
+                app: "Student Email Exchange",
+                factor: "SMS OTP",
+                ip: "91.240.118.2",
+                location: "Moscow, Russia",
+                flag: "🇷🇺",
+                device: "Linux x86_64",
+                browser: "Unknown Script/Bot",
+                timestamp: "1 hour ago",
+                status: "Denied",
+                riskScore: 95,
+                riskLevel: "High",
+                riskFactors: ["Geofenced Location Blocked", "Known Botnet IP", "High Velocity OTP Request"],
+                vpnDetected: true
+            }
+        ];
+
+        let mockDevices = [
+            { id: "DEV-101", name: "Alex's MacBook Pro", owner: "alex.m@college.edu", type: "Laptop", lastActive: "2 mins ago", trust: "Verified", keyType: "TouchID / WebAuthn" },
+            { id: "DEV-102", name: "YubiKey 5C NFC", owner: "prof.jenkins@college.edu", type: "Hardware Key", lastActive: "1 day ago", trust: "Verified", keyType: "FIDO2 / U2F" },
+            { id: "DEV-103", name: "iPhone 15 Pro", owner: "sam.student@college.edu", type: "Mobile Push", lastActive: "7 mins ago", trust: "Pending Review", keyType: "Secure Enclave" }
+        ];
+
+        let pushTimerInterval = null;
+        let chartGeo = null;
+        let chartAuth = null;
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        window.onload = function() {
+            renderDashboardStream();
+            renderRequestsTable();
+            renderDevicesGrid();
+            initCharts();
+        };
+
+        function switchTab(tabName) {
+            const tabs = ['dashboard', 'requests', 'devices', 'policies'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`nav-${t}`);
+                if (btn) {
+                    btn.classList.remove('text-cyan-400', 'bg-cyan-500/10', 'border', 'border-cyan-500/20');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            if (activeBtn) {
+                activeBtn.classList.add('text-cyan-400', 'bg-cyan-500/10', 'border', 'border-cyan-500/20');
+                activeBtn.classList.remove('text-slate-400');
+            }
+
+            if (tabName === 'dashboard') {
+                setTimeout(updateCharts, 100);
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                icon.className = "fa-solid fa-sun text-amber-400";
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                icon.className = "fa-solid fa-moon text-slate-300";
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        // ==========================================
+        // RENDER FUNCTIONS
+        // ==========================================
+        function renderDashboardStream() {
+            const container = document.getElementById('dashboardLiveStream');
+            container.innerHTML = '';
+
+            mockRequests.slice(0, 4).forEach(req => {
+                const div = document.createElement('div');
+                div.className = "p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-center justify-between text-xs";
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 rounded-lg ${getRiskBgColor(req.riskLevel)}">
+                            <i class="fa-solid ${req.status === 'Approved' ? 'fa-check text-emerald-400' : (req.status === 'Denied' ? 'fa-xmark text-rose-400' : 'fa-hourglass-half text-amber-400')}"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-white">${req.user}</span>
+                                <span class="text-[10px] font-mono text-slate-400">(${req.app})</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400">${req.flag} ${req.location} • <span class="font-mono text-slate-300">${req.ip}</span></p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${getStatusStyle(req.status)}">${req.status}</span>
+                        <span class="block text-[9px] font-mono text-slate-500 mt-1">${req.timestamp}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            updateStatCounters();
+        }
+
+        function renderRequestsTable() {
+            const tbody = document.getElementById('requestsTableBody');
+            tbody.innerHTML = '';
+
+            mockRequests.forEach(req => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/50 transition";
+                tr.innerHTML = `
+                    <td class="py-3 px-4">
+                        <span class="font-bold text-white block">${req.user}</span>
+                        <span class="text-[10px] text-cyan-400 font-mono">${req.app}</span>
+                    </td>
+                    <td class="py-3 px-4 font-mono text-slate-300">
+                        <i class="fa-solid fa-key text-cyan-400 mr-1.5"></i>${req.factor}
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="block text-slate-200">${req.device}</span>
+                        <span class="text-[10px] font-mono text-slate-400">${req.ip} ${req.vpnDetected ? '<span class="text-rose-400 font-bold">[VPN]</span>' : ''}</span>
+                    </td>
+                    <td class="py-3 px-4">
+                        ${req.flag} ${req.location}
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold ${getRiskBadgeStyle(req.riskLevel)}">
+                            ${req.riskScore}/100 (${req.riskLevel})
+                        </span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${getStatusStyle(req.status)}">${req.status}</span>
+                    </td>
+                    <td class="py-3 px-4 text-right space-x-1">
+                        <button onclick="openRequestModal('${req.id}')" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg text-xs" title="Inspect Request">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        ${req.status === 'Pending' ? `
+                            <button onclick="updateRequestStatus('${req.id}', 'Approved')" class="p-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 rounded-lg text-xs" title="Approve">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button onclick="updateRequestStatus('${req.id}', 'Denied')" class="p-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 rounded-lg text-xs" title="Deny / Flag">
+                                <i class="fa-solid fa-ban"></i>
+                            </button>
+                        ` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderDevicesGrid() {
+            const grid = document.getElementById('devicesGrid');
+            grid.innerHTML = '';
+
+            mockDevices.forEach(dev => {
+                const card = document.createElement('div');
+                card.className = "glass-panel p-4 rounded-xl border border-slate-800 space-y-3";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-cyan-500/10 text-cyan-400 rounded-xl">
+                                <i class="fa-solid ${dev.type === 'Hardware Key' ? 'fa-key' : 'fa-laptop'} text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">${dev.name}</h4>
+                                <p class="text-[10px] text-slate-400">${dev.owner}</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${dev.trust}</span>
+                    </div>
+
+                    <div class="text-[11px] font-mono text-slate-400 space-y-1 bg-slate-950 p-2.5 rounded-lg border border-slate-800/80">
+                        <div class="flex justify-between"><span>Factor Type:</span><span class="text-slate-200">${dev.keyType}</span></div>
+                        <div class="flex justify-between"><span>Last Active:</span><span class="text-slate-200">${dev.lastActive}</span></div>
+                    </div>
+
+                    <button onclick="revokeDevice('${dev.id}')" class="w-full py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 rounded-lg text-xs font-semibold transition">
+                        <i class="fa-solid fa-shield-xmark mr-1"></i> Revoke Token / Access
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ==========================================
+        // ACTION HANDLERS & MODALS
+        // ==========================================
+        function updateRequestStatus(reqId, newStatus) {
+            const req = mockRequests.find(r => r.id === reqId);
+            if (req) {
+                req.status = newStatus;
+                renderDashboardStream();
+                renderRequestsTable();
+                showToast(`Request ${reqId} marked as ${newStatus}`);
+            }
+        }
+
+        function openRequestModal(reqId) {
+            const req = mockRequests.find(r => r.id === reqId);
+            if (!req) return;
+
+            document.getElementById('modalReqId').innerText = req.id + " • " + req.app;
+            const content = document.getElementById('modalContent');
+
+            content.innerHTML = `
+                <div class="grid grid-cols-2 gap-3 text-xs bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono">
+                    <div><span class="text-slate-500">Target User:</span> <span class="text-slate-200 font-bold block">${req.user}</span></div>
+                    <div><span class="text-slate-500">Auth Factor:</span> <span class="text-cyan-400 font-bold block">${req.factor}</span></div>
+                    <div><span class="text-slate-500">IP Address:</span> <span class="text-slate-200 block">${req.ip}</span></div>
+                    <div><span class="text-slate-500">Geo Location:</span> <span class="text-slate-200 block">${req.flag} ${req.location}</span></div>
+                </div>
+
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-slate-300">Risk Assessment Breakdown Score: ${req.riskScore}/100</span>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div class="h-full ${req.riskScore > 70 ? 'bg-rose-500' : (req.riskScore > 40 ? 'bg-amber-400' : 'bg-emerald-400')}" style="width: ${req.riskScore}%"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-xs font-bold text-slate-300">Contextual Risk Indicators:</span>
+                    <div class="flex flex-wrap gap-1.5">
+                        ${req.riskFactors.map(f => `<span class="px-2.5 py-1 bg-slate-900 border border-slate-800 text-slate-300 rounded-lg text-[11px] font-mono"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5"></i>${f}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+
+            const footer = document.getElementById('modalFooterActions');
+            footer.innerHTML = `
+                <button onclick="closeRequestModal()" class="px-3 py-1.5 bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg">Close</button>
+                ${req.status === 'Pending' ? `
+                    <button onclick="updateRequestStatus('${req.id}', 'Denied'); closeRequestModal();" class="px-3 py-1.5 bg-rose-600 text-white text-xs font-semibold rounded-lg shadow">Deny Request</button>
+                    <button onclick="updateRequestStatus('${req.id}', 'Approved'); closeRequestModal();" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow">Approve Request</button>
+                ` : ''}
+            `;
+
+            document.getElementById('requestModal').classList.remove('hidden');
+        }
+
+        function closeRequestModal() {
+            document.getElementById('requestModal').classList.add('hidden');
+        }
+
+        // PUSH SIMULATOR
+        function triggerSimulatedPushModal() {
+            document.getElementById('pushSimModal').classList.remove('hidden');
+            let timeLeft = 30;
+            const countdownEl = document.getElementById('pushCountdown');
+            const progressEl = document.getElementById('pushProgressBar');
+
+            clearInterval(pushTimerInterval);
+            pushTimerInterval = setInterval(() => {
+                timeLeft--;
+                countdownEl.innerText = `${timeLeft}s`;
+                progressEl.style.width = `${(timeLeft / 30) * 100}%`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(pushTimerInterval);
+                    handleSimPushAction(false);
+                }
+            }, 1000);
+        }
+
+        function closeSimulatedPushModal() {
+            clearInterval(pushTimerInterval);
+            document.getElementById('pushSimModal').classList.add('hidden');
+        }
+
+        function handleSimPushAction(approved) {
+            closeSimulatedPushModal();
+            if (approved) {
+                showToast("Simulated MFA Push APPROVED! Access Token Granted.");
+                mockRequests.unshift({
+                    id: `REQ-${Math.floor(10000 + Math.random() * 90000)}`,
+                    user: "alex.m@college.edu",
+                    app: "Student Portal VPN",
+                    factor: "Push MFA",
+                    ip: "103.21.144.18",
+                    location: "Mumbai, India",
+                    flag: "🇮🇳",
+                    device: "iPhone 15 Pro",
+                    browser: "Safari Mobile",
+                    timestamp: "Just now",
+                    status: "Approved",
+                    riskScore: 15,
+                    riskLevel: "Low",
+                    riskFactors: ["Push Verification Success"],
+                    vpnDetected: false
+                });
+            } else {
+                showToast("Simulated MFA Push DENIED! Incident Logged.", true);
+            }
+            renderDashboardStream();
+            renderRequestsTable();
+        }
+
+        function filterRequests() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('filterStatus').value;
+            const risk = document.getElementById('filterRisk').value;
+
+            const rows = document.querySelectorAll('#requestsTableBody tr');
+            rows.forEach((row, idx) => {
+                const req = mockRequests[idx];
+                if (!req) return;
+
+                const matchesQuery = req.user.toLowerCase().includes(query) || req.ip.includes(query) || req.app.toLowerCase().includes(query);
+                const matchesStatus = status === 'ALL' || req.status === status;
+                const matchesRisk = risk === 'ALL' || req.riskLevel === risk;
+
+                if (matchesQuery && matchesStatus && matchesRisk) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+
+        function resetRequestsData() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterStatus').value = 'ALL';
+            document.getElementById('filterRisk').value = 'ALL';
+            filterRequests();
+            showToast("Filters reset");
+        }
+
+        function revokeDevice(devId) {
+            mockDevices = mockDevices.filter(d => d.id !== devId);
+            renderDevicesGrid();
+            showToast(`Device ${devId} token revoked successfully`);
+        }
+
+        function enrollNewDeviceMock() {
+            const name = prompt("Enter device name (e.g., YubiKey 5 NFC / Windows PC):", "YubiKey Bio 2026");
+            if (name) {
+                mockDevices.push({
+                    id: `DEV-${Math.floor(100 + Math.random() * 900)}`,
+                    name: name,
+                    owner: "admin.dean@college.edu",
+                    type: "Hardware Key",
+                    lastActive: "Just now",
+                    trust: "Verified",
+                    keyType: "WebAuthn / FIDO2"
+                });
+                renderDevicesGrid();
+                showToast("New WebAuthn Security Key Enrolled!");
+            }
+        }
+
+        // ==========================================
+        // CHARTS CONFIGURATION
+        // ==========================================
+        function initCharts() {
+            const ctxGeo = document.getElementById('chartGeoLocation').getContext('2d');
+            chartGeo = new Chart(ctxGeo, {
+                type: 'bar',
+                data: {
+                    labels: ['India 🇮🇳', 'USA 🇺🇸', 'Germany 🇩🇪', 'UK 🇬🇧', 'Russia 🇷🇺'],
+                    datasets: [{
+                        label: 'Auth Requests',
+                        data: [120, 25, 14, 8, 4],
+                        backgroundColor: '#06b6d4',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            const ctxAuth = document.getElementById('chartAuthMethods').getContext('2d');
+            chartAuth = new Chart(ctxAuth, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Push MFA', 'FIDO2 / Hardware Key', 'TOTP App', 'SMS OTP'],
+                    datasets: [{
+                        data: [52, 28, 14, 6],
+                        backgroundColor: ['#06b6d4', '#10b981', '#6366f1', '#f59e0b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } }
+                    }
+                }
+            });
+        }
+
+        function updateCharts() {
+            if (chartGeo && chartAuth) {
+                chartGeo.update();
+                chartAuth.update();
+            }
+        }
+
+        // UTILS
+        function updateStatCounters() {
+            const pending = mockRequests.filter(r => r.status === 'Pending').length;
+            const approved = mockRequests.filter(r => r.status === 'Approved').length + 140;
+            const denied = mockRequests.filter(r => r.status === 'Denied').length + 10;
+
+            document.getElementById('statPending').innerText = pending;
+            document.getElementById('pendingBadgeCount').innerText = pending;
+            document.getElementById('statApproved').innerText = approved;
+            document.getElementById('statDenied').innerText = denied;
+        }
+
+        function getStatusStyle(status) {
+            switch(status) {
+                case 'Approved': return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                case 'Denied': return 'bg-rose-500/20 text-rose-300 border border-rose-500/30';
+                default: return 'bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse';
+            }
+        }
+
+        function getRiskBadgeStyle(level) {
+            switch(level) {
+                case 'High': return 'bg-rose-500/20 text-rose-300 border border-rose-500/30';
+                case 'Medium': return 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
+                default: return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+            }
+        }
+
+        function getRiskBgColor(level) {
+            switch(level) {
+                case 'High': return 'bg-rose-500/10';
+                case 'Medium': return 'bg-amber-500/10';
+                default: return 'bg-emerald-500/10';
+            }
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            document.getElementById('toastMessage').innerText = message;
+
+            if (isError) {
+                icon.className = "fa-solid fa-circle-xmark text-rose-400 text-base";
+                toast.classList.remove('border-cyan-500/40');
+                toast.classList.add('border-rose-500/40');
+            } else {
+                icon.className = "fa-solid fa-circle-check text-cyan-400 text-base";
+                toast.classList.remove('border-rose-500/40');
+                toast.classList.add('border-cyan-500/40');
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

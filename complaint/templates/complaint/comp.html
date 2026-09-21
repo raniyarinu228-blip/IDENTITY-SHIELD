@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Shield - Cybercrime & Complaint Management</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        shield: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49',
+                        },
+                        cyber: {
+                            dark: '#0b0f19',
+                            card: '#111827',
+                            accent: '#38bdf8',
+                            emerald: '#10b981',
+                            rose: '#f43f5e',
+                            amber: '#f59e0b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.4);
+            border-radius: 4px;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .light .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white dark:bg-gray-950 dark:text-gray-100 light:bg-slate-50 light:text-slate-800">
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-40 w-full border-b border-gray-800 dark:border-gray-800 light:border-slate-200 bg-gray-950/80 dark:bg-gray-950/80 light:bg-white/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+                    <div class="p-2 bg-gradient-to-tr from-sky-600 to-cyan-400 rounded-xl shadow-lg shadow-sky-500/20 text-white">
+                        <i class="fa-solid font-bold fa-shield-halved text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-sky-400 to-cyan-300 bg-clip-text text-transparent">Identity Shield</span>
+                        <span class="block text-[10px] text-sky-400/80 uppercase font-semibold tracking-wider">Cyber Crime Cyber Cell</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links (Desktop) -->
+                <nav class="hidden md:flex space-x-1">
+                    <button id="nav-dashboard" onclick="switchTab('dashboard')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-colors text-sky-400 bg-sky-500/10">
+                        <i class="fa-solid fa-chart-pie mr-2"></i>Dashboard
+                    </button>
+                    <button id="nav-complaints" onclick="switchTab('complaints')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-400 hover:text-gray-200 hover:bg-gray-800/50">
+                        <i class="fa-solid fa-folder-open mr-2"></i>View Complaints
+                    </button>
+                    <button id="nav-submit" onclick="switchTab('submit')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-400 hover:text-gray-200 hover:bg-gray-800/50">
+                        <i class="fa-solid fa-file-circle-plus mr-2"></i>Lodge Complaint
+                    </button>
+                    <button id="nav-tools" onclick="switchTab('tools')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-400 hover:text-gray-200 hover:bg-gray-800/50">
+                        <i class="fa-solid fa-user-shield mr-2"></i>Cyber Tools
+                    </button>
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="flex items-center space-x-3">
+                    <button id="themeToggle" onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-800 dark:bg-gray-800 light:bg-slate-200 text-gray-300 dark:text-gray-300 light:text-slate-700 hover:bg-gray-700 transition">
+                        <i id="themeIcon" class="fa-solid fa-moon"></i>
+                    </button>
+                    <button onclick="openNewComplaintModal()" class="hidden sm:inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-sky-600 to-cyan-600 hover:from-sky-500 hover:to-cyan-500 shadow-md shadow-sky-600/20 transition">
+                        <i class="fa-solid fa-plus mr-2"></i>Report Incident
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-b border-gray-800 bg-gray-900 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('dashboard'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-sky-400 bg-sky-500/10">Dashboard</button>
+            <button onclick="switchTab('complaints'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">View Complaints</button>
+            <button onclick="switchTab('submit'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Lodge Complaint</button>
+            <button onclick="switchTab('tools'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Cyber Safety Tools</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: DASHBOARD -->
+        <section id="tab-dashboard" class="space-y-6">
+            <!-- Welcome Banner -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-sky-900/60 via-indigo-900/40 to-gray-900 border border-sky-500/20 p-6 md:p-8">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-sky-500/20 text-sky-300 rounded-full mb-3 border border-sky-500/30">Academic Project • Identity Cyber Shield</span>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2">Cybercrime Incident Monitoring Portal</h1>
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        Centralized platform for real-time reporting, tracking, and investigating digital identity theft, impersonation, and online financial fraud cases.
+                    </p>
+                    <div class="mt-5 flex flex-wrap gap-3">
+                        <button onclick="switchTab('complaints')" class="px-4 py-2 text-sm font-semibold rounded-lg bg-sky-600 hover:bg-sky-500 text-white shadow-lg transition">
+                            <i class="fa-solid fa-list-check mr-2"></i>Browse Complaints
+                        </button>
+                        <button onclick="switchTab('tools')" class="px-4 py-2 text-sm font-semibold rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 transition">
+                            <i class="fa-solid fa-shield-virus mr-2"></i>Run Security Assessment
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute right-0 top-0 bottom-0 opacity-10 md:opacity-20 flex items-center pointer-events-none pr-10">
+                    <i class="fa-solid fa-fingerprint text-[180px] text-sky-400"></i>
+                </div>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-panel p-5 rounded-xl border border-gray-800 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Total Complaints</p>
+                        <h3 id="stat-total" class="text-2xl font-bold text-white mt-1">0</h3>
+                        <p class="text-xs text-sky-400 mt-1"><i class="fa-solid fa-arrow-up text-[10px] mr-1"></i>+12% this month</p>
+                    </div>
+                    <div class="p-3 bg-sky-500/10 rounded-xl text-sky-400 border border-sky-500/20">
+                        <i class="fa-solid fa-folder-closed text-xl"></i>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-xl border border-gray-800 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Under Investigation</p>
+                        <h3 id="stat-investigating" class="text-2xl font-bold text-amber-400 mt-1">0</h3>
+                        <p class="text-xs text-amber-400/80 mt-1"><i class="fa-solid fa-clock text-[10px] mr-1"></i>Active processing</p>
+                    </div>
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-xl border border-gray-800 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Cases Resolved</p>
+                        <h3 id="stat-resolved" class="text-2xl font-bold text-emerald-400 mt-1">0</h3>
+                        <p class="text-xs text-emerald-400 mt-1"><i class="fa-solid fa-check text-[10px] mr-1"></i>High resolution rate</p>
+                    </div>
+                    <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 border border-emerald-500/20">
+                        <i class="fa-solid fa-circle-check text-xl"></i>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-xl border border-gray-800 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">High Urgency Cases</p>
+                        <h3 id="stat-urgent" class="text-2xl font-bold text-rose-400 mt-1">0</h3>
+                        <p class="text-xs text-rose-400 mt-1"><i class="fa-solid fa-triangle-exclamation text-[10px] mr-1"></i>Requires priority</p>
+                    </div>
+                    <div class="p-3 bg-rose-500/10 rounded-xl text-rose-400 border border-rose-500/20">
+                        <i class="fa-solid fa-fire text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Analytics Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart 1: Categories -->
+                <div class="glass-panel p-5 rounded-xl border border-gray-800">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-semibold text-gray-200"><i class="fa-solid fa-chart-pie mr-2 text-sky-400"></i>Incidents by Category</h3>
+                        <span class="text-xs text-gray-400">Distribution Overview</span>
+                    </div>
+                    <div class="relative h-64">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Timeline -->
+                <div class="glass-panel p-5 rounded-xl border border-gray-800">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-semibold text-gray-200"><i class="fa-solid fa-chart-line mr-2 text-sky-400"></i>Monthly Case Filing Trends</h3>
+                        <span class="text-xs text-gray-400">Year 2026</span>
+                    </div>
+                    <div class="relative h-64">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Complaints Preview List -->
+            <div class="glass-panel p-5 rounded-xl border border-gray-800">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-100">Recent Reported Incidents</h3>
+                        <p class="text-xs text-gray-400">Latest complaints logged in the system</p>
+                    </div>
+                    <button onclick="switchTab('complaints')" class="text-xs font-semibold text-sky-400 hover:text-sky-300 flex items-center gap-1">
+                        View All <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </button>
+                </div>
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <thead class="bg-gray-800/50 text-gray-400 uppercase text-[11px] tracking-wider">
+                            <tr>
+                                <th class="p-3 rounded-l-lg">Case ID</th>
+                                <th class="p-3">Category</th>
+                                <th class="p-3">Complainant</th>
+                                <th class="p-3">Urgency</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 rounded-r-lg text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-complaints-tbody" class="divide-y divide-gray-800/60">
+                            <!-- JS Inject -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: VIEW COMPLAINTS -->
+        <section id="tab-complaints" class="space-y-6 hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Complaint Management Hub</h2>
+                    <p class="text-xs sm:text-sm text-gray-400">Search, filter, and review details of reported cyber incidents</p>
+                </div>
+                <button onclick="openNewComplaintModal()" class="self-start md:self-auto px-4 py-2 rounded-lg text-sm font-medium text-white bg-sky-600 hover:bg-sky-500 shadow-md transition">
+                    <i class="fa-solid fa-plus mr-2"></i>New Complaint
+                </button>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="glass-panel p-4 rounded-xl border border-gray-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <!-- Search -->
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400 text-xs"></i>
+                    <input type="text" id="filterSearch" oninput="applyFilters()" placeholder="Search Case ID, Title, Name..." class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg pl-9 pr-3 py-2 text-xs text-gray-200 outline-none">
+                </div>
+                <!-- Category Filter -->
+                <div>
+                    <select id="filterCategory" onchange="applyFilters()" class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+                        <option value="ALL">All Categories</option>
+                        <option value="Identity Theft">Identity Theft</option>
+                        <option value="Financial Fraud">Financial Fraud</option>
+                        <option value="Phishing & Scam">Phishing & Scam</option>
+                        <option value="Social Impersonation">Social Impersonation</option>
+                        <option value="Data Breach">Data Breach</option>
+                    </select>
+                </div>
+                <!-- Status Filter -->
+                <div>
+                    <select id="filterStatus" onchange="applyFilters()" class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+                        <option value="ALL">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Under Investigation">Under Investigation</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+                <!-- Urgency Filter -->
+                <div>
+                    <select id="filterUrgency" onchange="applyFilters()" class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+                        <option value="ALL">All Urgency Levels</option>
+                        <option value="High">High Urgency</option>
+                        <option value="Medium">Medium Urgency</option>
+                        <option value="Low">Low Urgency</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Complaints Main Cards Grid -->
+            <div id="complaints-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamically Populated -->
+            </div>
+
+            <!-- Empty State Placeholder -->
+            <div id="no-complaints-msg" class="hidden glass-panel p-12 text-center rounded-xl border border-gray-800">
+                <i class="fa-solid fa-folder-open text-4xl text-gray-600 mb-3"></i>
+                <h4 class="text-base font-semibold text-gray-300">No Complaints Found</h4>
+                <p class="text-xs text-gray-500 mt-1">Try adjusting your filters or search term to see results.</p>
+            </div>
+        </section>
+
+        <!-- TAB 3: SUBMIT COMPLAINT -->
+        <section id="tab-submit" class="max-w-3xl mx-auto space-y-6 hidden">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Lodge a New Incident Complaint</h2>
+                <p class="text-xs sm:text-sm text-gray-400">Fill in the details regarding the identity cybercrime event to begin an investigation.</p>
+            </div>
+
+            <form id="complaintForm" onsubmit="handleFormSubmit(event)" class="glass-panel p-6 sm:p-8 rounded-2xl border border-gray-800 space-y-5">
+                <!-- Anonymous Toggle -->
+                <div class="flex items-center justify-between p-4 bg-sky-950/30 border border-sky-800/40 rounded-xl">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-user-secret text-sky-400 text-xl"></i>
+                        <div>
+                            <h4 class="text-sm font-medium text-white">Submit Anonymously</h4>
+                            <p class="text-xs text-gray-400">Your personal identity won't be linked to the public record</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="anonymousToggle" onchange="toggleAnonymousMode(this)" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-sky-600"></div>
+                    </label>
+                </div>
+
+                <!-- Personal Information Section -->
+                <div id="personalFields" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Full Name *</label>
+                        <input type="text" id="complainantName" required placeholder="John Doe" class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Contact Email / Phone *</label>
+                        <input type="text" id="complainantContact" required placeholder="email@example.com or phone" class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+                    </div>
+                </div>
+
+                <!-- Incident Classification -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Incident Category *</label>
+                        <select id="complaintCategory" required class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+                            <option value="">Select Category</option>
+                            <option value="Identity Theft">Identity Theft</option>
+                            <option value="Financial Fraud">Financial Fraud</option>
+                            <option value="Phishing & Scam">Phishing & Scam</option>
+                            <option value="Social Impersonation">Social Impersonation</option>
+                            <option value="Data Breach">Data Breach</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Urgency Level *</label>
+                        <select id="complaintUrgency" required class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+                            <option value="Low">Low - Informational / Minor Loss</option>
+                            <option value="Medium" selected>Medium - Significant Loss / Active Threats</option>
+                            <option value="High">High - Critical Financial / Active Cyber Impersonation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Title & Description -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Incident Summary / Title *</label>
+                    <input type="text" id="complaintTitle" required placeholder="e.g. Unauthorized Loan Applied Using My Stolen SSN/Aadhaar" class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Detailed Event Description *</label>
+                    <textarea id="complaintDesc" rows="4" required placeholder="Describe what happened, timeline, platforms involved, messages received, financial losses..." class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg p-3 text-xs text-gray-200 outline-none custom-scrollbar"></textarea>
+                </div>
+
+                <!-- Simulated File Upload -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Evidence Files (Screenshots, PDFs, Logs)</label>
+                    <div class="border-2 border-dashed border-gray-700 hover:border-sky-500 rounded-xl p-4 text-center cursor-pointer transition bg-gray-900/50" onclick="document.getElementById('evidenceInput').click()">
+                        <i class="fa-solid fa-cloud-arrow-up text-2xl text-sky-400 mb-1"></i>
+                        <p class="text-xs text-gray-300 font-medium">Click to upload digital evidence</p>
+                        <p class="text-[10px] text-gray-500 mt-0.5">PNG, JPG, PDF up to 10MB (Simulated)</p>
+                        <input type="file" id="evidenceInput" class="hidden" multiple onchange="handleFileSelect(event)">
+                    </div>
+                    <div id="filePreviewList" class="mt-2 space-y-1"></div>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="switchTab('dashboard')" class="px-4 py-2 text-xs font-medium text-gray-400 hover:text-white bg-gray-800 rounded-lg transition">Cancel</button>
+                    <button type="submit" class="px-6 py-2 text-xs font-semibold text-white bg-gradient-to-r from-sky-600 to-cyan-600 hover:from-sky-500 hover:to-cyan-500 rounded-lg shadow-lg shadow-sky-600/20 transition">
+                        <i class="fa-solid fa-paper-plane mr-1.5"></i>Submit Complaint
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- TAB 4: CYBER TOOLS (Breach Checker & Risk Quiz) -->
+        <section id="tab-tools" class="space-y-8 hidden">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="text-2xl font-bold text-white">Identity Protection & Safety Suite</h2>
+                <p class="text-xs sm:text-sm text-gray-400">Interactive tools for users to check leaked credentials and test identity vulnerability security practices.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Tool 1: Breach Simulator -->
+                <div class="glass-panel p-6 rounded-2xl border border-gray-800 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="p-3 bg-rose-500/10 text-rose-400 rounded-xl border border-rose-500/20">
+                                <i class="fa-solid fa-user-shield text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">Data Breach Checker</h3>
+                                <p class="text-xs text-gray-400">Simulate checking email/phone against dark web breach indexes</p>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-gray-300 mb-4 leading-relaxed">
+                            Enter an email address or mobile number to run a mock scan across known compromised databases and credential dumps.
+                        </p>
+
+                        <div class="space-y-3">
+                            <div class="relative">
+                                <i class="fa-solid fa-at absolute left-3 top-3 text-gray-400 text-xs"></i>
+                                <input type="text" id="breachInput" placeholder="Enter email (e.g., test@example.com)..." class="w-full bg-gray-900 border border-gray-700 focus:border-sky-500 rounded-lg pl-9 pr-3 py-2 text-xs text-gray-200 outline-none">
+                            </div>
+                            <button onclick="runBreachCheck()" class="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs rounded-lg shadow-md transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-radar"></i> Scan Dark Web Records
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Breach Output Container -->
+                    <div id="breachResult" class="mt-6 hidden p-4 rounded-xl border">
+                        <!-- JS injected result -->
+                    </div>
+                </div>
+
+                <!-- Tool 2: Risk Assessment Quiz -->
+                <div class="glass-panel p-6 rounded-2xl border border-gray-800">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="p-3 bg-sky-500/10 text-sky-400 rounded-xl border border-sky-500/20">
+                            <i class="fa-solid fa-list-check text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Identity Risk Calculator</h3>
+                            <p class="text-xs text-gray-400">Evaluate your susceptibility to online identity theft</p>
+                        </div>
+                    </div>
+
+                    <div id="quiz-container" class="space-y-4">
+                        <!-- Step-by-step interactive questions -->
+                        <div id="quiz-questions" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1.5">1. Do you use Two-Factor Authentication (2FA) on your primary accounts?</label>
+                                <select id="q1" class="w-full bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-lg p-2">
+                                    <option value="20">Yes, on almost all accounts (Authenticator app/Hardware key)</option>
+                                    <option value="10">Only on bank accounts or email</option>
+                                    <option value="0">No, I rarely or never use 2FA</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1.5">2. How do you manage your passwords?</label>
+                                <select id="q2" class="w-full bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-lg p-2">
+                                    <option value="20">Unique passwords stored in a Password Manager</option>
+                                    <option value="10">A few variations that I memorize</option>
+                                    <option value="0">Same 1-2 passwords across multiple sites</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1.5">3. How do you handle public Wi-Fi networks?</label>
+                                <select id="q3" class="w-full bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-lg p-2">
+                                    <option value="20">Always use a trusted VPN or cellular data</option>
+                                    <option value="10">Connect occasionally without checking</option>
+                                    <option value="0">Connect openly and perform sensitive transactions</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1.5">4. What is your response to unexpected text messages with link verification?</label>
+                                <select id="q4" class="w-full bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-lg p-2">
+                                    <option value="20">Never click link; inspect domain or call vendor directly</option>
+                                    <option value="10">Click link if it looks semi-authentic</option>
+                                    <option value="0">Immediately click to resolve account lock warnings</option>
+                                </select>
+                            </div>
+                            <button onclick="calculateRiskScore()" class="w-full py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-lg shadow-md transition">
+                                Calculate Security Score
+                            </button>
+                        </div>
+
+                        <!-- Quiz Result -->
+                        <div id="quiz-result" class="hidden p-4 bg-gray-900 rounded-xl border border-gray-800 text-center space-y-3">
+                            <h4 class="text-sm font-bold text-gray-300">Your Identity Protection Score</h4>
+                            <div id="quiz-score-badge" class="text-3xl font-extrabold text-sky-400">80/100</div>
+                            <p id="quiz-summary" class="text-xs text-gray-300"></p>
+                            <button onclick="resetQuiz()" class="text-xs text-sky-400 hover:underline">Retake Assessment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- DETAILED COMPLAINT MODAL -->
+    <div id="complaintModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-3xl max-h-[90vh] rounded-2xl border border-gray-700 flex flex-col overflow-hidden shadow-2xl">
+            <!-- Modal Header -->
+            <div class="p-5 border-b border-gray-800 flex items-center justify-between bg-gray-900/60">
+                <div class="flex items-center space-x-3">
+                    <span id="modalCategoryBadge" class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-sky-500/20 text-sky-300">Category</span>
+                    <h3 id="modalCaseId" class="text-base font-bold text-white">#CASE-1001</h3>
+                </div>
+                <button onclick="closeComplaintModal()" class="text-gray-400 hover:text-white p-1 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div class="p-6 overflow-y-auto space-y-6 custom-scrollbar flex-grow">
+                <div>
+                    <h2 id="modalTitle" class="text-xl font-bold text-white mb-2">Complaint Title Placeholder</h2>
+                    <div class="flex flex-wrap items-center gap-3 text-xs text-gray-400">
+                        <span><i class="fa-regular fa-user mr-1"></i>Complainant: <strong id="modalComplainant" class="text-gray-200">John Doe</strong></span>
+                        <span>•</span>
+                        <span><i class="fa-regular fa-calendar mr-1"></i>Filed: <strong id="modalDate" class="text-gray-200">2026-09-15</strong></span>
+                        <span>•</span>
+                        <span>Urgency: <span id="modalUrgency" class="font-bold text-rose-400">High</span></span>
+                    </div>
+                </div>
+
+                <!-- Status Update Controller -->
+                <div class="p-4 bg-gray-900/80 border border-gray-800 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs text-gray-400 block mb-0.5">Current Case Status</span>
+                        <div class="flex items-center space-x-2">
+                            <span id="modalStatusBadge" class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">Under Investigation</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <select id="modalStatusSelect" class="bg-gray-800 border border-gray-700 text-xs text-gray-200 rounded-lg px-3 py-1.5 outline-none">
+                            <option value="Pending">Pending</option>
+                            <option value="Under Investigation">Under Investigation</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                        <button onclick="updateCaseStatus()" class="px-3 py-1.5 text-xs font-medium bg-sky-600 hover:bg-sky-500 text-white rounded-lg transition">Update Status</button>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Incident Narrative</h4>
+                    <p id="modalDescription" class="text-xs sm:text-sm text-gray-300 bg-gray-900/40 p-4 rounded-xl border border-gray-800/80 leading-relaxed">
+                        Full incident detail description goes here...
+                    </p>
+                </div>
+
+                <!-- Evidence Section -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Attached Digital Evidence</h4>
+                    <div id="modalEvidenceList" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Evidence cards injected here -->
+                    </div>
+                </div>
+
+                <!-- Activity Log & Timeline -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Investigation Timeline & Notes</h4>
+                    <div id="modalTimeline" class="space-y-3 border-l-2 border-gray-800 pl-4">
+                        <!-- Timeline entries injected here -->
+                    </div>
+
+                    <!-- Add Note Input -->
+                    <div class="mt-4 flex gap-2">
+                        <input type="text" id="modalNewNote" placeholder="Add an official investigator note or update..." class="flex-grow bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+                        <button onclick="addInvestigatorNote()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-xs text-sky-400 font-semibold rounded-lg transition">
+                            <i class="fa-solid fa-plus mr-1"></i>Add Note
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-gray-800 bg-gray-900/60 flex justify-end">
+                <button onclick="closeComplaintModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-xs font-medium text-gray-300 rounded-lg transition">Close Window</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 border border-sky-500/30 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-sky-400 text-base"></i>
+        <span id="toastMessage">Action completed successfully.</span>
+    </div>
+
+    <script>
+        // --- DATA STORE ---
+        let complaints = [
+            {
+                id: "CASE-9021",
+                category: "Identity Theft",
+                title: "Unauthorized Banking Accounts Opened via Fraudulent Aadhaar Scan",
+                complainant: "Ananya Verma",
+                contact: "ananya.v@example.com",
+                date: "2026-09-18",
+                urgency: "High",
+                status: "Under Investigation",
+                description: "I discovered two loan accounts registered under my identity at a digital micro-finance institution. I never submitted these documents. The scammer appears to have used an edited copy of my leaked ID.",
+                evidence: ["aadhaar_copy_forged.pdf", "credit_report_flag.png"],
+                timeline: [
+                    { date: "2026-09-18 10:15", text: "Complaint logged by victim via Identity Shield Portal." },
+                    { date: "2026-09-18 14:30", text: "Assigned to Cyber Cell Investigator #402." }
+                ]
+            },
+            {
+                id: "CASE-8842",
+                category: "Phishing & Scam",
+                title: "SMS Spoofing Phishing Scam Impersonating Bank Security Warning",
+                complainant: "Anonymous",
+                contact: "N/A (Anonymous)",
+                date: "2026-09-15",
+                urgency: "Medium",
+                status: "Pending",
+                description: "Received an urgent SMS stating my debit card was suspended with a link to a fake login portal 'bank-security-verify.net'. I filled out my credentials before realizing it was a fraudulent clone.",
+                evidence: ["sms_screenshot.png"],
+                timeline: [
+                    { date: "2026-09-15 09:00", text: "Anonymous report submitted." }
+                ]
+            },
+            {
+                id: "CASE-7619",
+                category: "Social Impersonation",
+                title: "Cloned Instagram & LinkedIn Profiles Soliciting Money",
+                complainant: "Rohan Sharma",
+                contact: "rohan.s@example.com",
+                date: "2026-09-10",
+                urgency: "Medium",
+                status: "Resolved",
+                description: "An impersonator downloaded my photos and created duplicate profiles across social media asking my contact network for emergency medical money transfers.",
+                evidence: ["fake_profile_url.txt", "victim_chat_proof.png"],
+                timeline: [
+                    { date: "2026-09-10 11:20", text: "Report submitted." },
+                    { date: "2026-09-11 16:00", text: "Platforms served take-down notices." },
+                    { date: "2026-09-13 10:00", text: "Profiles suspended by provider. Case resolved." }
+                ]
+            },
+            {
+                id: "CASE-6430",
+                category: "Financial Fraud",
+                title: "UPI QR Code Reverse Payment Scam on Marketplace",
+                complainant: "Priya Nair",
+                contact: "priya.n@example.com",
+                date: "2026-09-02",
+                urgency: "High",
+                status: "Under Investigation",
+                description: "While selling furniture online, a buyer sent a QR code claiming it was to 'receive payment'. Scanning it instead deducted ₹25,000 from my savings account instantly.",
+                evidence: ["transaction_receipt.pdf", "whatsapp_chat_export.txt"],
+                timeline: [
+                    { date: "2026-09-02 18:40", text: "Incident recorded." },
+                    { date: "2026-09-03 11:10", text: "Freeze request dispatched to recipient bank account." }
+                ]
+            },
+            {
+                id: "CASE-5102",
+                category: "Data Breach",
+                title: "Exposed Corporate Credentials Found on Dark Web Forum",
+                complainant: "Vikram Malhotra",
+                contact: "v.malhotra@techcorp.io",
+                date: "2026-08-28",
+                urgency: "Low",
+                status: "Closed",
+                description: "Automated scan detected company email addresses and hashed passwords leaked from a third-party analytics vendor breach.",
+                evidence: ["breach_dump_sample.csv"],
+                timeline: [
+                    { date: "2026-08-28 15:00", text: "Breach report logged." },
+                    { date: "2026-08-29 09:30", text: "Mandatory password reset forced. Threat mitigated." }
+                ]
+            }
+        ];
+
+        let selectedFiles = [];
+        let currentActiveModalId = null;
+        let categoryChart = null;
+        let trendChart = null;
+
+        // --- INIT ON LOAD ---
+        window.onload = function() {
+            renderDashboard();
+            renderComplaintsList(complaints);
+            initCharts();
+        };
+
+        // --- NAVIGATION ---
+        function switchTab(tabName) {
+            const tabs = ['dashboard', 'complaints', 'submit', 'tools'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`nav-${t}`);
+                if (btn) {
+                    btn.classList.remove('text-sky-400', 'bg-sky-500/10');
+                    btn.classList.add('text-gray-400');
+                }
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            if (activeBtn) {
+                activeBtn.classList.add('text-sky-400', 'bg-sky-500/10');
+                activeBtn.classList.remove('text-gray-400');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- DASHBOARD RENDER & CHARTS ---
+        function renderDashboard() {
+            // Stats Calculations
+            const total = complaints.length;
+            const investigating = complaints.filter(c => c.status === 'Under Investigation').length;
+            const resolved = complaints.filter(c => c.status === 'Resolved' || c.status === 'Closed').length;
+            const urgent = complaints.filter(c => c.urgency === 'High').length;
+
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-investigating').innerText = investigating;
+            document.getElementById('stat-resolved').innerText = resolved;
+            document.getElementById('stat-urgent').innerText = urgent;
+
+            // Render Recent Table
+            const tbody = document.getElementById('dashboard-complaints-tbody');
+            tbody.innerHTML = '';
+
+            complaints.slice(0, 5).forEach(c => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-800/30 transition cursor-pointer";
+                tr.onclick = () => openComplaintModal(c.id);
+
+                tr.innerHTML = `
+                    <td class="p-3 font-mono text-sky-400 font-semibold">${c.id}</td>
+                    <td class="p-3 text-gray-300">${c.category}</td>
+                    <td class="p-3 text-gray-300">${c.complainant}</td>
+                    <td class="p-3">${getUrgencyBadge(c.urgency)}</td>
+                    <td class="p-3">${getStatusBadge(c.status)}</td>
+                    <td class="p-3 text-right">
+                        <button onclick="event.stopPropagation(); openComplaintModal('${c.id}')" class="text-xs text-sky-400 hover:text-sky-300 font-medium">Inspect</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Chart.js Visualizations
+        function initCharts() {
+            // Category Chart
+            const ctxCat = document.getElementById('categoryChart').getContext('2d');
+            const categoriesCount = {
+                'Identity Theft': 0,
+                'Financial Fraud': 0,
+                'Phishing & Scam': 0,
+                'Social Impersonation': 0,
+                'Data Breach': 0
+            };
+
+            complaints.forEach(c => {
+                if (categoriesCount[c.category] !== undefined) categoriesCount[c.category]++;
+            });
+
+            categoryChart = new Chart(ctxCat, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categoriesCount),
+                    datasets: [{
+                        data: Object.values(categoriesCount),
+                        backgroundColor: ['#38bdf8', '#f59e0b', '#10b981', '#a855f7', '#f43f5e'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // Trend Chart
+            const ctxTrend = document.getElementById('trendChart').getContext('2d');
+            trendChart = new Chart(ctxTrend, {
+                type: 'line',
+                data: {
+                    labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    datasets: [{
+                        label: 'Incidents Logged',
+                        data: [12, 19, 15, 22, complaints.length],
+                        borderColor: '#0284c7',
+                        backgroundColor: 'rgba(2, 132, 199, 0.15)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#9ca3af' }, grid: { color: '#1f2937' } },
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: '#1f2937' } }
+                    }
+                }
+            });
+        }
+
+        // --- COMPLAINTS FILTERING & RENDERING ---
+        function renderComplaintsList(data) {
+            const grid = document.getElementById('complaints-grid');
+            const noMsg = document.getElementById('no-complaints-msg');
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                noMsg.classList.remove('hidden');
+                return;
+            } else {
+                noMsg.classList.add('hidden');
+            }
+
+            data.forEach(c => {
+                const card = document.createElement('div');
+                card.className = "glass-panel p-5 rounded-xl border border-gray-800 flex flex-col justify-between hover:border-sky-500/40 transition cursor-pointer group";
+                card.onclick = () => openComplaintModal(c.id);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-mono font-bold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">${c.id}</span>
+                            ${getStatusBadge(c.status)}
+                        </div>
+                        <h3 class="text-sm font-bold text-gray-100 group-hover:text-sky-400 transition line-clamp-2 mb-2">${c.title}</h3>
+                        <p class="text-xs text-gray-400 line-clamp-3 mb-4 leading-relaxed">${c.description}</p>
+                    </div>
+
+                    <div class="pt-3 border-t border-gray-800/80 flex items-center justify-between text-[11px] text-gray-400">
+                        <div class="flex items-center gap-2">
+                            <span><i class="fa-solid fa-tag text-sky-400 mr-1"></i>${c.category}</span>
+                        </div>
+                        <div>
+                            ${getUrgencyBadge(c.urgency)}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function applyFilters() {
+            const search = document.getElementById('filterSearch').value.toLowerCase();
+            const category = document.getElementById('filterCategory').value;
+            const status = document.getElementById('filterStatus').value;
+            const urgency = document.getElementById('filterUrgency').value;
+
+            const filtered = complaints.filter(c => {
+                const matchesSearch = c.id.toLowerCase().includes(search) || 
+                                      c.title.toLowerCase().includes(search) || 
+                                      c.complainant.toLowerCase().includes(search);
+                const matchesCategory = category === 'ALL' || c.category === category;
+                const matchesStatus = status === 'ALL' || c.status === status;
+                const matchesUrgency = urgency === 'ALL' || c.urgency === urgency;
+
+                return matchesSearch && matchesCategory && matchesStatus && matchesUrgency;
+            });
+
+            renderComplaintsList(filtered);
+        }
+
+        // Helper Badges
+        function getStatusBadge(status) {
+            switch(status) {
+                case 'Pending':
+                    return `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-800 text-gray-300 border border-gray-700">Pending</span>`;
+                case 'Under Investigation':
+                    return `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">Investigating</span>`;
+                case 'Resolved':
+                    return `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Resolved</span>`;
+                case 'Closed':
+                    return `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/30">Closed</span>`;
+                default:
+                    return `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-800 text-gray-400">${status}</span>`;
+            }
+        }
+
+        function getUrgencyBadge(urgency) {
+            switch(urgency) {
+                case 'High':
+                    return `<span class="text-[10px] font-semibold text-rose-400"><i class="fa-solid fa-circle text-[8px] mr-1"></i>High Urgency</span>`;
+                case 'Medium':
+                    return `<span class="text-[10px] font-semibold text-amber-400"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Medium Urgency</span>`;
+                case 'Low':
+                    return `<span class="text-[10px] font-semibold text-sky-400"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Low Urgency</span>`;
+                default:
+                    return urgency;
+            }
+        }
+
+        // --- COMPLAINT DETAIL MODAL LOGIC ---
+        function openComplaintModal(caseId) {
+            const complaint = complaints.find(c => c.id === caseId);
+            if (!complaint) return;
+
+            currentActiveModalId = caseId;
+            document.getElementById('modalCaseId').innerText = complaint.id;
+            document.getElementById('modalTitle').innerText = complaint.title;
+            document.getElementById('modalComplainant').innerText = complaint.complainant;
+            document.getElementById('modalDate').innerText = complaint.date;
+            document.getElementById('modalUrgency').innerText = complaint.urgency;
+            document.getElementById('modalDescription').innerText = complaint.description;
+            document.getElementById('modalCategoryBadge').innerText = complaint.category;
+            
+            document.getElementById('modalStatusBadge').innerHTML = getStatusBadge(complaint.status);
+            document.getElementById('modalStatusSelect').value = complaint.status;
+
+            // Render Evidence
+            const evList = document.getElementById('modalEvidenceList');
+            evList.innerHTML = '';
+            if (complaint.evidence && complaint.evidence.length > 0) {
+                complaint.evidence.forEach(file => {
+                    const div = document.createElement('div');
+                    div.className = "p-3 bg-gray-900 border border-gray-800 rounded-lg flex items-center justify-between text-xs";
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-2 truncate">
+                            <i class="fa-solid fa-file-shield text-sky-400"></i>
+                            <span class="text-gray-300 truncate">${file}</span>
+                        </div>
+                        <span class="text-[10px] text-gray-500 uppercase font-semibold">Attached</span>
+                    `;
+                    evList.appendChild(div);
+                });
+            } else {
+                evList.innerHTML = `<p class="text-xs text-gray-500 italic">No evidence files uploaded.</p>`;
+            }
+
+            // Render Timeline
+            renderTimeline(complaint.timeline);
+
+            document.getElementById('complaintModal').classList.remove('hidden');
+        }
+
+        function renderTimeline(timeline) {
+            const container = document.getElementById('modalTimeline');
+            container.innerHTML = '';
+            timeline.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "relative pl-2";
+                div.innerHTML = `
+                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-sky-500 ring-4 ring-gray-950"></div>
+                    <span class="text-[10px] text-gray-500 font-mono">${item.date}</span>
+                    <p class="text-xs text-gray-300 mt-0.5">${item.text}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function closeComplaintModal() {
+            document.getElementById('complaintModal').classList.add('hidden');
+            currentActiveModalId = null;
+        }
+
+        function updateCaseStatus() {
+            if (!currentActiveModalId) return;
+            const newStatus = document.getElementById('modalStatusSelect').value;
+            const complaint = complaints.find(c => c.id === currentActiveModalId);
+
+            if (complaint) {
+                complaint.status = newStatus;
+                complaint.timeline.push({
+                    date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                    text: `Status officially updated to "${newStatus}".`
+                });
+
+                document.getElementById('modalStatusBadge').innerHTML = getStatusBadge(newStatus);
+                renderTimeline(complaint.timeline);
+                renderDashboard();
+                applyFilters();
+                showToast(`Case status updated to ${newStatus}`);
+            }
+        }
+
+        function addInvestigatorNote() {
+            const noteInput = document.getElementById('modalNewNote');
+            const text = noteInput.value.trim();
+            if (!text || !currentActiveModalId) return;
+
+            const complaint = complaints.find(c => c.id === currentActiveModalId);
+            if (complaint) {
+                complaint.timeline.push({
+                    date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                    text: `Investigator Note: ${text}`
+                });
+                renderTimeline(complaint.timeline);
+                noteInput.value = '';
+                showToast('Investigator note attached.');
+            }
+        }
+
+        // --- SUBMIT COMPLAINT FORM LOGIC ---
+        function openNewComplaintModal() {
+            switchTab('submit');
+        }
+
+        function toggleAnonymousMode(checkbox) {
+            const personalFields = document.getElementById('personalFields');
+            const nameInput = document.getElementById('complainantName');
+            const contactInput = document.getElementById('complainantContact');
+
+            if (checkbox.checked) {
+                personalFields.classList.add('opacity-40', 'pointer-events-none');
+                nameInput.removeAttribute('required');
+                contactInput.removeAttribute('required');
+                nameInput.value = "Anonymous Victim";
+                contactInput.value = "N/A";
+            } else {
+                personalFields.classList.remove('opacity-40', 'pointer-events-none');
+                nameInput.setAttribute('required', 'true');
+                contactInput.setAttribute('required', 'true');
+                nameInput.value = "";
+                contactInput.value = "";
+            }
+        }
+
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            selectedFiles = files.map(f => f.name);
+            const container = document.getElementById('filePreviewList');
+            container.innerHTML = '';
+
+            selectedFiles.forEach((file, index) => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-2 bg-gray-900 border border-gray-800 rounded text-xs";
+                div.innerHTML = `
+                    <span class="text-gray-300 truncate"><i class="fa-solid fa-paperclip text-sky-400 mr-2"></i>${file}</span>
+                    <button type="button" onclick="removeFile(${index})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            const container = document.getElementById('filePreviewList');
+            container.children[index]?.remove();
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const isAnon = document.getElementById('anonymousToggle').checked;
+            const name = isAnon ? "Anonymous" : document.getElementById('complainantName').value;
+            const contact = isAnon ? "N/A" : document.getElementById('complainantContact').value;
+            const category = document.getElementById('complaintCategory').value;
+            const urgency = document.getElementById('complaintUrgency').value;
+            const title = document.getElementById('complaintTitle').value;
+            const description = document.getElementById('complaintDesc').value;
+
+            const newCaseId = `CASE-${Math.floor(1000 + Math.random() * 9000)}`;
+            const today = new Date().toISOString().split('T')[0];
+
+            const newComplaint = {
+                id: newCaseId,
+                category,
+                title,
+                complainant: name,
+                contact,
+                date: today,
+                urgency,
+                status: "Pending",
+                description,
+                evidence: selectedFiles.length > 0 ? [...selectedFiles] : ["submitted_log_evidence.png"],
+                timeline: [
+                    { date: `${today} ${new Date().toLocaleTimeString().substring(0, 5)}`, text: "Complaint successfully logged." }
+                ]
+            };
+
+            complaints.unshift(newComplaint);
+            
+            // Reset Form
+            document.getElementById('complaintForm').reset();
+            selectedFiles = [];
+            document.getElementById('filePreviewList').innerHTML = '';
+            toggleAnonymousMode({ checked: false });
+
+            // Refresh UI
+            renderDashboard();
+            applyFilters();
+            showToast(`Complaint ${newCaseId} logged successfully!`);
+            
+            // Navigate to Complaints tab
+            switchTab('complaints');
+        }
+
+        // --- BREACH SIMULATOR TOOL ---
+        function runBreachCheck() {
+            const input = document.getElementById('breachInput').value.trim();
+            const resultBox = document.getElementById('breachResult');
+
+            if (!input) {
+                showToast("Please enter an email or phone number first.");
+                return;
+            }
+
+            resultBox.classList.remove('hidden');
+            resultBox.className = "mt-6 p-4 rounded-xl border bg-gray-900 border-gray-800 text-center";
+            resultBox.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-sky-400 text-xl"></i><p class="text-xs text-gray-400 mt-2">Querying indexed dark web breach repositories...</p>`;
+
+            setTimeout(() => {
+                // Mock leak logic
+                const isPwned = input.includes('test') || input.includes('hack') || input.length % 2 === 0;
+
+                if (isPwned) {
+                    resultBox.className = "mt-6 p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-left";
+                    resultBox.innerHTML = `
+                        <div class="flex items-center space-x-2 text-rose-400 font-bold text-sm mb-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>Warning: Records Compromised!</span>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Target <strong>${input}</strong> appeared in <strong>2 known data breaches</strong> (Mock Breach Dump 2024, E-Commerce Credential Leak).
+                        </p>
+                        <ul class="mt-3 text-xs text-rose-300/80 list-disc list-inside space-y-1">
+                            <li>Compromised data: Passwords, IP addresses, Email hashes</li>
+                            <li>Recommended Action: Immediately change passwords and enable 2FA.</li>
+                        </ul>
+                    `;
+                } else {
+                    resultBox.className = "mt-6 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-left";
+                    resultBox.innerHTML = `
+                        <div class="flex items-center space-x-2 text-emerald-400 font-bold text-sm mb-2">
+                            <i class="fa-solid fa-shield-check"></i>
+                            <span>No Leaks Found</span>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            No direct matches found for <strong>${input}</strong> in simulated dark web indexes. Continue keeping passwords updated regularly.
+                        </p>
+                    `;
+                }
+            }, 1200);
+        }
+
+        // --- RISK CALCULATOR QUIZ ---
+        function calculateRiskScore() {
+            const q1 = parseInt(document.getElementById('q1').value);
+            const q2 = parseInt(document.getElementById('q2').value);
+            const q3 = parseInt(document.getElementById('q3').value);
+            const q4 = parseInt(document.getElementById('q4').value);
+
+            const score = q1 + q2 + q3 + q4; // Max 80
+
+            const container = document.getElementById('quiz-questions');
+            const resultBox = document.getElementById('quiz-result');
+            const scoreBadge = document.getElementById('quiz-score-badge');
+            const summary = document.getElementById('quiz-summary');
+
+            container.classList.add('hidden');
+            resultBox.classList.remove('hidden');
+
+            scoreBadge.innerText = `${score} / 80 Points`;
+
+            if (score >= 60) {
+                scoreBadge.className = "text-3xl font-extrabold text-emerald-400";
+                summary.innerText = "Excellent identity protection practices! You maintain strong authentication and phishing awareness.";
+            } else if (score >= 40) {
+                scoreBadge.className = "text-3xl font-extrabold text-amber-400";
+                summary.innerText = "Moderate vulnerability. Consider implementing a dedicated password manager and enabling 2FA on all accounts.";
+            } else {
+                scoreBadge.className = "text-3xl font-extrabold text-rose-400";
+                summary.innerText = "High Risk! You are highly susceptible to cyber identity theft. Immediate security enhancements are strongly advised.";
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-questions').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+        }
+
+        // --- THEME & UTILS ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                icon.className = "fa-solid fa-sun text-amber-400";
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                icon.className = "fa-solid fa-moon text-gray-300";
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
