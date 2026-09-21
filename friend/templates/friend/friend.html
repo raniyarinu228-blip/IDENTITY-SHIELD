@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identity Shield - Accepted Friends</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-shield: #38bdf8;
+      --accent-green: #10b981;
+      --border-color: #475569;
+      --radius-lg: 16px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Navigation / Header */
+    header {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background-color: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      margin-bottom: 30px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand i {
+      font-size: 1.8rem;
+      color: var(--accent-shield);
+    }
+
+    .brand h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .shield-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent-green);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Main Container */
+    main {
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    /* Search & Filter Controls */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .search-bar {
+      position: relative;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .search-bar i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--accent-shield);
+    }
+
+    .stats-badge {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .stats-badge span {
+      color: var(--accent-shield);
+      font-weight: 700;
+    }
+
+    /* Friends Grid */
+    .friends-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* Friend Card */
+    .friend-card {
+      background-color: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .friend-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-shield);
+    }
+
+    .verified-icon {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background-color: var(--accent-shield);
+      color: var(--bg-primary);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      border: 2px solid var(--bg-surface);
+    }
+
+    .friend-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .friend-handle {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--bg-card);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      color: var(--accent-shield);
+      margin-bottom: 16px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-profile {
+      background-color: var(--accent-shield);
+      color: var(--bg-primary);
+    }
+
+    .btn-remove {
+      background-color: var(--bg-card);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal {
+      background: var(--bg-surface);
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .modal-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      margin-bottom: 12px;
+      border: 3px solid var(--accent-shield);
+    }
+
+    .modal-details {
+      text-align: left;
+      margin-top: 16px;
+      background: var(--bg-card);
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <div class="brand">
+      <i class="fa-solid fa-shield-halved"></i>
+      <h1>Identity Shield</h1>
+    </div>
+    <div class="shield-status">
+      <i class="fa-solid fa-lock"></i> Encryption Active
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main>
+    <div class="controls">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search accepted connections..." onkeyup="filterFriends()">
+      </div>
+      <div class="stats-badge">
+        Accepted Friends: <span id="friendCount">3</span>
+      </div>
+    </div>
+
+    <!-- Dynamic Friends Grid -->
+    <div class="friends-grid" id="friendsContainer">
+      <!-- Friend cards will be generated by JavaScript -->
+    </div>
+  </main>
+
+  <!-- Identity Shield Detail Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <i class="fa-solid fa-xmark close-btn" onclick="closeModal()"></i>
+      <img src="" id="modalImg" class="modal-avatar" alt="Friend Profile">
+      <h3 id="modalName">Friend Name</h3>
+      <p id="modalHandle" style="color: var(--text-muted); font-size:0.85rem;">@handle</p>
+      
+      <div class="modal-details">
+        <div><strong>Shield ID:</strong> <span id="modalShieldId">IS-883921</span></div>
+        <div><strong>Trust Score:</strong> <span style="color:var(--accent-green)">98% Verified</span></div>
+        <div><strong>Identity Encryption:</strong> AES-256</div>
+        <div><strong>Connection Date:</strong> Oct 14, 2024</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample Data: Accepted Friends stored securely under Identity Shield
+    const friendsData = [
+      {
+        id: 1,
+        name: "Alex Morgan",
+        handle: "@alex_m",
+        shieldId: "IS-902142",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+        trustScore: "99%"
+      },
+      {
+        id: 2,
+        name: "David Chen",
+        handle: "@d_chen",
+        shieldId: "IS-482019",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+        trustScore: "95%"
+      },
+      {
+        id: 3,
+        name: "Sophia Patel",
+        handle: "@sophiap",
+        shieldId: "IS-339102",
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
+        trustScore: "97%"
+      }
+    ];
+
+    // Function to render the cards
+    function renderFriends(friends) {
+      const container = document.getElementById('friendsContainer');
+      container.innerHTML = '';
+
+      if (friends.length === 0) {
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No accepted connections match your search.</p>`;
+        return;
+      }
+
+      friends.forEach(friend => {
+        const cardHTML = `
+          <div class="friend-card">
+            <div class="avatar-wrapper">
+              <img src="${friend.avatar}" alt="${friend.name}" class="avatar">
+              <div class="verified-icon" title="Identity Shield Verified">
+                <i class="fa-solid fa-check"></i>
+              </div>
+            </div>
+            <h2 class="friend-name">${friend.name}</h2>
+            <p class="friend-handle">${friend.handle}</p>
+            <div class="security-badge">
+              <i class="fa-solid fa-fingerprint"></i> Identity Shielded
+            </div>
+            <div class="card-actions">
+              <button class="btn btn-profile" onclick="openModal(${friend.id})">
+                <i class="fa-solid fa-shield"></i> View
+              </button>
+              <button class="btn btn-remove" onclick="removeFriend(${friend.id})">
+                <i class="fa-solid fa-user-xmark"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        container.innerHTML += cardHTML;
+      });
+
+      document.getElementById('friendCount').innerText = friends.length;
+    }
+
+    // Function to filter friends via Search
+    function filterFriends() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = friendsData.filter(friend => 
+        friend.name.toLowerCase().includes(query) || 
+        friend.handle.toLowerCase().includes(query)
+      );
+      renderFriends(filtered);
+    }
+
+    // Modal Control Functions
+    function openModal(id) {
+      const friend = friendsData.find(f => f.id === id);
+      if(!friend) return;
+
+      document.getElementById('modalImg').src = friend.avatar;
+      document.getElementById('modalName').innerText = friend.name;
+      document.getElementById('modalHandle').innerText = friend.handle;
+      document.getElementById('modalShieldId').innerText = friend.shieldId;
+      
+      document.getElementById('modalOverlay').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').style.display = 'none';
+    }
+
+    // Remove Friend Action
+    function removeFriend(id) {
+      const index = friendsData.findIndex(f => f.id === id);
+      if (index !== -1) {
+        friendsData.splice(index, 1);
+        filterFriends(); // re-render list
+      }
+    }
+
+    // Initial Render
+    renderFriends(friendsData);
+  </script>
+</body>
+</html>

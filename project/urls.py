@@ -27,7 +27,5 @@ urlpatterns = [
     path('reply/',include('reply.urls')),
     path('feedback/',include('feedback.urls')),
     path('main_templates/',include('main_templates.urls')),
-    path('admin/',include('main_templates.urls')),
-    path('user/',include('main_templates.urls')),
-    path('technical/',include('main_templates.urls')),
+    path('friend/',include('friend.urls')),
 ]

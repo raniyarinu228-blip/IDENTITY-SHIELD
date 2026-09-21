@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identity Shield - Shielded Post Comments</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-shield: #38bdf8;
+      --accent-green: #10b981;
+      --accent-purple: #a855f7;
+      --border-color: #475569;
+      --radius-lg: 16px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Navigation Header */
+    header {
+      width: 100%;
+      max-width: 750px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background-color: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand i {
+      font-size: 1.8rem;
+      color: var(--accent-shield);
+    }
+
+    .brand h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .shield-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent-green);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Main Container */
+    main {
+      width: 100%;
+      max-width: 750px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Main Post Card */
+    .post-card {
+      background-color: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .author-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent-shield);
+    }
+
+    .author-meta h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .author-meta p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .post-content {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      color: #e2e8f0;
+    }
+
+    .post-footer {
+      display: flex;
+      gap: 20px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .post-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .post-stat:hover {
+      color: var(--accent-shield);
+    }
+
+    /* Comment Form Area */
+    .comment-box-card {
+      background-color: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+    }
+
+    .comment-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .comment-box-header h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Identity Mode Selector Pill */
+    .mode-selector {
+      display: flex;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3px;
+    }
+
+    .mode-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 5px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .mode-btn.active {
+      background-color: var(--accent-shield);
+      color: var(--bg-primary);
+    }
+
+    .mode-btn.anonymous.active {
+      background-color: var(--accent-purple);
+      color: #fff;
+    }
+
+    /* Input Controls */
+    .input-area {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .input-area textarea {
+      width: 100%;
+      min-height: 90px;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      padding: 12px;
+      font-size: 0.9rem;
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    .input-area textarea:focus {
+      border-color: var(--accent-shield);
+    }
+
+    .comment-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .identity-preview-badge {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .identity-preview-badge strong {
+      color: var(--accent-shield);
+    }
+
+    .btn-submit {
+      background-color: var(--accent-shield);
+      color: var(--bg-primary);
+      border: none;
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-submit:hover {
+      opacity: 0.9;
+    }
+
+    /* Comments Section */
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .comment-card {
+      background-color: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+    }
+
+    .comment-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border-color);
+    }
+
+    .comment-body {
+      flex: 1;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .comment-author {
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-shield {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-shield);
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .badge-anon {
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--accent-purple);
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .comment-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .comment-text {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Navigation -->
+  <header>
+    <div class="brand">
+      <i class="fa-solid fa-shield-halved"></i>
+      <h1>Identity Shield</h1>
+    </div>
+    <div class="shield-status">
+      <i class="fa-solid fa-user-shield"></i> Protected Comments
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main>
+    <!-- Sample Post -->
+    <div class="post-card">
+      <div class="post-header">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="author-avatar" alt="Author">
+        <div class="author-meta">
+          <h3>Alex Morgan</h3>
+          <p>Posted 2 hours ago • <i class="fa-solid fa-earth-americas"></i> Public Shield</p>
+        </div>
+      </div>
+      <div class="post-content">
+        Building a zero-trust network model for college web applications. Privacy is key when communicating online—Identity Shield masks sensitive IDs while ensuring authenticated users can interact safely!
+      </div>
+      <div class="post-footer">
+        <div class="post-stat"><i class="fa-solid fa-heart"></i> 18 Likes</div>
+        <div class="post-stat"><i class="fa-solid fa-comment"></i> <span id="commentCount">2</span> Comments</div>
+        <div class="post-stat"><i class="fa-solid fa-share"></i> Share</div>
+      </div>
+    </div>
+
+    <!-- Identity Shield Comment Box -->
+    <div class="comment-box-card">
+      <div class="comment-box-header">
+        <h3><i class="fa-solid fa-comment-dots" style="color:var(--accent-shield)"></i> Leave a Comment</h3>
+        
+        <!-- Toggle Identity Mode -->
+        <div class="mode-selector">
+          <button class="mode-btn active" id="btnVerified" onclick="setIdentityMode('verified')">
+            <i class="fa-solid fa-shield-check"></i> Verified ID
+          </button>
+          <button class="mode-btn anonymous" id="btnAnon" onclick="setIdentityMode('anonymous')">
+            <i class="fa-solid fa-mask"></i> Shield Alias
+          </button>
+        </div>
+      </div>
+
+      <form id="commentForm" onsubmit="postComment(event)">
+        <div class="input-area">
+          <textarea id="commentText" placeholder="Write a secure comment..." required></textarea>
+        </div>
+
+        <div class="comment-actions">
+          <div class="identity-preview-badge" id="identityPreview">
+            Posting as: <strong id="previewName">Alex Mercer (IS-894021)</strong>
+          </div>
+          <button type="submit" class="btn-submit">
+            <i class="fa-solid fa-paper-plane"></i> Post Comment
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Comments List -->
+    <div class="comments-list" id="commentsContainer">
+      <!-- Generated via JS -->
+    </div>
+  </main>
+
+  <script>
+    // State Management
+    let identityMode = 'verified'; // 'verified' or 'anonymous'
+
+    const currentUser = {
+      realName: "Alex Mercer",
+      shieldId: "IS-894021",
+      aliasName: "Ghost Shield #402",
+      realAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
+      anonAvatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Ghost402"
+    };
+
+    let commentsData = [
+      {
+        id: 1,
+        author: "David Chen",
+        isAnon: false,
+        time: "1 hour ago",
+        text: "Great work on the Zero-Trust implementation!",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 2,
+        author: "Anon Shield #882",
+        isAnon: true,
+        time: "30 mins ago",
+        text: "Using alias mode to comment safely without leaking personal metadata.",
+        avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Anon882"
+      }
+    ];
+
+    // Toggle Identity Mode Switch
+    function setIdentityMode(mode) {
+      identityMode = mode;
+      const btnVerified = document.getElementById('btnVerified');
+      const btnAnon = document.getElementById('btnAnon');
+      const previewName = document.getElementById('previewName');
+
+      if (mode === 'verified') {
+        btnVerified.classList.add('active');
+        btnAnon.classList.remove('active');
+        previewName.innerText = `${currentUser.realName} (${currentUser.shieldId})`;
+        previewName.style.color = "var(--accent-shield)";
+      } else {
+        btnAnon.classList.add('active');
+        btnVerified.classList.remove('active');
+        previewName.innerText = currentUser.aliasName;
+        previewName.style.color = "var(--accent-purple)";
+      }
+    }
+
+    // Render Comments
+    function renderComments() {
+      const container = document.getElementById('commentsContainer');
+      container.innerHTML = '';
+
+      commentsData.forEach(c => {
+        const commentHTML = `
+          <div class="comment-card">
+            <img src="${c.avatar}" class="comment-avatar" alt="Avatar">
+            <div class="comment-body">
+              <div class="comment-header">
+                <div class="comment-author">
+                  ${c.author}
+                  ${c.isAnon 
+                    ? `<span class="badge-anon"><i class="fa-solid fa-mask"></i> Shielded Alias</span>` 
+                    : `<span class="badge-shield"><i class="fa-solid fa-check-double"></i> Verified</span>`}
+                </div>
+                <span class="comment-time">${c.time}</span>
+              </div>
+              <p class="comment-text">${c.text}</p>
+            </div>
+          </div>
+        `;
+        container.innerHTML += commentHTML;
+      });
+
+      document.getElementById('commentCount').innerText = commentsData.length;
+    }
+
+    // Handle Comment Submit
+    function postComment(event) {
+      event.preventDefault();
+
+      const textInput = document.getElementById('commentText');
+      const text = textInput.value.trim();
+
+      if (!text) return;
+
+      const isAnon = identityMode === 'anonymous';
+      const newComment = {
+        id: Date.now(),
+        author: isAnon ? currentUser.aliasName : currentUser.realName,
+        isAnon: isAnon,
+        time: "Just now",
+        text: text,
+        avatar: isAnon ? currentUser.anonAvatar : currentUser.realAvatar
+      };
+
+      commentsData.unshift(newComment); // Add to top
+      textInput.value = '';
+      renderComments();
+    }
+
+    // Initial Execution
+    renderComments();
+  </script>
+</body>
+</html>
