@@ -3,637 +3,704 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Identity Shield - Security Support & Chat</title>
-    <!-- Font Awesome Icons -->
+    <title>Keyo - Talkie Inbox</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #eff6ff;
-            --dark-bg: #0f172a;
-            --card-bg: #ffffff;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --chat-bg: #f8fafc;
-            --msg-user: #2563eb;
-            --msg-bot: #ffffff;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.08);
-        }
-
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
 
-        body {
-            background-color: #f1f5f9;
-            color: var(--text-dark);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+body {
+    background-color: #050505;
+    color: #f5f5f5;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
 
-        /* --- NAVIGATION --- */
-        .navbar {
-            background: var(--dark-bg);
-            color: white;
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
-        }
+.app-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: #ffffff;
-            font-size: 1.3rem;
-            font-weight: 800;
-        }
+/* Sidebar Styling */
+.main-sidebar {
+    width: 220px;
+    background: #121212;
+    border-right: 1px solid #262626;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+}
 
-        .brand i {
-            color: #06b6d4;
-        }
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
 
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-        }
+.brand-icon {
+    font-size: 1.5rem;
+    color: #3797f0;
+}
 
-        .nav-links a {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 
-        .nav-links a:hover, .nav-links a.active {
-            color: #ffffff;
-        }
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: #a8a8a8;
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: 0.2s;
+}
 
-        /* --- CHAT CONTAINER LAYOUT --- */
-        .chat-container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 20px auto;
-            padding: 0 20px;
-            flex: 1;
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 20px;
-            height: calc(100vh - 120px);
-        }
+.nav-btn:hover, .nav-btn.active {
+    background: #262626;
+    color: #ffffff;
+}
 
-        /* --- SIDEBAR --- */
-        .chat-sidebar {
-            background: var(--card-bg);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+/* Panels */
+.view-panel {
+    display: none;
+    flex-grow: 1;
+    height: 100vh;
+}
 
-        .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-        }
+.view-panel.active {
+    display: flex; !important;
+}
 
-        .sidebar-header h2 {
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
+/* Inbox & Support Layouts */
+.inbox-container, .support-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
 
-        .channel-list {
-            list-style: none;
-            padding: 10px;
-            overflow-y: auto;
-        }
+.chat-sidebar, .support-sidebar {
+    width: 320px;
+    background: #000000;
+    border-right: 1px solid #262626;
+    display: flex;
+    flex-direction: column;
+}
 
-        .channel-item {
-            padding: 12px 15px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            margin-bottom: 5px;
-            transition: background 0.2s;
-        }
+.sidebar-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .channel-item:hover, .channel-item.active {
-            background: var(--primary-light);
-        }
+.search-box {
+    margin: 0 15px 15px 15px;
+    background: #121212;
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .channel-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: #e0f2fe;
-            color: #0284c7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
+.search-box input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    outline: none;
+    width: 100%;
+}
 
-        .channel-item.active .channel-icon {
-            background: var(--primary);
-            color: white;
-        }
+.conversation-list, .support-topic-list {
+    overflow-y: auto;
+    flex-grow: 1;
+}
 
-        .channel-info h4 {
-            font-size: 0.9rem;
-            color: var(--text-dark);
-        }
+.conversation-item, .topic-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    gap: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
 
-        .channel-info p {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
+.conversation-item:hover, .topic-item:hover, .conversation-item.active, .topic-item.active {
+    background: #121212;
+}
 
-        .sidebar-footer {
-            margin-top: auto;
-            padding: 15px;
-            background: #f8fafc;
-            border-top: 1px solid var(--border);
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
-        /* --- MAIN CHAT WINDOW --- */
-        .chat-main {
-            background: var(--card-bg);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+.conv-details {
+    flex-grow: 1;
+}
 
-        /* Chat Header */
-        .chat-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #ffffff;
-        }
+.conv-top {
+    display: flex;
+    justify-content: space-between;
+}
 
-        .agent-details {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+.user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
 
-        .agent-avatar {
-            position: relative;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
+.time {
+    font-size: 0.75rem;
+    color: #a8a8a8;
+}
 
-        .status-dot {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--success);
-            border: 2px solid white;
-        }
+.last-msg {
+    font-size: 0.8rem;
+    color: #a8a8a8;
+}
 
-        .agent-info h3 {
-            font-size: 1rem;
-            color: var(--text-dark);
-        }
+.topic-icon {
+    font-size: 1.2rem;
+    color: #3797f0;
+}
 
-        .agent-info p {
-            font-size: 0.78rem;
-            color: var(--success);
-            font-weight: 600;
-        }
+/* Chat Main View */
+.chat-window {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background: #000000;
+}
 
-        /* Messages Body */
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            background: var(--chat-bg);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+.chat-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #262626;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .msg {
-            max-width: 70%;
-            display: flex;
-            flex-direction: column;
-        }
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
-        .msg-bot {
-            align-self: flex-start;
-        }
+.status.online {
+    color: #10b981;
+    font-size: 0.75rem;
+}
 
-        .msg-user {
-            align-self: flex-end;
-        }
+.encryption-tag {
+    font-size: 0.75rem;
+    color: #10b981;
+}
 
-        .msg-bubble {
-            padding: 12px 16px;
-            border-radius: 14px;
-            font-size: 0.92rem;
-            line-height: 1.5;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+.support-badge-icon {
+    font-size: 1.8rem;
+    color: #3797f0;
+}
 
-        .msg-bot .msg-bubble {
-            background: var(--msg-bot);
-            color: var(--text-dark);
-            border: 1px solid var(--border);
-            border-top-left-radius: 2px;
-        }
+.header-actions button, .chat-header button {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.1rem;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: 0.2s;
+}
 
-        .msg-user .msg-bubble {
-            background: var(--msg-user);
-            color: white;
-            border-top-right-radius: 2px;
-        }
+.header-actions button:hover {
+    background: #262626;
+}
 
-        .msg-time {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
+.header-actions button.danger-btn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
+}
 
-        .msg-bot .msg-time { align-self: flex-start; }
-        .msg-user .msg-time { align-self: flex-end; }
+/* Messages Feed */
+.message-feed {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-        /* Quick Suggestions */
-        .quick-suggestions {
-            display: flex;
-            gap: 8px;
-            padding: 10px 20px;
-            background: #ffffff;
-            border-top: 1px solid var(--border);
-            overflow-x: auto;
-        }
+.message {
+    display: flex;
+    width: 100%;
+}
 
-        .chip {
-            background: #f1f5f9;
-            border: 1px solid var(--border);
-            color: var(--text-dark);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
+.message.incoming {
+    justify-content: flex-start;
+}
 
-        .chip:hover {
-            background: var(--primary-light);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
+.message.outgoing {
+    justify-content: flex-end;
+}
 
-        /* Input Area */
-        .chat-input-area {
-            padding: 15px 20px;
-            background: #ffffff;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+.bubble {
+    max-width: 60%;
+    padding: 10px 16px;
+    border-radius: 18px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
 
-        .input-actions button {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 5px;
-            transition: color 0.2s;
-        }
+.incoming .bubble {
+    background: #262626;
+    color: #fff;
+}
 
-        .input-actions button:hover {
-            color: var(--primary);
-        }
+.outgoing .bubble {
+    background: #3797f0;
+    color: #fff;
+}
 
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            outline: none;
-            font-size: 0.95rem;
-            transition: border-color 0.2s;
-        }
+.media-bubble {
+    max-width: 250px;
+    border-radius: 12px;
+}
 
-        .chat-input:focus {
-            border-color: var(--primary);
-        }
+.system-encrypted-notice {
+    text-align: center;
+    background: #121212;
+    border: 1px solid #262626;
+    color: #10b981;
+    padding: 10px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
 
-        .send-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+.quick-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
 
-        .send-btn:hover {
-            background: var(--primary-dark);
-        }
+.quick-options button {
+    background: #121212;
+    border: 1px solid #3797f0;
+    color: #3797f0;
+    padding: 8px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.2s;
+}
 
-        /* Typing indicator animation */
-        .typing-indicator {
-            display: none;
-            align-items: center;
-            gap: 4px;
-            padding: 10px 14px;
-            background: var(--msg-bot);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            width: fit-content;
-        }
+.quick-options button:hover {
+    background: #3797f0;
+    color: #fff;
+}
 
-        .dot {
-            width: 6px;
-            height: 6px;
-            background: var(--text-muted);
-            border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
+/* Input Area */
+.input-container {
+    padding: 15px 20px;
+    border-top: 1px solid #262626;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
-        .dot:nth-child(1) { animation-delay: -0.32s; }
-        .dot:nth-child(2) { animation-delay: -0.16s; }
+.attachment-buttons {
+    display: flex;
+    gap: 6px;
+}
 
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-        }
+.attachment-buttons button {
+    background: transparent;
+    border: none;
+    color: #a8a8a8;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: 0.2s;
+}
 
-        /* Responsive */
-        @media (max-width: 850px) {
-            .chat-container {
-                grid-template-columns: 1fr;
-                height: auto;
-            }
-            .chat-sidebar { display: none; }
-            .chat-main { height: 75vh; }
-        }
-    </style>
+.attachment-buttons button:hover {
+    color: #fff;
+    background: #262626;
+}
+
+.input-container input[type="text"] {
+    flex-grow: 1;
+    background: #121212;
+    border: 1px solid #262626;
+    padding: 10px 16px;
+    border-radius: 20px;
+    color: #fff;
+    outline: none;
+}
+
+.send-btn {
+    background: transparent;
+    border: none;
+    color: #3797f0;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+</style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
-    <nav class="navbar">
-        <a href="#" class="brand">
-            <i class="fa-solid fa-shield-halved"></i>
-            Identity Shield
-        </a>
-        <ul class="nav-links">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Verification</a></li>
-            <li><a href="#" class="active">Support Chat</a></li>
-            <li><a href="#">Feedback</a></li>
-        </ul>
-    </nav>
-
-    <!-- Chat Container -->
-    <div class="container chat-container">
-
-        <!-- Sidebar / Support Channels -->
-        <div class="chat-sidebar">
-            <div class="sidebar-header">
-                <h2>Support Channels</h2>
+    <div class="app-container">
+        <!-- Main Sidebar / Brand Nav -->
+        <aside class="main-sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-shield-halved brand-icon"></i>
+                <h2>Keyo</h2>
             </div>
-            <ul class="channel-list">
-                <li class="channel-item active">
-                    <div class="channel-icon"><i class="fa-solid fa-robot"></i></div>
-                    <div class="channel-info">
-                        <h4>AI Security Shield Bot</h4>
-                        <p>Instant Automated Assistance</p>
-                    </div>
-                </li>
-                <li class="channel-item">
-                    <div class="channel-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-user-shield"></i></div>
-                    <div class="channel-info">
-                        <h4>Identity Fraud Response</h4>
-                        <p>Live Incident Specialist</p>
-                    </div>
-                </li>
-                <li class="channel-item">
-                    <div class="channel-icon" style="background: #f0fdf4; color: #16a34a;"><i class="fa-solid fa-headset"></i></div>
-                    <div class="channel-info">
-                        <h4>Account Access Help</h4>
-                        <p>General Technical Support</p>
-                    </div>
-                </li>
-            </ul>
-            <div class="sidebar-footer">
-                <i class="fa-solid fa-lock"></i> End-to-End Encrypted Session
-            </div>
-        </div>
+           <nav class="nav-menu">
+    <button id="nav-btn-talkie" class="nav-btn active" onclick="switchMainTab('talkie')">
+        <i class="fa-solid fa-comments"></i> Talkie Inbox
+    </button>
+    <button id="nav-btn-support" class="nav-btn" onclick="switchMainTab('support')">
+        <i class="fa-solid fa-user-shield"></i> Security Support
+    </button>
+</nav>
+        </aside>
 
-        <!-- Main Chat Window -->
-        <div class="chat-main">
-            <!-- Chat Header -->
-            <div class="chat-header">
-                <div class="agent-details">
-                    <div class="agent-avatar">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        <span class="status-dot"></span>
+        <!-- VIEW 1: TALKIE INBOX (User-to-User Direct Messages) -->
+        <section id="talkie-view" class="view-panel active">
+            <div class="inbox-container">
+                <!-- Direct Messages Sidebar -->
+                <div class="chat-sidebar">
+                    <div class="sidebar-header">
+                        <h3>Talkie</h3>
+                        <i class="fa-regular fa-pen-to-square"></i>
                     </div>
-                    <div class="agent-info">
-                        <h3>Identity Shield Security Assistant</h3>
-                        <p>Online • AI Powered Protection</p>
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search Talkie messages...">
+                    </div>
+                    <div class="conversation-list">
+                        <div class="conversation-item active" onclick="selectUser('alex_dev', 'Alex River')">
+                            <img src="https://i.pravatar.cc/150?img=11" class="avatar">
+                            <div class="conv-details">
+                                <div class="conv-top">
+                                    <span class="user-name">Alex River</span>
+                                    <span class="time">12:45 PM</span>
+                                </div>
+                                <p class="last-msg">Sent a video attachment</p>
+                            </div>
+                        </div>
+                        <div class="conversation-item" onclick="selectUser('sarah_m', 'Sarah Miller')">
+                            <img src="https://i.pravatar.cc/150?img=5" class="avatar">
+                            <div class="conv-details">
+                                <div class="conv-top">
+                                    <span class="user-name">Sarah Miller</span>
+                                    <span class="time">Yesterday</span>
+                                </div>
+                                <p class="last-msg">Active 10m ago</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <button class="chip" onclick="clearChat()"><i class="fa-solid fa-trash"></i> Clear Chat</button>
-                </div>
-            </div>
 
-            <!-- Messages Area -->
-            <div class="chat-messages" id="chatMessages">
-                <!-- Bot Welcome Message -->
-                <div class="msg msg-bot">
-                    <div class="msg-bubble">
-                        Hello! Welcome to <strong>Identity Shield Security Assistance</strong>. How can I help secure your account or review identity alerts today?
+                <!-- Active DM Window -->
+                <div class="chat-window">
+                    <div class="chat-header">
+                        <div class="user-info">
+                            <img src="https://i.pravatar.cc/150?img=11" id="active-user-avatar" class="avatar">
+                            <div>
+                                <h4 id="active-user-name">Alex River</h4>
+                                <span class="status online">● Active Now</span>
+                            </div>
+                        </div>
+                        <div class="header-actions">
+                            <button title="Audio Call" onclick="startCall('audio')"><i class="fa-solid fa-phone"></i></button>
+                            <button title="Video Call" onclick="startCall('video')"><i class="fa-solid fa-video"></i></button>
+                            <button title="Clear Chat" onclick="clearCurrentChat()"><i class="fa-solid fa-trash-can"></i></button>
+                            <button title="Report User" class="danger-btn" onclick="reportUser()"><i class="fa-solid fa-triangle-exclamation"></i></button>
+                        </div>
                     </div>
-                    <span class="msg-time">Just now</span>
-                </div>
 
-                <!-- Typing indicator -->
-                <div class="typing-indicator" id="typingIndicator">
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
+                    <!-- Message Feed -->
+                    <div class="message-feed" id="talkie-feed">
+                        <div class="message incoming">
+                            <div class="bubble">Hey, check out this preview!</div>
+                        </div>
+                        <div class="message outgoing">
+                            <div class="bubble">Looks great! Send over the raw footage.</div>
+                        </div>
+                    </div>
+
+                    <!-- Media Attachment Bar & Input -->
+                    <div class="input-container">
+                        <!-- Hidden inputs for file upload and camera capture -->
+                        <input type="file" id="gallery-input" accept="image/*,video/*" hidden onchange="handleFileSelect(event)">
+                        <input type="file" id="camera-input" accept="image/*,video/*" capture="environment" hidden onchange="handleFileSelect(event)">
+
+                        <div class="attachment-buttons">
+                            <button title="Upload from Gallery" onclick="document.getElementById('gallery-input').click()">
+                                <i class="fa-solid fa-image"></i>
+                            </button>
+                            <button title="Capture from Camera" onclick="document.getElementById('camera-input').click()">
+                                <i class="fa-solid fa-camera"></i>
+                            </button>
+                        </div>
+                        <input type="text" id="talkie-msg-input" placeholder="Message Talkie..." onkeypress="handleEnter(event, 'talkie')">
+                        <button class="send-btn" onclick="sendTalkieMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Quick Reply Chips -->
-            <div class="quick-suggestions">
-                <button class="chip" onclick="sendQuickMessage('Report suspicious account login')"><i class="fa-solid fa-triangle-exclamation"></i> Report suspicious login</button>
-                <button class="chip" onclick="sendQuickMessage('How to enable Two-Factor Authentication?')"><i class="fa-solid fa-key"></i> Enable 2FA</button>
-                <button class="chip" onclick="sendQuickMessage('Check photo verification status')"><i class="fa-solid fa-id-card"></i> Check ID status</button>
-            </div>
-
-            <!-- Chat Input Bar -->
-            <div class="chat-input-area">
-                <div class="input-actions">
-                    <button title="Attach File"><i class="fa-solid fa-paperclip"></i></button>
+        <!-- VIEW 2: SECURITY & SUPPORT CHAT -->
+        <section id="support-view" class="view-panel">
+            <div class="support-container">
+                <!-- Support Topics List -->
+                <div class="support-sidebar">
+                    <div class="sidebar-header">
+                        <h3>Keyo Support</h3>
+                    </div>
+                    <div class="support-topic-list">
+                        <div class="topic-item active" onclick="switchSupportTopic('ai-shield')">
+                            <i class="fa-solid fa-robot topic-icon"></i>
+                            <div>
+                                <h4>AI Security Shield Bot</h4>
+                                <p>Automated Threat Monitoring</p>
+                            </div>
+                        </div>
+                        <div class="topic-item" onclick="switchSupportTopic('identity')">
+                            <i class="fa-solid fa-user-ninja topic-icon"></i>
+                            <div>
+                                <h4>Identity Fraud Response</h4>
+                                <p>Report unauthorized account cloning</p>
+                            </div>
+                        </div>
+                        <div class="topic-item" onclick="switchSupportTopic('access')">
+                            <i class="fa-solid fa-key topic-icon"></i>
+                            <div>
+                                <h4>Account Access Help</h4>
+                                <p>2FA, password reset, login locks</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <input type="text" id="userInput" class="chat-input" placeholder="Type your security question..." onkeypress="handleKeyPress(event)">
-                <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+
+                <!-- Support Conversation Area -->
+                <div class="chat-window">
+                    <div class="chat-header">
+                        <div class="user-info">
+                            <i class="fa-solid fa-shield-halved support-badge-icon"></i>
+                            <div>
+                                <h4 id="support-title">Keyo AI Security Assistant</h4>
+                                <span class="encryption-tag"><i class="fa-solid fa-lock"></i> End-to-End Encrypted Session</span>
+                            </div>
+                        </div>
+                        <button title="Clear Support Log" onclick="clearSupportChat()"><i class="fa-solid fa-eraser"></i></button>
+                    </div>
+
+                    <div class="message-feed" id="support-feed">
+                        <div class="system-encrypted-notice">
+                            <i class="fa-solid fa-shield-check"></i>
+                            Messages in this session are secured with Keyo End-to-End Encryption protocol. No third parties can view this log.
+                        </div>
+                        <div class="message incoming">
+                            <div class="bubble">
+                                Welcome to Keyo Security Assistance. How can I help secure your account or resolve identity alerts today?
+                            </div>
+                        </div>
+                        <div class="quick-options">
+                            <button onclick="sendQuickOption('Check Account Security Status')">Check Security Status</button>
+                            <button onclick="sendQuickOption('Report Suspicious Login')">Report Unknown Login</button>
+                            <button onclick="sendQuickOption('Enable 2FA Protection')">Enable 2FA</button>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <input type="text" id="support-msg-input" placeholder="Type your security inquiry..." onkeypress="handleEnter(event, 'support')">
+                        <button class="send-btn" onclick="sendSupportMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
 
-    <!-- Interactive JavaScript -->
-    <script>
-        const chatMessages = document.getElementById('chatMessages');
-        const userInput = document.getElementById('userInput');
-        const typingIndicator = document.getElementById('typingIndicator');
+    <script src="script.js">
+        // Tab Switching
+// Tab Switching
+function switchMainTab(tabName) {
+    // 1. Get elements
+    const talkiePanel = document.getElementById('talkie-view');
+    const supportPanel = document.getElementById('support-view');
+    const talkieBtn = document.getElementById('nav-btn-talkie');
+    const supportBtn = document.getElementById('nav-btn-support');
 
-        // Handle Enter keypress
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+    // 2. Reset classes & inline styles
+    if (talkiePanel) {
+        talkiePanel.classList.remove('active');
+        talkiePanel.style.display = 'none';
+    }
+    if (supportPanel) {
+        supportPanel.classList.remove('active');
+        supportPanel.style.display = 'none';
+    }
+    if (talkieBtn) talkieBtn.classList.remove('active');
+    if (supportBtn) supportBtn.classList.remove('active');
+
+    // 3. Switch to target panel
+    if (tabName === 'talkie') {
+        if (talkiePanel) {
+            talkiePanel.classList.add('active');
+            talkiePanel.style.display = 'flex';
+        }
+        if (talkieBtn) talkieBtn.classList.add('active');
+    } else if (tabName === 'support') {
+        if (supportPanel) {
+            supportPanel.classList.add('active');
+            supportPanel.style.display = 'flex';
+        }
+        if (supportBtn) supportBtn.classList.add('active');
+    }
+}
+
+// User Switching in Talkie
+function selectUser(username, displayName) {
+    document.getElementById('active-user-name').innerText = displayName;
+    document.getElementById('active-user-avatar').src = `https://i.pravatar.cc/150?u=${username}`;
+}
+
+// Send Text Message in Talkie
+function sendTalkieMessage() {
+    const input = document.getElementById('talkie-msg-input');
+    const text = input.value.trim();
+    if (text) {
+        appendMessage('talkie-feed', text, 'outgoing');
+        input.value = '';
+    }
+}
+
+// Send Text Message in Support
+function sendSupportMessage() {
+    const input = document.getElementById('support-msg-input');
+    const text = input.value.trim();
+    if (text) {
+        appendMessage('support-feed', text, 'outgoing');
+        input.value = '';
+
+        // Simulated AI Bot response
+        setTimeout(() => {
+            appendMessage('support-feed', "Keyo Security Assistant: Your log request has been encrypted and processed. No breaches detected.", 'incoming');
+        }, 1000);
+    }
+}
+
+// Append message helper
+function appendMessage(feedId, content, type, isMedia = false) {
+    const feed = document.getElementById(feedId);
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message ${type}`;
+
+    if (isMedia) {
+        msgDiv.innerHTML = `<div class="bubble">${content}</div>`;
+    } else {
+        msgDiv.innerHTML = `<div class="bubble">${content}</div>`;
+    }
+
+    feed.appendChild(msgDiv);
+    feed.scrollTop = feed.scrollHeight;
+}
+
+// Keypress enter listener
+function handleEnter(e, view) {
+    if (e.key === 'Enter') {
+        if (view === 'talkie') sendTalkieMessage();
+        if (view === 'support') sendSupportMessage();
+    }
+}
+
+// Media file upload handler (Gallery & Camera)
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const fileURL = URL.createObjectURL(file);
+        let mediaTag = '';
+
+        if (file.type.startsWith('image/')) {
+            mediaTag = `<img src="${fileURL}" class="media-bubble" alt="Attached photo">`;
+        } else if (file.type.startsWith('video/')) {
+            mediaTag = `<video src="${fileURL}" class="media-bubble" controls></video>`;
         }
 
-        // Send Quick Suggestion Message
-        function sendQuickMessage(text) {
-            userInput.value = text;
-            sendMessage();
+        if (mediaTag) {
+            appendMessage('talkie-feed', mediaTag, 'outgoing', true);
         }
+    }
+}
 
-        // Send User Message
-        function sendMessage() {
-            const text = userInput.value.trim();
-            if (text === '') return;
+// Header Actions
+function startCall(type) {
+    const user = document.getElementById('active-user-name').innerText;
+    alert(`Initiating ${type.toUpperCase()} call with ${user}...`);
+}
 
-            const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+function clearCurrentChat() {
+    if (confirm("Clear this Talkie conversation history?")) {
+        document.getElementById('talkie-feed').innerHTML = '';
+    }
+}
 
-            // Render User Message
-            const userMsgDiv = document.createElement('div');
-            userMsgDiv.className = 'msg msg-user';
-            userMsgDiv.innerHTML = `
-                <div class="msg-bubble">${escapeHTML(text)}</div>
-                <span class="msg-time">${timeString}</span>
-            `;
-            
-            // Append before typing indicator
-            chatMessages.insertBefore(userMsgDiv, typingIndicator);
-            userInput.value = '';
-            scrollToBottom();
+function reportUser() {
+    const user = document.getElementById('active-user-name').innerText;
+    if (confirm(`Report ${user} for policy violations or fraud?`)) {
+        alert(`User ${user} reported. Our Keyo Security Team will inspect the incident log.`);
+    }
+}
 
-            // Show Bot Typing Indicator
-            showTyping(true);
+function clearSupportChat() {
+    document.getElementById('support-feed').innerHTML = `
+        <div class="system-encrypted-notice">
+            <i class="fa-solid fa-shield-check"></i>
+            New Encrypted Support Session Started.
+        </div>`;
+}
 
-            // Simulate Bot Automated Response
-            setTimeout(() => {
-                showTyping(false);
-                generateBotResponse(text);
-            }, 1200);
-        }
+function sendQuickOption(text) {
+    appendMessage('support-feed', text, 'outgoing');
+    setTimeout(() => {
+        appendMessage('support-feed', `Keyo Security Assistant: Running automated check for "${text}"... Session Secure.`, 'incoming');
+    }, 800);
+}
 
-        // Display or hide typing dots
-        function showTyping(show) {
-            typingIndicator.style.display = show ? 'flex' : 'none';
-            if (show) scrollToBottom();
-        }
-
-        // Generate Bot Response logic
-        function generateBotResponse(userText) {
-            const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            let responseText = "I have logged your query regarding Identity Shield security protocols. An automated scan has been initiated for your account.";
-
-            const textLower = userText.toLowerCase();
-
-            if (textLower.includes('suspicious') || textLower.includes('login') || textLower.includes('breach')) {
-                responseText = "⚠️ <strong>Security Alert Triggered:</strong> We recommend freezing your active session immediately from the Dashboard settings and resetting your MFA credentials.";
-            } else if (textLower.includes('2fa') || textLower.includes('two-factor') || textLower.includes('authentication')) {
-                responseText = "🔑 You can enable Two-Factor Authentication (2FA) by navigating to <strong>Settings > Security & MFA</strong> and scanning the TOTP QR code.";
-            } else if (textLower.includes('photo') || textLower.includes('id') || textLower.includes('status')) {
-                responseText = "🪪 Your uploaded photo verification document is currently being verified against encrypted biometric templates. Current status: <strong>In Progress</strong>.";
-            }
-
-            const botMsgDiv = document.createElement('div');
-            botMsgDiv.className = 'msg msg-bot';
-            botMsgDiv.innerHTML = `
-                <div class="msg-bubble">${responseText}</div>
-                <span class="msg-time">${timeString}</span>
-            `;
-
-            chatMessages.insertBefore(botMsgDiv, typingIndicator);
-            scrollToBottom();
-        }
-
-        // Scroll to chat bottom
-        function scrollToBottom() {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // Clear Chat function
-        function clearChat() {
-            chatMessages.innerHTML = `
-                <div class="msg msg-bot">
-                    <div class="msg-bubble">
-                        Chat history cleared. How else can Identity Shield assist you today?
-                    </div>
-                    <span class="msg-time">Just now</span>
-                </div>
-                <div class="typing-indicator" id="typingIndicator">
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                </div>
-            `;
-        }
-
-        // Escape HTML helper
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-            );
-        }
+// Support Topic Switching
+function switchSupportTopic(topic) {
+    const title = document.getElementById('support-title');
+    if (topic === 'ai-shield') title.innerText = "Keyo AI Security Shield Bot";
+    if (topic === 'identity') title.innerText = "Identity Fraud Response Unit";
+    if (topic === 'access') title.innerText = "Account Access & Recovery Desk";
+}
     </script>
 </body>
 </html>

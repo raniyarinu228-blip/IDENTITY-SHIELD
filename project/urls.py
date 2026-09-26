@@ -27,17 +27,12 @@ urlpatterns = [
     path('reply/',include('reply.urls')),
     path('feedback/',include('feedback.urls')),
     path('main_templates/',include('main_templates.urls')),
-<<<<<<< Updated upstream
-<<<<<<< HEAD
+
     path('admin/',include('main_templates.urls')),
     path('user/',include('main_templates.urls')),
     path('technical/',include('main_templates.urls')),
     path('feed/',include('feedback.urls')),
     path('home/',include('main_templates.urls')),
-=======
     path('friend/',include('friend.urls')),
->>>>>>> 887e2eb5634c0ea25f314d1aff681fdb756c807d
-=======
-    
->>>>>>> Stashed changes
+
 ]

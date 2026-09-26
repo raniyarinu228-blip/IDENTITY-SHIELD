@@ -6,4 +6,5 @@ urlpatterns = [
      path('user/', mviews.user),
      path('technical/', mviews.technical),
      path('home/', mviews.home),
+     
 ]

@@ -10,4 +10,5 @@ def technical(request):
     return render(request, 'main_templates/technical.html')
 def home(request):
     return render(request, 'main_templates/home.html')
+
 # Create your views here.

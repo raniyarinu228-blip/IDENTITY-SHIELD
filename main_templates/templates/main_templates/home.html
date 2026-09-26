@@ -3,707 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Identity Shield - Secure Identity & Access Management</title>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #eff6ff;
-            --accent: #06b6d4;
-            --dark-bg: #0f172a;
-            --card-bg: #ffffff;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background-color: #f8fafc;
-            color: var(--text-dark);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* --- NAVIGATION --- */
-        .navbar {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: #ffffff;
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .brand i {
-            color: var(--accent);
-            font-size: 1.6rem;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #94a3b8;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: #ffffff;
-        }
-
-        .nav-btns {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.6rem 1.4rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #ffffff;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: #ffffff;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
-            color: #ffffff;
-            padding: 160px 5% 100px;
-            text-align: center;
-            position: relative;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%3C%23334155%3E' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-
-        .hero-content {
-            max-width: 850px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .badge {
-            background: rgba(6, 182, 212, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero h1 {
-            font-size: 3.2rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to right, #ffffff, #cbd5e1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.15rem;
-            color: #94a3b8;
-            margin-bottom: 2.5rem;
-        }
-
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        /* --- STATS BAR --- */
-        .stats-container {
-            max-width: 1100px;
-            margin: -50px auto 0;
-            position: relative;
-            z-index: 10;
-            padding: 0 20px;
-        }
-
-        .stats-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 0.2rem;
-        }
-
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        /* --- FEATURES SECTION --- */
-        .features {
-            padding: 100px 5% 80px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .section-header p {
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
-        }
-
-        .feature-icon {
-            width: 55px;
-            height: 55px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .feature-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            background: var(--dark-bg);
-            color: #94a3b8;
-            padding: 3rem 5% 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        footer p {
-            margin-top: 1rem;
-        }
-
-        /* --- LOGIN & ACCESS MODAL --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .auth-card {
-            background: #ffffff;
-            width: 100%;
-            max-width: 440px;
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .auth-card {
-            transform: translateY(0);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-
-        .auth-tabs {
-            display: flex;
-            border-bottom: 2px solid var(--border);
-            margin-bottom: 2rem;
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 0.8rem 0;
-            background: none;
-            border: none;
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .auth-tab.active {
-            color: var(--primary);
-        }
-
-        .auth-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-            color: var(--text-dark);
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-wrapper i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.6rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            outline: none;
-            font-size: 0.95rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .role-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 1.25rem;
-        }
-
-        .role-btn {
-            flex: 1;
-            padding: 0.5rem;
-            border: 1px solid var(--border);
-            background: #ffffff;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            color: var(--text-muted);
-        }
-
-        .role-btn.active {
-            border-color: var(--primary);
-            background: var(--primary-light);
-            color: var(--primary);
-        }
-
-        .auth-footer {
-            margin-top: 1.5rem;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .auth-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero h1 { font-size: 2.2rem; }
-            .hero { padding-top: 120px; }
-            .stats-card { grid-template-columns: 1fr; }
-        }
-    </style>
+    <title>LMS Social Learning Feed</title>
 </head>
-<body>
+<body style="margin: 0; padding: 20px 0; font-family: 'Courier New', Courier, monospace; background-color: #03060a; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #4cc9f0; box-sizing: border-box;">
 
-    <!-- Header Navigation -->
-    <nav class="navbar">
-        <a href="#" class="brand">
-            <i class="fa-solid fa-shield-halved"></i>
-            Identity Shield
-        </a>
-        <ul class="nav-links">
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="view-feedback.html">Feedback</a></li>
-            <li><a href="#about">About</a></li>
-        </ul>
-        <div class="nav-btns">
-            <button class="btn btn-outline" onclick="openModal('login')">Log In</button>
-            <button class="btn btn-primary" onclick="openModal('register')">Get Started</button>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <span class="badge"><i class="fa-solid fa-lock"></i> Enterprise Identity Security</span>
-            <h1>Zero-Trust Access & Next-Gen Identity Verification</h1>
-            <p>Identity Shield safeguards your platform using AI-driven authentication, centralized access policies, and continuous biometric identity validation.</p>
-            <div class="hero-buttons">
-                <button class="btn btn-primary" style="padding: 0.8rem 1.8rem;" onclick="openModal('register')">
-                    Request Access Portal <i class="fa-solid fa-arrow-right"></i>
+    <!-- Mobile Frame Container -->
+    <div style="width: 100%; max-width: 412px; height: 820px; background-color: #080c14; border: 2px solid #1a2a40; border-radius: 36px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 35px rgba(0, 229, 255, 0.15), 0 0 10px rgba(0,0,0,0.9); position: relative; box-sizing: border-box;">
+        
+        <!-- Header Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px 14px 24px; border-bottom: 1px solid #101c2e; background-color: #080c14; z-index: 10;">
+            <span style="font-size: 20px; letter-spacing: 1px; color: #4cc9f0; font-weight: bold; user-select: none;">App Name</span>
+            <div style="display: flex; gap: 18px; align-items: center;">
+                <button onclick="alert('LMS Session: Encrypted & Active')" style="background: none; border: none; padding: 0; cursor: pointer; color: #4cc9f0;">
+                    <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8;">
+                        <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                        <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+                    </svg>
                 </button>
-                <button class="btn btn-outline" style="padding: 0.8rem 1.8rem;" onclick="openModal('login')">
-                    System Login
+                <button onclick="alert('3 Unread LMS Notifications')" style="background: none; border: none; padding: 0; cursor: pointer; color: #4cc9f0; position: relative;">
+                    <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8;">
+                        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                        <polyline points="3 7 12 13 21 7"></polyline>
+                    </svg>
+                    <span style="position: absolute; top: -3px; right: -3px; width: 7px; height: 7px; background-color: #00e5ff; border-radius: 50%;"></span>
+                </button>
+                <button onclick="alert('Opening Community Chat Module...')" style="background: none; border: none; padding: 0; cursor: pointer; color: #4cc9f0;">
+                    <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8;">
+                        <rect x="4" y="5" width="16" height="12" rx="2"></rect>
+                        <polyline points="8 17 4 21 4 17"></polyline>
+                    </svg>
                 </button>
             </div>
         </div>
-    </section>
 
-    <!-- Analytics / Stats Section -->
-    <div class="stats-container">
-        <div class="stats-card">
-            <div class="stat-item">
-                <div class="stat-number">99.99%</div>
-                <div class="stat-label">System Uptime SLA</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">2.4M+</div>
-                <div class="stat-label">Identities Shielded</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">&lt; 100ms</div>
-                <div class="stat-label">Auth Latency</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">0</div>
-                <div class="stat-label">Breaches Recorded</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="section-header">
-            <h2>Complete Identity Governance</h2>
-            <p>Engineered to mitigate risk, streamline compliance, and deliver frictionless user access verification.</p>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fa-solid fa-fingerprint"></i></div>
-                <h3>Multi-Factor Auth</h3>
-                <p>Support for TOTP, FIDO2 WebAuthn, hardware tokens, and adaptive biometrics to ensure verified identity access.</p>
+        <!-- Shots / Stories Bar -->
+        <div style="display: flex; align-items: flex-start; padding: 12px 20px 8px 20px; gap: 20px; background-color: #080c14; border-bottom: 1px solid #0d1728; overflow-x: auto;">
+            <!-- Create Shot -->
+            <div onclick="alert('Create a new Learning Shot')" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; flex-shrink: 0;">
+                <span style="position: absolute; top: -4px; left: -2px; color: #00e5ff; font-size: 14px; font-weight: bold; text-shadow: 0 0 5px #00e5ff;">+</span>
+                <svg viewBox="0 0 80 50" style="width: 65px; height: 42px; stroke: #4cc9f0; fill: none; stroke-width: 1.8;">
+                    <path d="M 15 35 C 10 35, 5 30, 8 22 C 10 15, 20 12, 25 18 C 30 10, 45 8, 52 16 C 60 12, 72 18, 70 28 C 75 33, 70 38, 62 38 Z" stroke-linejoin="round" stroke-linecap="round"/>
+                </svg>
+                <span style="font-size: 11px; color: #8a99ad; margin-top: 4px; letter-spacing: 0.5px;">Shots</span>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
-                <h3>Role-Based Access Control</h3>
-                <p>Granular RBAC and ABAC policy assignment ensuring employees access only authorized network segments.</p>
+            <!-- Instructor Story 1 -->
+            <div onclick="loadStory(0)" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; flex-shrink: 0;">
+                <svg viewBox="0 0 50 45" style="width: 48px; height: 42px; stroke: #00e5ff; fill: none; stroke-width: 1.8;">
+                    <path d="M 8 38 A 10 10 0 0 1 28 38" />
+                    <circle cx="18" cy="22" r="5" />
+                    <rect x="24" y="10" width="20" height="12" rx="6" />
+                </svg>
+                <span style="font-size: 11px; color: #8a99ad; margin-top: 4px; letter-spacing: 0.5px;">Alex</span>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                <h3>Real-Time Threat Detection</h3>
-                <p>Machine learning monitors user behavior patterns to flag anomalous logins and automated credential stuffing attempts.</p>
+            <!-- Instructor Story 2 -->
+            <div onclick="loadStory(1)" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; flex-shrink: 0;">
+                <svg viewBox="0 0 50 45" style="width: 48px; height: 42px; stroke: #4cc9f0; fill: none; stroke-width: 1.8;">
+                    <path d="M 8 38 A 10 10 0 0 1 28 38" />
+                    <circle cx="18" cy="22" r="5" />
+                    <rect x="24" y="8" width="22" height="14" rx="7" />
+                </svg>
+                <span style="font-size: 11px; color: #8a99ad; margin-top: 4px; letter-spacing: 0.5px;">Sarah</span>
             </div>
         </div>
-    </section>
 
-    <!-- Footer Section -->
-    <footer>
-        <div class="brand" style="justify-content: center; margin-bottom: 1rem;">
-            <i class="fa-solid fa-shield-halved"></i> Identity Shield
+        <!-- User Profile Banner Header -->
+        <div style="background-color: #0d1728; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #132238;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 34px; height: 34px; border: 2px solid #4cc9f0; border-radius: 8px; display: flex; justify-content: center; align-items: center; background-color: #080c14;">
+                    <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: #4cc9f0; fill: none; stroke-width: 1.8;">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M 4 20 C 4 15, 8 14, 12 14 C 16 14, 20 15, 20 20"></path>
+                    </svg>
+                </div>
+                <span id="post-author" style="color: #4cc9f0; font-size: 13px; border-bottom: 2px solid #4cc9f0; padding-bottom: 1px; font-weight: bold;">user</span>
+            </div>
+            <span id="post-time" style="font-size: 10px; color: #8a99ad;">2 hrs ago</span>
         </div>
-        <p>&copy; 2026 Identity Shield Security Project. Developed for Academic Demonstrations.</p>
-    </footer>
 
-    <!-- ACCESS & LOGIN MODAL -->
-    <div class="modal-overlay" id="authModal">
-        <div class="auth-card">
-            <button class="close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+        <!-- Main Display / Feed Area -->
+        <div id="main-display" style="flex: 1; background-color: #060910; display: flex; flex-direction: column; overflow-y: auto; padding: 16px; box-sizing: border-box; position: relative;">
             
-            <div class="auth-tabs">
-                <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Login</button>
-                <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
+            <!-- Home Feed View (Social Media LMS Content Card) -->
+            <div id="view-home" style="display: flex; flex-direction: column; width: 100%; height: 100%; justify-content: space-between;">
+                
+                <!-- Lesson Code / Graphic Box -->
+                <div style="background-color: #0b1322; border: 1px solid #1a2a40; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: inset 0 0 10px rgba(0,229,255,0.05);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #132238; padding-bottom: 6px;">
+                        <span id="module-tag" style="font-size: 10px; background-color: #10233b; color: #00e5ff; padding: 3px 8px; border-radius: 4px; border: 1px solid #00e5ff;">#CYBER_SECURITY</span>
+                        <span style="font-size: 10px; color: #8a99ad;">Lesson 04/12</span>
+                    </div>
+
+                    <h4 id="post-title" style="color: #4cc9f0; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">Understanding Phishing Headers</h4>
+                    <p id="post-body" style="color: #8a99ad; font-size: 12px; line-height: 1.5; margin: 0 0 12px 0;">
+                        Always check the `Return-Path` and `Authentication-Results` fields in email headers to verify SPF & DKIM signatures before trusting links.
+                    </p>
+
+                    <!-- Interactive Micro Quiz Card Inside Feed -->
+                    <div style="background-color: #080c14; border-left: 3px solid #00e5ff; padding: 10px; border-radius: 4px;">
+                        <div style="font-size: 11px; color: #00e5ff; font-weight: bold; margin-bottom: 6px;">QUICK CHECK:</div>
+                        <div style="font-size: 11px; color: #d1d5db; margin-bottom: 8px;">Which header confirms domain ownership?</div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="answerQuiz(this, false)" style="flex: 1; background-color: #0d1728; border: 1px solid #1a2a40; color: #4cc9f0; padding: 6px; font-size: 10px; border-radius: 4px; cursor: pointer;">A) Subject</button>
+                            <button onclick="answerQuiz(this, true)" style="flex: 1; background-color: #0d1728; border: 1px solid #1a2a40; color: #4cc9f0; padding: 6px; font-size: 10px; border-radius: 4px; cursor: pointer;">B) DKIM-Signature</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Stats Counter -->
+                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #8a99ad; padding: 0 4px 6px 4px;">
+                    <span id="likes-count">128 Likes</span>
+                    <span id="comments-count">14 Community Comments</span>
+                </div>
             </div>
 
-            <!-- Login Form -->
-            <form id="form-login" onsubmit="handleAuth(event, 'login')">
-                <div class="role-selector">
-                    <button type="button" class="role-btn active" onclick="setRole(this)">User</button>
-                    <button type="button" class="role-btn" onclick="setRole(this)">Administrator</button>
+            <!-- Mind Unlock View -->
+            <div id="view-mind" style="display: none; flex-direction: column; gap: 10px; width: 100%;">
+                <h3 style="color: #4cc9f0; font-size: 15px; margin: 0 0 6px 0;">UNLOCKED LMS MODULES</h3>
+                <div style="background-color: #0d1728; padding: 12px; border: 1px solid #1a2a40; border-radius: 8px;">
+                    <div style="color: #00e5ff; font-weight: bold; font-size: 12px;">01. Email Threat Vectors</div>
+                    <div style="color: #8a99ad; font-size: 10px; margin-top: 4px;">100% Completed • Certificate Issued</div>
                 </div>
-
-                <div class="form-group">
-                    <label for="login-email">Work Email</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="login-email" class="form-control" placeholder="name@company.com" required>
-                    </div>
+                <div style="background-color: #0d1728; padding: 12px; border: 1px solid #1a2a40; border-radius: 8px;">
+                    <div style="color: #00e5ff; font-weight: bold; font-size: 12px;">02. Social Engineering Defense</div>
+                    <div style="color: #8a99ad; font-size: 10px; margin-top: 4px;">In Progress • 2 Lessons Remaining</div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
-                    </div>
+            <!-- Search View -->
+            <div id="view-search" style="display: none; flex-direction: column; gap: 12px; width: 100%;">
+                <input type="text" placeholder="Search topics, tags, or peers..." style="width: 100%; padding: 10px; background-color: #0d1728; border: 1px solid #4cc9f0; border-radius: 6px; color: #4cc9f0; font-family: inherit; box-sizing: border-box; outline: none; font-size: 12px;">
+                <div style="color: #8a99ad; font-size: 11px;">Trending tags: <span style="color: #00e5ff;">#phishing</span>, <span style="color: #00e5ff;">#soc_analyst</span></div>
+            </div>
+
+            <!-- Friends / Network View -->
+            <div id="view-friends" style="display: none; flex-direction: column; gap: 10px; width: 100%;">
+                <h3 style="color: #4cc9f0; font-size: 15px; margin: 0 0 6px 0;">LEARNING NETWORK</h3>
+                <div style="display: flex; align-items: center; justify-content: space-between; background-color: #0d1728; padding: 10px; border-radius: 8px;">
+                    <span style="font-size: 12px; color: #4cc9f0;">Alex (Instructor)</span>
+                    <span style="font-size: 10px; color: #00e5ff;">● Online</span>
                 </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; background-color: #0d1728; padding: 10px; border-radius: 8px;">
+                    <span style="font-size: 12px; color: #4cc9f0;">Sarah (Security Lead)</span>
+                    <span style="font-size: 10px; color: #00e5ff;">● Active now</span>
+                </div>
+            </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
-                    Authenticate Identity <i class="fa-solid fa-right-to-bracket"></i>
+            <!-- Profile View -->
+            <div id="view-profile" style="display: none; flex-direction: column; gap: 10px; width: 100%; text-align: center;">
+                <div style="width: 50px; height: 50px; border: 2px solid #00e5ff; border-radius: 50%; margin: 0 auto; display: flex; justify-content: center; align-items: center;">
+                    <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; stroke: #4cc9f0; fill: none; stroke-width: 1.8;">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M 4 20 C 4 15, 8 14, 12 14 C 16 14, 20 15, 20 20"></path>
+                    </svg>
+                </div>
+                <div style="color: #00e5ff; font-weight: bold; font-size: 14px;">User Student</div>
+                <div style="color: #8a99ad; font-size: 11px;">Level 4 Security Analyst Trainee</div>
+            </div>
+
+        </div>
+
+        <!-- Post Actions & Audio Podcast Bar -->
+        <div style="background-color: #0b1322; padding: 12px 20px 14px 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #122035;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <!-- Like Button -->
+                    <button id="btn-like" onclick="toggleLike()" style="background: none; border: none; padding: 0; cursor: pointer; color: #4cc9f0;">
+                        <svg id="svg-like" viewBox="0 0 24 24" style="width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; transition: all 0.2s ease;">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                    <!-- Bookmark Button -->
+                    <button id="btn-cloud" onclick="toggleCloud()" style="background: none; border: none; padding: 0; cursor: pointer; color: #4cc9f0;">
+                        <svg id="svg-cloud" viewBox="0 0 24 24" style="width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; transition: all 0.2s ease;">
+                            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <!-- Share Button -->
+                    <button onclick="alert('Post link copied to share with learning group!')" style="background: none; border: none; padding: 0; cursor: pointer; color: #4cc9f0;">
+                        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8;">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                    <!-- Flag / Report Button -->
+                    <button onclick="alert('Flagged for review by course administrator.')" style="background: none; border: none; padding: 0; cursor: pointer; color: #4cc9f0;">
+                        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8;">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Working Audio Lesson Player -->
+            <div style="display: flex; align-items: center; gap: 12px; margin-top: 2px;">
+                <button id="audio-play-btn" onclick="toggleAudio()" style="width: 22px; height: 22px; border: 2px solid #4cc9f0; border-radius: 4px; background: none; cursor: pointer; display: flex; justify-content: center; align-items: center; padding: 0;">
+                    <div id="play-icon" style="width: 0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 7px solid #4cc9f0; margin-left: 2px;"></div>
                 </button>
-
-                <div class="auth-footer">
-                    <a href="#">Forgot password?</a>
-                </div>
-            </form>
-
-            <!-- Register Form -->
-            <form id="form-register" style="display: none;" onsubmit="handleAuth(event, 'register')">
-                <div class="form-group">
-                    <label for="reg-name">Full Name</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-user"></i>
-                        <input type="text" id="reg-name" class="form-control" placeholder="John Doe" required>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 4px; cursor: pointer;" onclick="toggleAudio()">
+                    <div style="height: 2px; width: 100%; background-color: #1a2a40; position: relative;">
+                        <div id="audio-progress" style="height: 100%; width: 0%; background-color: #00e5ff; transition: width 0.1s linear;"></div>
                     </div>
+                    <div style="height: 2px; width: 60%; background-color: #4cc9f0;"></div>
                 </div>
+            </div>
+        </div>
 
-                <div class="form-group">
-                    <label for="reg-email">Work Email</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="reg-email" class="form-control" placeholder="name@company.com" required>
-                    </div>
-                </div>
+        <!-- Navigation Bar -->
+        <div style="background-color: #080c14; display: flex; justify-content: space-around; align-items: flex-end; padding: 10px 10px 14px 10px; border-top: 1px solid #101c2e;">
+            <button onclick="switchTab('home')" style="background: none; border: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 4px; padding: 0;">
+                <svg id="nav-home-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: #00e5ff; fill: none; stroke-width: 1.8;">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span id="nav-home-text" style="font-size: 9px; color: #00e5ff; text-align: center; line-height: 1.1; font-family: inherit;">Home</span>
+            </button>
 
-                <div class="form-group">
-                    <label for="reg-password">Create Password</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
-                    </div>
-                </div>
+            <button onclick="switchTab('mind')" style="background: none; border: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 4px; padding: 0;">
+                <svg id="nav-mind-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: #8a99ad; fill: none; stroke-width: 1.8;">
+                    <circle cx="7.5" cy="15.5" r="4.5"></circle>
+                    <path d="M11 12l8.5-8.5"></path>
+                    <path d="M16 6l3 3"></path>
+                </svg>
+                <span id="nav-mind-text" style="font-size: 9px; color: #8a99ad; text-align: center; line-height: 1.1; font-family: inherit;">Mind<br>unlock</span>
+            </button>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
-                    Request Credentials <i class="fa-solid fa-user-plus"></i>
-                </button>
+            <button onclick="switchTab('search')" style="background: none; border: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 4px; padding: 0;">
+                <svg id="nav-search-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: #8a99ad; fill: none; stroke-width: 1.8;">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span id="nav-search-text" style="font-size: 9px; color: #8a99ad; text-align: center; line-height: 1.1; font-family: inherit;">Search</span>
+            </button>
 
-                <div class="auth-footer">
-                    By registering, you agree to our <a href="#">Security Protocol</a>
-                </div>
-            </form>
+            <button onclick="switchTab('friends')" style="background: none; border: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 4px; padding: 0;">
+                <svg id="nav-friends-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: #8a99ad; fill: none; stroke-width: 1.8;">
+                    <circle cx="9" cy="12" r="1.5" />
+                    <circle cx="15" cy="12" r="1.5" />
+                    <path d="M 8 17 C 8 16, 10 15, 12 15 C 14 15, 16 16, 16 17" />
+                </svg>
+                <span id="nav-friends-text" style="font-size: 9px; color: #8a99ad; text-align: center; line-height: 1.1; font-family: inherit;">Friends &<br>connection</span>
+            </button>
+
+            <button onclick="switchTab('profile')" style="background: none; border: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 4px; padding: 0;">
+                <svg id="nav-profile-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: #8a99ad; fill: none; stroke-width: 1.8;">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 8l4 4-4 4"></path>
+                    <path d="M8 12h8"></path>
+                </svg>
+                <span id="nav-profile-text" style="font-size: 9px; color: #8a99ad; text-align: center; line-height: 1.1; font-family: inherit;">Profile</span>
+            </button>
         </div>
     </div>
 
-    <!-- JavaScript Controls -->
+    <!-- Application Script -->
     <script>
-        // Modal toggling
-        function openModal(mode) {
-            document.getElementById('authModal').classList.add('active');
-            switchTab(mode);
-        }
+        let isLiked = false;
+        let isClouded = false;
+        let isPlaying = false;
+        let likes = 128;
+        let audioProgressInterval = null;
 
-        function closeModal() {
-            document.getElementById('authModal').classList.remove('active');
-        }
-
-        // Close modal when clicking outside of card
-        window.onclick = function(event) {
-            const modal = document.getElementById('authModal');
-            if (event.target === modal) {
-                closeModal();
+        const stories = [
+            {
+                author: "Alex (Instructor)",
+                time: "10 mins ago",
+                tag: "#THREAT_INTEL",
+                title: "Domain Spoofing Techniques",
+                body: "Typosquatting and IDN homograph attacks trick users into visiting fake portals. Always inspect URL characters!"
+            },
+            {
+                author: "Sarah (Security Lead)",
+                time: "1 hour ago",
+                tag: "#SOC_ANALYST",
+                title: "SOC Alert Triage Tip",
+                body: "When analyzing flagged attachments, run them in an isolated sandbox environment prior to opening."
             }
+        ];
+
+        function loadStory(idx) {
+            switchTab('home');
+            const data = stories[idx];
+            document.getElementById('post-author').innerText = data.author;
+            document.getElementById('post-time').innerText = data.time;
+            document.getElementById('module-tag').innerText = data.tag;
+            document.getElementById('post-title').innerText = data.title;
+            document.getElementById('post-body').innerText = data.body;
         }
 
-        // Switching between Login and Register tabs
-        function switchTab(tab) {
-            const loginForm = document.getElementById('form-login');
-            const regForm = document.getElementById('form-register');
-            const tabLogin = document.getElementById('tab-login');
-            const tabReg = document.getElementById('tab-register');
+        function switchTab(tabName) {
+            const tabs = ['home', 'mind', 'search', 'friends', 'profile'];
+            tabs.forEach(tab => {
+                const view = document.getElementById('view-' + tab);
+                const icon = document.getElementById('nav-' + tab + '-icon');
+                const text = document.getElementById('nav-' + tab + '-text');
 
-            if (tab === 'login') {
-                loginForm.style.display = 'block';
-                regForm.style.display = 'none';
-                tabLogin.classList.add('active');
-                tabReg.classList.remove('active');
+                if (tab === tabName) {
+                    view.style.display = 'flex';
+                    icon.style.stroke = '#00e5ff';
+                    text.style.color = '#00e5ff';
+                } else {
+                    view.style.display = 'none';
+                    icon.style.stroke = '#8a99ad';
+                    text.style.color = '#8a99ad';
+                }
+            });
+        }
+
+        function toggleLike() {
+            isLiked = !isLiked;
+            const icon = document.getElementById('svg-like');
+            const counter = document.getElementById('likes-count');
+            if (isLiked) {
+                icon.style.fill = '#00e5ff';
+                icon.style.stroke = '#00e5ff';
+                likes++;
             } else {
-                loginForm.style.display = 'none';
-                regForm.style.display = 'block';
-                tabReg.classList.add('active');
-                tabLogin.classList.remove('active');
+                icon.style.fill = 'none';
+                icon.style.stroke = '#4cc9f0';
+                likes--;
             }
+            counter.innerText = likes + " Likes";
         }
 
-        // Select Role in Login
-        function setRole(element) {
-            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-        }
-
-        // Authentication Handler Simulation
-        function handleAuth(event, type) {
-            event.preventDefault();
-            if (type === 'login') {
-                const email = document.getElementById('login-email').value;
-                alert(`Authentication Successful!\nWelcome back to Identity Shield, ${email}.`);
+        function toggleCloud() {
+            isClouded = !isClouded;
+            const icon = document.getElementById('svg-cloud');
+            if (isClouded) {
+                icon.style.fill = '#00e5ff';
+                icon.style.stroke = '#00e5ff';
             } else {
-                alert('Access Request Submitted!\nYour registration is pending administrator clearance.');
+                icon.style.fill = 'none';
+                icon.style.stroke = '#4cc9f0';
             }
-            closeModal();
+        }
+
+        function answerQuiz(btn, isCorrect) {
+            if (isCorrect) {
+                btn.style.backgroundColor = '#00e5ff';
+                btn.style.color = '#080c14';
+                btn.innerText = 'Correct! ✓';
+            } else {
+                btn.style.backgroundColor = '#ff4d4d';
+                btn.style.color = '#ffffff';
+                btn.innerText = 'Incorrect ✗';
+            }
+        }
+
+        function toggleAudio() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('audio-play-btn');
+            const progressBar = document.getElementById('audio-progress');
+
+            if (isPlaying) {
+                btn.innerHTML = '<div style="width: 6px; height: 8px; border-left: 2px solid #00e5ff; border-right: 2px solid #00e5ff;"></div>';
+                let progress = 0;
+                audioProgressInterval = setInterval(() => {
+                    progress += 2;
+                    if (progress > 100) progress = 0;
+                    progressBar.style.width = progress + '%';
+                }, 100);
+            } else {
+                btn.innerHTML = '<div style="width: 0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 7px solid #4cc9f0; margin-left: 2px;"></div>';
+                clearInterval(audioProgressInterval);
+            }
         }
     </script>
 </body>

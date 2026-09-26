@@ -1,471 +1,1477 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Identity Shield - Accepted Friends</title>
-  <!-- Google Fonts & Font Awesome Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    :root {
-      --bg-primary: #0f172a;
-      --bg-surface: #1e293b;
-      --bg-card: #334155;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent-shield: #38bdf8;
-      --accent-green: #10b981;
-      --border-color: #475569;
-      --radius-lg: 16px;
-      --radius-sm: 8px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Keyo | Friends & Connections</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+:root {
+    --bg: #060b16;
+    --surface: #0d1627;
+    --surface2: #111c2f;
+    --border: #1e293b;
+
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+
+    --green: #22c55e;
+    --blue: #3b82f6;
+    --orange: #f97316;
+    --red: #ef4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+    height: 72px;
+    background: rgba(6, 11, 22, 0.94);
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 6%;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    backdrop-filter: blur(14px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #6366f1,
+        #4338ca
+    );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-icon i {
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-links a {
+    color: var(--muted);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    transition: 0.25s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: white;
+    background: var(--surface);
+}
+
+.nav-links a.active {
+    color: #818cf8;
+}
+
+.nav-profile {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #6366f1,
+        #3b82f6
+    );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+
+    margin-left: 8px;
+}
+
+
+/* ================= MAIN ================= */
+
+.container {
+    width: 88%;
+    max-width: 1250px;
+    margin: auto;
+}
+
+
+/* ================= PAGE HEADER ================= */
+
+.page-header {
+    padding: 45px 0 30px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 25px;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #818cf8;
+
+    background: rgba(99, 102, 241, 0.1);
+
+    border: 1px solid rgba(99, 102, 241, 0.2);
+
+    padding: 7px 12px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.page-header h1 {
+    font-size: 34px;
+
+    letter-spacing: -1px;
+
+    margin: 14px 0 8px;
+}
+
+.page-header p {
+    color: var(--muted);
+
+    font-size: 14px;
+
+    max-width: 620px;
+
+    line-height: 1.7;
+}
+
+.add-btn {
+    border: none;
+
+    background: var(--primary);
+
+    color: white;
+
+    padding: 13px 18px;
+
+    border-radius: 9px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    transition: 0.25s;
+}
+
+.add-btn:hover {
+    background: var(--primary-dark);
+}
+
+
+/* ================= STATISTICS ================= */
+
+.stats {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+.stat {
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 20px;
+}
+
+.stat-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 14px;
+}
+
+.stat-icon {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(99, 102, 241, 0.12);
+
+    color: #818cf8;
+}
+
+.stat small {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.stat strong {
+    display: block;
+
+    font-size: 24px;
+
+    margin-top: 4px;
+}
+
+.green {
+    color: var(--green);
+}
+
+.blue {
+    color: var(--blue);
+}
+
+.orange {
+    color: var(--orange);
+}
+
+.red {
+    color: var(--red);
+}
+
+
+/* ================= SEARCH ================= */
+
+.toolbar {
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 14px;
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-bottom: 22px;
+}
+
+.search {
+    flex: 1;
+
+    position: relative;
+}
+
+.search i {
+    position: absolute;
+
+    left: 14px;
+    top: 14px;
+
+    color: #64748b;
+}
+
+.search input {
+    width: 100%;
+
+    background: var(--surface2);
+
+    border: 1px solid var(--border);
+
+    color: var(--text);
+
+    padding: 12px 15px 12px 40px;
+
+    border-radius: 8px;
+
+    outline: none;
+}
+
+.search input:focus {
+    border-color: var(--primary);
+}
+
+.filter {
+    background: var(--surface2);
+
+    border: 1px solid var(--border);
+
+    color: var(--muted);
+
+    border-radius: 8px;
+
+    padding: 0 15px;
+
+    min-width: 180px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+
+/* ================= SECTION TITLE ================= */
+
+.section-title {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin: 25px 0 14px;
+}
+
+.section-title h2 {
+    font-size: 18px;
+}
+
+.section-title span {
+    font-size: 12px;
+
+    color: var(--muted);
+}
+
+
+/* ================= FRIEND CARDS ================= */
+
+.network-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+}
+
+.person {
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    transition: 0.25s;
+}
+
+.person:hover {
+    border-color: #334155;
+
+    transform: translateY(-2px);
+}
+
+.person-head {
+    display: flex;
+
+    gap: 13px;
+
+    align-items: center;
+}
+
+.avatar {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #334155,
+        #6366f1
+    );
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+
+    font-weight: 800;
+}
+
+.person h3 {
+    font-size: 14px;
+}
+
+.person p {
+    font-size: 11px;
+
+    color: var(--muted);
+
+    margin-top: 4px;
+}
+
+.status {
+    margin-left: auto;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    padding: 5px 8px;
+
+    border-radius: 6px;
+
+    background: rgba(34, 197, 94, 0.1);
+
+    color: #4ade80;
+}
+
+.status.pending {
+    background: rgba(249, 115, 22, 0.1);
+
+    color: #fb923c;
+}
+
+.person-info {
+    display: flex;
+
+    gap: 8px;
+
+    margin: 17px 0;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+.tag {
+    background: #111c2f;
+
+    border: 1px solid var(--border);
+
+    padding: 6px 8px;
+
+    border-radius: 6px;
+}
+
+.person-actions {
+    display: flex;
+
+    gap: 8px;
+}
+
+.btn {
+    flex: 1;
+
+    padding: 9px;
+
+    border-radius: 7px;
+
+    border: 1px solid var(--border);
+
+    background: transparent;
+
+    color: #cbd5e1;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: var(--surface2);
+}
+
+.btn.primary {
+    background: var(--primary);
+
+    border-color: var(--primary);
+
+    color: white;
+}
+
+
+/* ================= SECURITY BOX ================= */
+
+.security-box {
+    margin: 28px 0;
+
+    background: linear-gradient(
+        135deg,
+        #0d1627,
+        #0a1322
+    );
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 23px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.shield {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 10px;
+
+    background: rgba(34, 197, 94, 0.1);
+
+    color: var(--green);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.security-box h3 {
+    font-size: 14px;
+
+    margin-bottom: 5px;
+}
+
+.security-box p {
+    font-size: 12px;
+
+    color: var(--muted);
+
+    line-height: 1.6;
+}
+
+.security-score {
+    margin-left: auto;
+
+    text-align: right;
+}
+
+.security-score strong {
+    font-size: 24px;
+
+    color: var(--green);
+}
+
+.security-score span {
+    display: block;
+
+    font-size: 10px;
+
+    color: var(--muted);
+}
+
+
+/* ================= FOOTER ================= */
+
+footer {
+    margin-top: 55px;
+
+    border-top: 1px solid var(--border);
+
+    padding: 28px 6%;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+    .network-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
+    .nav-links a:nth-child(-n+4) {
+        display: none;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .container {
+        width: 92%;
     }
 
-    /* Navigation / Header */
-    header {
-      width: 100%;
-      max-width: 1000px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 24px;
-      background-color: var(--bg-surface);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-color);
-      margin-bottom: 30px;
+    .page-header {
+        align-items: flex-start;
+
+        flex-direction: column;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .page-header h1 {
+        font-size: 28px;
     }
 
-    .brand i {
-      font-size: 1.8rem;
-      color: var(--accent-shield);
+    .stats,
+    .network-grid {
+        grid-template-columns: 1fr;
     }
 
-    .brand h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+    .toolbar {
+        flex-direction: column;
     }
 
-    .shield-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--accent-green);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+    .filter {
+        height: 44px;
     }
 
-    /* Main Container */
-    main {
-      width: 100%;
-      max-width: 1000px;
+    .navbar {
+        padding: 0 4%;
     }
 
-    /* Search & Filter Controls */
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
+    .nav-links {
+        display: none;
     }
 
-    .search-bar {
-      position: relative;
-      flex: 1;
-      min-width: 280px;
+    .security-box {
+        align-items: flex-start;
+
+        flex-wrap: wrap;
     }
 
-    .search-bar i {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
+    .security-score {
+        margin-left: 0;
+
+        text-align: left;
     }
 
-    .search-bar input {
-      width: 100%;
-      padding: 12px 16px 12px 42px;
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      color: var(--text-main);
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+    footer {
+        flex-direction: column;
 
-    .search-bar input:focus {
-      border-color: var(--accent-shield);
+        gap: 8px;
     }
+}
 
-    .stats-badge {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    .stats-badge span {
-      color: var(--accent-shield);
-      font-weight: 700;
-    }
-
-    /* Friends Grid */
-    .friends-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    /* Friend Card */
-    .friend-card {
-      background-color: var(--bg-surface);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-color);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      position: relative;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .friend-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    .avatar-wrapper {
-      position: relative;
-      margin-bottom: 12px;
-    }
-
-    .avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--accent-shield);
-    }
-
-    .verified-icon {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      background-color: var(--accent-shield);
-      color: var(--bg-primary);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      border: 2px solid var(--bg-surface);
-    }
-
-    .friend-name {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .friend-handle {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-bottom: 12px;
-    }
-
-    .security-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background-color: var(--bg-card);
-      padding: 6px 12px;
-      border-radius: var(--radius-sm);
-      font-size: 0.75rem;
-      color: var(--accent-shield);
-      margin-bottom: 16px;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .card-actions {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-    }
-
-    .btn {
-      flex: 1;
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      border: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: opacity 0.2s;
-    }
-
-    .btn:hover {
-      opacity: 0.9;
-    }
-
-    .btn-profile {
-      background-color: var(--accent-shield);
-      color: var(--bg-primary);
-    }
-
-    .btn-remove {
-      background-color: var(--bg-card);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    /* Modal Styling */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-    }
-
-    .modal {
-      background: var(--bg-surface);
-      padding: 24px;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-color);
-      width: 90%;
-      max-width: 420px;
-      text-align: center;
-      position: relative;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 14px;
-      right: 16px;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-
-    .modal-avatar {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      margin-bottom: 12px;
-      border: 3px solid var(--accent-shield);
-    }
-
-    .modal-details {
-      text-align: left;
-      margin-top: 16px;
-      background: var(--bg-card);
-      padding: 12px;
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-  </style>
+</style>
 </head>
+
 <body>
 
-  <!-- Top Navigation Header -->
-  <header>
-    <div class="brand">
-      <i class="fa-solid fa-shield-halved"></i>
-      <h1>Identity Shield</h1>
-    </div>
-    <div class="shield-status">
-      <i class="fa-solid fa-lock"></i> Encryption Active
-    </div>
-  </header>
 
-  <!-- Main Content Container -->
-  <main>
-    <div class="controls">
-      <div class="search-bar">
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <a href="/main_templates/home/" class="brand">
+
+        <span class="brand-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+        </span>
+
+        Keyo
+
+    </a>
+
+
+    <div class="nav-links">
+
+        <a href="/main_templates/home/">
+            Home
+        </a>
+
+        <a href="/friend/friend/" class="active">
+            Friends & Connections
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<main class="container">
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="page-header">
+
+    <div>
+
+        <span class="eyebrow">
+
+            <i class="fa-solid fa-user-group"></i>
+
+            Secure Friends & Connections
+
+        </span>
+
+
+        <h1>
+            Friends & Connections
+        </h1>
+
+
+        <p>
+            Manage your trusted friends and connections,
+            monitor connection activity, and keep your
+            digital social network protected.
+        </p>
+
+    </div>
+
+
+    <button class="add-btn" onclick="openRequest()">
+
+        <i class="fa-solid fa-user-plus"></i>
+
+        Add Connection
+
+    </button>
+
+</header>
+
+
+
+<!-- ================= STATISTICS ================= -->
+
+<section class="stats">
+
+
+    <div class="stat">
+
+        <div class="stat-top">
+
+            <small>
+                Total Friends & Connections
+            </small>
+
+            <span class="stat-icon">
+                <i class="fa-solid fa-users"></i>
+            </span>
+
+        </div>
+
+        <strong>
+            128
+        </strong>
+
+    </div>
+
+
+
+    <div class="stat">
+
+        <div class="stat-top">
+
+            <small>
+                Trusted Connections
+            </small>
+
+            <span class="stat-icon">
+                <i class="fa-solid fa-shield"></i>
+            </span>
+
+        </div>
+
+        <strong class="green">
+            112
+        </strong>
+
+    </div>
+
+
+
+    <div class="stat">
+
+        <div class="stat-top">
+
+            <small>
+                Pending Requests
+            </small>
+
+            <span class="stat-icon">
+                <i class="fa-solid fa-user-clock"></i>
+            </span>
+
+        </div>
+
+        <strong class="orange">
+            08
+        </strong>
+
+    </div>
+
+
+
+    <div class="stat">
+
+        <div class="stat-top">
+
+            <small>
+                Security Alerts
+            </small>
+
+            <span class="stat-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </span>
+
+        </div>
+
+        <strong class="red">
+            02
+        </strong>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ================= SEARCH / FILTER ================= -->
+
+<div class="toolbar">
+
+
+    <div class="search">
+
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="Search accepted connections..." onkeyup="filterFriends()">
-      </div>
-      <div class="stats-badge">
-        Accepted Friends: <span id="friendCount">3</span>
-      </div>
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search friends & connections..."
+            onkeyup="searchPeople()"
+        >
+
     </div>
 
-    <!-- Dynamic Friends Grid -->
-    <div class="friends-grid" id="friendsContainer">
-      <!-- Friend cards will be generated by JavaScript -->
+
+    <select
+        class="filter"
+        id="filter"
+        onchange="filterPeople()"
+    >
+
+        <option value="all">
+            All Friends & Connections
+        </option>
+
+        <option value="trusted">
+            Trusted
+        </option>
+
+        <option value="pending">
+            Pending
+        </option>
+
+    </select>
+
+</div>
+
+
+
+<!-- ================= FRIENDS ================= -->
+
+<div class="section-title">
+
+    <h2>
+        Your Friends & Connections
+    </h2>
+
+    <span>
+        128 connections
+    </span>
+
+</div>
+
+
+
+<section class="network-grid" id="networkGrid">
+
+
+<!-- FRIEND 1 -->
+
+<article class="person" data-status="trusted">
+
+    <div class="person-head">
+
+        <div class="avatar">
+            AN
+        </div>
+
+        <div>
+
+            <h3>
+                Ananya Nair
+            </h3>
+
+            <p>
+                @ananyanair
+            </p>
+
+        </div>
+
+        <span class="status">
+            Trusted
+        </span>
+
     </div>
-  </main>
 
-  <!-- Identity Shield Detail Modal -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <i class="fa-solid fa-xmark close-btn" onclick="closeModal()"></i>
-      <img src="" id="modalImg" class="modal-avatar" alt="Friend Profile">
-      <h3 id="modalName">Friend Name</h3>
-      <p id="modalHandle" style="color: var(--text-muted); font-size:0.85rem;">@handle</p>
-      
-      <div class="modal-details">
-        <div><strong>Shield ID:</strong> <span id="modalShieldId">IS-883921</span></div>
-        <div><strong>Trust Score:</strong> <span style="color:var(--accent-green)">98% Verified</span></div>
-        <div><strong>Identity Encryption:</strong> AES-256</div>
-        <div><strong>Connection Date:</strong> Oct 14, 2024</div>
-      </div>
+
+    <div class="person-info">
+
+        <span class="tag">
+            <i class="fa-solid fa-location-dot"></i>
+            Kerala
+        </span>
+
+        <span class="tag">
+            <i class="fa-solid fa-link"></i>
+            Mutual 12
+        </span>
+
     </div>
-  </div>
 
-  <script>
-    // Sample Data: Accepted Friends stored securely under Identity Shield
-    const friendsData = [
-      {
-        id: 1,
-        name: "Alex Morgan",
-        handle: "@alex_m",
-        shieldId: "IS-902142",
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-        trustScore: "99%"
-      },
-      {
-        id: 2,
-        name: "David Chen",
-        handle: "@d_chen",
-        shieldId: "IS-482019",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-        trustScore: "95%"
-      },
-      {
-        id: 3,
-        name: "Sophia Patel",
-        handle: "@sophiap",
-        shieldId: "IS-339102",
-        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
-        trustScore: "97%"
-      }
-    ];
 
-    // Function to render the cards
-    function renderFriends(friends) {
-      const container = document.getElementById('friendsContainer');
-      container.innerHTML = '';
+    <div class="person-actions">
 
-      if (friends.length === 0) {
-        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No accepted connections match your search.</p>`;
-        return;
-      }
+        <button class="btn">
+            View Profile
+        </button>
 
-      friends.forEach(friend => {
-        const cardHTML = `
-          <div class="friend-card">
-            <div class="avatar-wrapper">
-              <img src="${friend.avatar}" alt="${friend.name}" class="avatar">
-              <div class="verified-icon" title="Identity Shield Verified">
-                <i class="fa-solid fa-check"></i>
-              </div>
-            </div>
-            <h2 class="friend-name">${friend.name}</h2>
-            <p class="friend-handle">${friend.handle}</p>
-            <div class="security-badge">
-              <i class="fa-solid fa-fingerprint"></i> Identity Shielded
-            </div>
-            <div class="card-actions">
-              <button class="btn btn-profile" onclick="openModal(${friend.id})">
-                <i class="fa-solid fa-shield"></i> View
-              </button>
-              <button class="btn btn-remove" onclick="removeFriend(${friend.id})">
-                <i class="fa-solid fa-user-xmark"></i>
-              </button>
-            </div>
-          </div>
-        `;
-        container.innerHTML += cardHTML;
-      });
+        <button class="btn primary">
+            Message
+        </button>
 
-      document.getElementById('friendCount').innerText = friends.length;
-    }
+    </div>
 
-    // Function to filter friends via Search
-    function filterFriends() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = friendsData.filter(friend => 
-        friend.name.toLowerCase().includes(query) || 
-        friend.handle.toLowerCase().includes(query)
-      );
-      renderFriends(filtered);
-    }
+</article>
 
-    // Modal Control Functions
-    function openModal(id) {
-      const friend = friendsData.find(f => f.id === id);
-      if(!friend) return;
 
-      document.getElementById('modalImg').src = friend.avatar;
-      document.getElementById('modalName').innerText = friend.name;
-      document.getElementById('modalHandle').innerText = friend.handle;
-      document.getElementById('modalShieldId').innerText = friend.shieldId;
-      
-      document.getElementById('modalOverlay').style.display = 'flex';
-    }
 
-    function closeModal() {
-      document.getElementById('modalOverlay').style.display = 'none';
-    }
+<!-- FRIEND 2 -->
 
-    // Remove Friend Action
-    function removeFriend(id) {
-      const index = friendsData.findIndex(f => f.id === id);
-      if (index !== -1) {
-        friendsData.splice(index, 1);
-        filterFriends(); // re-render list
-      }
-    }
+<article class="person" data-status="trusted">
 
-    // Initial Render
-    renderFriends(friendsData);
-  </script>
+    <div class="person-head">
+
+        <div class="avatar">
+            AK
+        </div>
+
+        <div>
+
+            <h3>
+                Arjun Kumar
+            </h3>
+
+            <p>
+                @arjunk
+            </p>
+
+        </div>
+
+        <span class="status">
+            Trusted
+        </span>
+
+    </div>
+
+
+    <div class="person-info">
+
+        <span class="tag">
+            <i class="fa-solid fa-location-dot"></i>
+            Kochi
+        </span>
+
+        <span class="tag">
+            <i class="fa-solid fa-link"></i>
+            Mutual 8
+        </span>
+
+    </div>
+
+
+    <div class="person-actions">
+
+        <button class="btn">
+            View Profile
+        </button>
+
+        <button class="btn primary">
+            Message
+        </button>
+
+    </div>
+
+</article>
+
+
+
+<!-- FRIEND 3 -->
+
+<article class="person" data-status="trusted">
+
+    <div class="person-head">
+
+        <div class="avatar">
+            FS
+        </div>
+
+        <div>
+
+            <h3>
+                Fathima Shirin
+            </h3>
+
+            <p>
+                @fathimashirin
+            </p>
+
+        </div>
+
+        <span class="status">
+            Trusted
+        </span>
+
+    </div>
+
+
+    <div class="person-info">
+
+        <span class="tag">
+            <i class="fa-solid fa-location-dot"></i>
+            Kannur
+        </span>
+
+        <span class="tag">
+            <i class="fa-solid fa-link"></i>
+            Mutual 15
+        </span>
+
+    </div>
+
+
+    <div class="person-actions">
+
+        <button class="btn">
+            View Profile
+        </button>
+
+        <button class="btn primary">
+            Message
+        </button>
+
+    </div>
+
+</article>
+
+
+
+<!-- FRIEND 4 -->
+
+<article class="person" data-status="pending">
+
+    <div class="person-head">
+
+        <div class="avatar">
+            RM
+        </div>
+
+        <div>
+
+            <h3>
+                Rahul Menon
+            </h3>
+
+            <p>
+                @rahulmenon
+            </p>
+
+        </div>
+
+        <span class="status pending">
+            Pending
+        </span>
+
+    </div>
+
+
+    <div class="person-info">
+
+        <span class="tag">
+            <i class="fa-solid fa-location-dot"></i>
+            Kozhikode
+        </span>
+
+        <span class="tag">
+            <i class="fa-solid fa-link"></i>
+            Mutual 4
+        </span>
+
+    </div>
+
+
+    <div class="person-actions">
+
+        <button class="btn">
+            Review
+        </button>
+
+        <button class="btn primary">
+            Accept
+        </button>
+
+    </div>
+
+</article>
+
+
+
+<!-- FRIEND 5 -->
+
+<article class="person" data-status="trusted">
+
+    <div class="person-head">
+
+        <div class="avatar">
+            SM
+        </div>
+
+        <div>
+
+            <h3>
+                Sarah Mathew
+            </h3>
+
+            <p>
+                @sarahm
+            </p>
+
+        </div>
+
+        <span class="status">
+            Trusted
+        </span>
+
+    </div>
+
+
+    <div class="person-info">
+
+        <span class="tag">
+            <i class="fa-solid fa-location-dot"></i>
+            Thrissur
+        </span>
+
+        <span class="tag">
+            <i class="fa-solid fa-link"></i>
+            Mutual 7
+        </span>
+
+    </div>
+
+
+    <div class="person-actions">
+
+        <button class="btn">
+            View Profile
+        </button>
+
+        <button class="btn primary">
+            Message
+        </button>
+
+    </div>
+
+</article>
+
+
+
+<!-- FRIEND 6 -->
+
+<article class="person" data-status="pending">
+
+    <div class="person-head">
+
+        <div class="avatar">
+            NJ
+        </div>
+
+        <div>
+
+            <h3>
+                Nihal Joseph
+            </h3>
+
+            <p>
+                @nihalj
+            </p>
+
+        </div>
+
+        <span class="status pending">
+            Pending
+        </span>
+
+    </div>
+
+
+    <div class="person-info">
+
+        <span class="tag">
+            <i class="fa-solid fa-location-dot"></i>
+            Malappuram
+        </span>
+
+        <span class="tag">
+            <i class="fa-solid fa-link"></i>
+            Mutual 3
+        </span>
+
+    </div>
+
+
+    <div class="person-actions">
+
+        <button class="btn">
+            Review
+        </button>
+
+        <button class="btn primary">
+            Accept
+        </button>
+
+    </div>
+
+</article>
+
+
+</section>
+
+
+
+<!-- ================= SECURITY INFORMATION ================= -->
+
+<section class="security-box">
+
+    <div class="shield">
+
+        <i class="fa-solid fa-shield-halved"></i>
+
+    </div>
+
+
+    <div>
+
+        <h3>
+            Friends & Connections Security Monitoring Active
+        </h3>
+
+        <p>
+            SafeNet continuously checks your connections
+            for suspicious activity, duplicate identities
+            and unusual account behaviour.
+        </p>
+
+    </div>
+
+
+    <div class="security-score">
+
+        <strong>
+            94%
+        </strong>
+
+        <span>
+            Connections Safety Score
+        </span>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <span>© 2026 SafeNet. Secure social networking platform.
+    </span>
+
+    <span>
+        Privacy &nbsp; • &nbsp;
+        Security &nbsp; • &nbsp;
+        Terms
+    </span>
+
+</footer>
+
+
+<script>
+
+/* ================= SEARCH & FILTER ================= */
+
+function filterConnections(){
+
+    const search =
+        document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const filter =
+        document
+        .getElementById("statusFilter")
+        .value;
+
+
+    document
+    .querySelectorAll(".card")
+    .forEach(card => {
+
+        const name =
+            card.dataset.name;
+
+        const status =
+            card.dataset.status;
+
+
+        const nameMatch =
+            name.includes(search);
+
+        const statusMatch =
+            filter === "all" ||
+            status === filter;
+
+
+        if(nameMatch && statusMatch){
+
+            card.style.display = "block";
+
+        }else{
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+/* ================= ADD CONNECTION ================= */
+
+function openRequest(){
+
+    alert(
+        "Add Connection\n\n" +
+        "Enter a username or email address " +
+        "to send a secure connection request."
+    );
+
+}
+
+</script>
+
 </body>
 </html>
